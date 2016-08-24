@@ -36,3 +36,4 @@
 .settings/
 .project
 .cproject
+/Debug/
