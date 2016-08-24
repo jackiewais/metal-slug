@@ -27,3 +27,12 @@
 *.exe
 *.out
 *.app
+
+# Archivos temporales
+*.swp
+*~
+
+# Configuraciones Eclipse
+.settings/
+.project
+.cproject
