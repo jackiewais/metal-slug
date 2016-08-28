@@ -1,21 +1,32 @@
 #include <iostream>
-#include "Servidor.h"
-#include "Cliente.h"
+#include "Servidor/Servidor.h"
+#include "Cliente/Cliente.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-	if (argc != 2)
-		cout << "Error\n";
-	else {
-		if ( argv[1][0] == 's' ) {       // Servidor
-			Servidor servidor(3000);
-			servidor.escuchar(10);
-		} else if(argv[1][0] == 'c') {   // Cliente
-			Cliente cliente;
-			cliente.conectar("127.0.0.1", 3000);
-		}
+
+	string cliOrSrv;
+	bool ok = false;
+
+	if (argc == 2) {
+		cliOrSrv = argv[1][0];
+		ok = (cliOrSrv == "c" || cliOrSrv == "s");
+	}
+
+	while (!ok){
+		cout << "Ingrese 'c' para cliente, 's' para servidor" << endl;
+		cin >> cliOrSrv;
+		ok = (cliOrSrv == "c" || cliOrSrv == "s");
+	}
+
+	if (cliOrSrv == "c"){
+		Cliente cliente;
+		cliente.runCliente();
+	}else{
+		Servidor servidor;
+		servidor.runServer();
 	}
 
 	return 0;

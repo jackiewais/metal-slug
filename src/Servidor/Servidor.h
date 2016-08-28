@@ -8,12 +8,16 @@
 
 class Servidor {
 private:
-	int sockfd;
+	int sockfd = 0;
 	struct sockaddr_in my_addr;
+
+	int openSocket(short puerto);
+	int escuchar();
+
 public:
-	Servidor(short puerto);
+	Servidor();
 	virtual ~Servidor();
-	void escuchar(int conexiones_max);
+	void runServer();
 };
 
 #endif /* SERVIDOR_H_ */
