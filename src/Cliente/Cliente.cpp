@@ -65,6 +65,7 @@ int Cliente::seleccConectar(){
 	return respuesta;
 }
 
+
 int desconectar(){
 
 	return 0;
