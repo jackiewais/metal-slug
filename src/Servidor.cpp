@@ -62,8 +62,7 @@ void Servidor::escuchar(int conexiones_max) {
 			perror("accept");
 			continue;
 		}
-		printf("server: got connection from %s\n",
-		inet_ntoa(their_addr.sin_addr));
+		printf("server: got connection from %s\n", inet_ntoa(their_addr.sin_addr));
 		if (!fork()) { // Este es el proceso hijo
 			close(this->sockfd); // El hijo no necesita este descriptor
 			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)

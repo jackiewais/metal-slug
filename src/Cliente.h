@@ -9,11 +9,10 @@
 class Cliente {
 private:
 	int sockfd;
-	struct sockaddr_in their_addr;
 public:
-	Cliente(short puerto);
+	Cliente();
 	virtual ~Cliente();
-	void conectar();
+	void conectar(char *ip, short puerto);
 };
 
 #endif /* CLIENTE_H_ */

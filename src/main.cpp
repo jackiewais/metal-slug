@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
 			Servidor servidor(3000);
 			servidor.escuchar(10);
 		} else if(argv[1][0] == 'c') {   // Cliente
-			Cliente cliente(3000);
-			cliente.conectar();
+			Cliente cliente;
+			cliente.conectar("127.0.0.1", 3000);
 		}
 	}
 
