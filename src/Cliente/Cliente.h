@@ -8,8 +8,6 @@
 
 class Cliente {
 private:
-	struct sockaddr_in their_addr;
-
 	struct datosConexionStruct{
 		int sockfd;
 		short puerto;
