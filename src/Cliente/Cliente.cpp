@@ -2,11 +2,9 @@
 #include <limits>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <errno.h>
-#include <netdb.h>
-#include <arpa/inet.h>
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -20,38 +18,6 @@ Cliente::~Cliente() {
 	// TODO Auto-generated destructor stub
 }
 
-int Cliente::conectar() {
-	struct sockaddr_in their_addr;
-	int numbytes;
-	char buf[MAXDATASIZE];
-
-	if ((this->datosConexion.sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		perror("ERROR abriendo el socket");
-		return 1;
-	}
-
-	their_addr.sin_family = AF_INET;
-	their_addr.sin_port = htons(datosConexion.puerto);
-	//this->their_addr.sin_addr = *((struct in_addr *)he->h_addr);
-	their_addr.sin_addr.s_addr = inet_addr(datosConexion.ip);
-	memset(&(their_addr.sin_zero), '\0', 8); // poner a cero el resto de la estructura
-
-	if (connect(this->datosConexion.sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
-		perror("ERROR ejecutando connect");
-		return 1;
-	}
-	if ((numbytes=recv(this->datosConexion.sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
-		perror("ERROR ejecutando recv");
-		return 1;
-	}
-	buf[numbytes] = '\0';
-	printf("Received: %s",buf);
-
-	this->datosConexion.conectado = true;
-	return 0;
-}
-
-
 
 int Cliente::seleccConectar(){
 	int respuesta = 0;
@@ -59,34 +25,46 @@ int Cliente::seleccConectar(){
 	if (this->datosConexion.conectado){
 		cout << "El usuario ya está conectado" << endl;
 	}else{
-		respuesta = conectar();
+		respuesta = conectar(&this->datosConexion);
+		if (respuesta == 0)
+			this->datosConexion.conectado = true;
+
 	}
 
 	return respuesta;
 }
 
 
-int desconectar(){
+int Cliente::seleccDesconectar(){
+	int respuesta = 0;
 
-	return 0;
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado" << endl;
+	}else{
+		respuesta = desconectar(&this->datosConexion);
+		if (respuesta == 0)
+			this->datosConexion.conectado = false;
+	}
+
+	return respuesta;
 }
 
-int salir(){
-
+int Cliente::salir(){
+	seleccDesconectar();
 	return -1;
 }
 
-int enviar(){
+int Cliente::enviar(){
 
 	return 0;
 }
 
-int recibir(){
+int Cliente::recibir(){
 
 	return 0;
 }
 
-int loremIpsum(){
+int Cliente::loremIpsum(){
 
 	return 0;
 }
@@ -166,7 +144,7 @@ int Cliente::selectFromMenu(){
 			status = seleccConectar();
 			break;
 		case 2:
-			status = desconectar();
+			status = seleccDesconectar();
 			break;
 		case 3:
 			status = salir();

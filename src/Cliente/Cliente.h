@@ -1,26 +1,21 @@
 #ifndef CLIENTE_H_
 #define CLIENTE_H_
 
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include "ConexionCli.h"
 
-class Cliente {
+class Cliente:ConexionCli {
 private:
-	struct datosConexionStruct{
-		int sockfd;
-		short puerto;
-		char ip[16];
-		bool conectado = false;
-	};
 
 	datosConexionStruct datosConexion;
 
-	int conectar();
 	int seleccConectar();
 	int getIpAndPort();
 	int selectFromMenu();
+	int seleccDesconectar();
+	int salir();
+	int enviar();
+	int recibir();
+	int loremIpsum();
 
 public:
 	Cliente();

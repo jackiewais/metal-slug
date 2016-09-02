@@ -22,11 +22,13 @@ int main(int argc, char *argv[])
 	}
 
 	if (cliOrSrv == "c"){
-		Cliente cliente;
-		cliente.runCliente();
+		Cliente* cliente = new Cliente;
+		cliente->runCliente();
+		delete cliente;
 	}else{
-		Servidor servidor;
-		servidor.runServer();
+		Servidor* servidor = new Servidor;
+		servidor->runServer();
+		delete servidor;
 	}
 
 	return 0;
