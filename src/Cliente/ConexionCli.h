@@ -14,6 +14,7 @@ class ConexionCli{
 
 		int conectar(datosConexionStruct* datosConexion);
 		int desconectar(datosConexionStruct* datosConexion);
+		static void* recvMessage(void * arg);
 };
 
 #endif

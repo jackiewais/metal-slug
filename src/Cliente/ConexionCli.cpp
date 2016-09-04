@@ -6,9 +6,10 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-
+#include <pthread.h>
+#include <iostream>
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
-
+using namespace std;
 int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 	char message[256];
 	memset(message,0,256);
@@ -54,12 +55,31 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion) {
 		return 1;
 	}
 	printf("Usuario conectado");
-	if ((numbytes=recv(datosConexion->sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
+	
+	//CREO HILO PARA ESCUCHAR
+	pthread_t threadRecv;
+    
+	int rc = pthread_create(&threadRecv, NULL,&ConexionCli::recvMessage,(void*)datosConexion);
+	if (rc){
+		printf("ERROR creando el thread  %i \n",rc);
+	}
+	
+
+	return 0;
+};
+
+void *ConexionCli::recvMessage(void * arg){
+
+	int numbytes;
+	char buf[MAXDATASIZE];
+
+	datosConexionStruct* conexion = (datosConexionStruct*)arg;
+
+	if ((numbytes=recv(conexion->sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
 		perror("ERROR ejecutando recv");
-		return 1;
+		
 	}
 	buf[numbytes] = '\0';
 	printf("Received: %s",buf);
 
-	return 0;
 };
