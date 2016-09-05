@@ -15,9 +15,11 @@ class ConexionCli{
 			int idUsuario = -1;
 		};
 
-		int conectar(datosConexionStruct* datosConexion);
-		int autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
+		int conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 		int desconectar(datosConexionStruct* datosConexion);
+		static void* recvMessage(void * arg);
+	private:
+		int autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 };
 
 #endif

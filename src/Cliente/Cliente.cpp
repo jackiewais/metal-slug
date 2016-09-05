@@ -27,13 +27,12 @@ int Cliente::seleccConectar(){
 		cout << "El usuario ya está conectado" << endl;
 		respuesta = 0;
 	}else{
-		if (conectar(&this->datosConexion) == 0){
-			getUsuarioYContrasenia(usuario, contrasenia);
-			if ((idUsuario = autenticar(&this->datosConexion, usuario, contrasenia)) > 0) {
-				this->datosConexion.idUsuario = idUsuario;
-				this->datosConexion.conectado = true;
-				respuesta = 0;
-			}
+		getUsuarioYContrasenia(usuario, contrasenia);
+		idUsuario = conectar(&this->datosConexion, usuario, contrasenia);
+		if (idUsuario > 0){
+			this->datosConexion.idUsuario = idUsuario;
+			this->datosConexion.conectado = true;
+			respuesta = 0;
 		}
 
 	}
