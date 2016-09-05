@@ -2,6 +2,8 @@
 #define CLIENTE_H_
 
 #include "ConexionCli.h"
+#include <iostream>
+#include <string.h>
 
 class Cliente:ConexionCli {
 private:
@@ -16,6 +18,7 @@ private:
 	int enviar();
 	int recibir();
 	int loremIpsum();
+	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 
 public:
 	Cliente();

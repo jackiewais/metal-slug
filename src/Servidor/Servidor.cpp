@@ -1,4 +1,5 @@
 #include "Servidor.h"
+#include "../Common/Mensajeria.h"
 #include <iostream>
 #include <limits>
 #include <stdio.h>
@@ -9,8 +10,11 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <pthread.h>
+#include <sstream>
 
 using namespace std;
+
+#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
 
 int Servidor::openSocket(short puerto){
 	int conexiones_max = 10;
@@ -52,20 +56,51 @@ void sigchld_handler(int s) {
 	while(wait(NULL) > 0);
 }
 
+void *nuevaConexion(void *nw_fd) {
+	char buf[MAXDATASIZE];
+	char *usuario, *contrasenia;
+	int numbytes;
+	char * pch;
+	struct timeval timeout;
+	int new_fd = *(int *)nw_fd;
+	timeout.tv_sec = 10;
+	timeout.tv_usec = 0;
+
+	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
+		printf("ERROR setealdo el rcv timeout \n");
+	if (setsockopt (new_fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+		printf("ERROR setealdo el snd timeout \n");
+
+
+	if ((numbytes=recv(new_fd, (void*)&buf, MAXDATASIZE-1, 0)) == -1) {
+		perror("ERROR ejecutando recv");
+	}
+
+	buf[numbytes] = '\0';
+	pch = strtok( buf, ";" );
+	usuario = pch;
+	pch = strtok( NULL, ";" );
+	contrasenia = pch;
+
+	cout << new_fd << endl;
+	printf("%s, %s\n", usuario, contrasenia);
+
+	// ACA HAY QUE CHECKEAR EL USUARIO Y LA CONTRASENIA
+	// SI SE PUDO LOGUEAR, HAY QUE DEVOLVERLE OK AL CLIENTE
+	// Y ADEMAS LANZAR UN THREAD PARA RECV Y OTRO PARA SEND
+	// SE PODRIA LANZAR SOLAMENTE UNO Y PARA EL OTRO APROVECHAR ESTE THREAD
+
+	close(new_fd);
+
+	return 0;
+}
+
 int Servidor::escuchar() {
 	socklen_t sin_size;
 	//struct sigaction sa;
 	int new_fd;
 	struct sockaddr_in their_addr; // información sobre la dirección del cliente
-
-
-	/*sa.sa_handler = sigchld_handler; // Eliminar procesos muertos
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	if (sigaction(SIGCHLD, &sa, NULL) == -1) {
-		perror("sigaction");
-		exit(1);
-	}*/
+	pthread_t thread;
 
 	while(1) { // main accept() loop
 		sin_size = sizeof(struct sockaddr_in);
@@ -75,28 +110,7 @@ int Servidor::escuchar() {
 		}
 		printf("server: got connection from %s\n", inet_ntoa(their_addr.sin_addr));
 
-		 struct timeval timeout;
-		 timeout.tv_sec = 10;
-		 timeout.tv_usec = 0;
-
-		if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
-			 printf("ERROR setealdo el rcv timeout \n");
-
-		 if (setsockopt (this->sockfd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
-			 printf("ERROR setealdo el snd timeout \n");
-
-		 if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
-		 				perror("send");
-		 close(new_fd);
-
-		/*if (!fork()) { // Este es el proceso hijo
-			close(this->sockfd); // El hijo no necesita este descriptor
-			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
-				perror("send");
-			close(new_fd);
-			exit(0);
-		}
-		close(new_fd); // El proceso padre no lo necesita*/
+		pthread_create(&thread, NULL, nuevaConexion, (void*)&new_fd);
 	}
 
 	return 0;

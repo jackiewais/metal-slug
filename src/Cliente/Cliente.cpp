@@ -20,20 +20,48 @@ Cliente::~Cliente() {
 
 
 int Cliente::seleccConectar(){
-	int respuesta = 0;
+	int respuesta = 1, idUsuario;
+	string usuario, contrasenia;
 
 	if (this->datosConexion.conectado){
 		cout << "El usuario ya está conectado" << endl;
+		respuesta = 0;
 	}else{
-		respuesta = conectar(&this->datosConexion);
-		if (respuesta == 0)
-			this->datosConexion.conectado = true;
+		if (conectar(&this->datosConexion) == 0){
+			getUsuarioYContrasenia(usuario, contrasenia);
+			if ((idUsuario = autenticar(&this->datosConexion, usuario, contrasenia)) > 0) {
+				this->datosConexion.idUsuario = idUsuario;
+				this->datosConexion.conectado = true;
+				respuesta = 0;
+			}
+		}
 
 	}
 
 	return respuesta;
 }
 
+int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){
+	string inputUsuario, inputContrasenia;
+	bool ok = false;
+
+	while (!ok){
+		cout << "Ingrese el nombre de usuario:" << endl;
+		cin >> usuario;
+		if (usuario.find(";") == string::npos)
+			ok = true;
+	}
+
+	ok = false;
+	while (!ok){
+		cout << "Ingrese la contraseña:" << endl;
+		cin >> contrasenia;
+		if (contrasenia.find(";") == string::npos)
+			ok = true;
+	}
+
+	return 0;
+}
 
 int Cliente::seleccDesconectar(){
 	int respuesta = 0;

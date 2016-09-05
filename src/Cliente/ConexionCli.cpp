@@ -1,9 +1,12 @@
 #include "ConexionCli.h"
+#include "../Common/Mensajeria.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <string.h>
+#include <sstream>
+#include <iostream>
 #include <arpa/inet.h>
 #include <unistd.h>
 
@@ -24,8 +27,6 @@ int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 
 int ConexionCli::conectar(datosConexionStruct* datosConexion) {
 	struct sockaddr_in their_addr;
-	int numbytes;
-	char buf[MAXDATASIZE];
 
 	if ((datosConexion->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		perror("ERROR abriendo el socket");
@@ -53,13 +54,20 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion) {
 		perror("ERROR ejecutando connect");
 		return 1;
 	}
-	printf("Usuario conectado");
-	if ((numbytes=recv(datosConexion->sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
-		perror("ERROR ejecutando recv");
-		return 1;
-	}
-	buf[numbytes] = '\0';
-	printf("Received: %s",buf);
 
 	return 0;
 };
+
+// Es necesario que se haya conectado mediante el socket previamente
+// Devuelve el ID de usuario si pudo autenticar con exito, o -1 en caso de error
+int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
+	std::string usuarioYContrasenia = usuario + ";" + contrasenia;
+
+	if (send(datosConexion->sockfd, usuarioYContrasenia.c_str(), strlen(usuarioYContrasenia.c_str()), 0) == -1)
+		perror("ERROR ejecutando send");
+
+	// ACA HAY QUE ESPERAR RESPUESTA DEL SERVIDOR Y EN BASE A ESO
+	// RETORNAR ID DE USUARIO(TENDRIA QUE MANDARLA EL SERVER) O -1
+
+	return 502; // Harcodeo para simular ID de usuario
+}
