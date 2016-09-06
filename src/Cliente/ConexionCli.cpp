@@ -56,7 +56,7 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 	if (connect(datosConexion->sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
 		perror("ERROR ejecutando connect");
 		return -1;
-	}
+	} else {cout << "conectado al servidor" << endl;}
 
 	idUsuario = autenticar(datosConexion, usuario, contrasenia);
 	if ( idUsuario == -1 ) {
@@ -65,8 +65,9 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 	}
 
 	printf("Usuario conectado con ID: %d\n", idUsuario);
-
+	
 	//CREO HILO PARA ESCUCHAR
+
 	pthread_t threadRecv;
 
 	int rc = pthread_create(&threadRecv, NULL,&ConexionCli::recvMessage,(void*)datosConexion);
@@ -81,16 +82,16 @@ void *ConexionCli::recvMessage(void * arg){
 
 	int numbytes;
 	char buf[MAXDATASIZE];
-
+	cout << "RESPUESTA SERVER : " ;
 	datosConexionStruct* conexion = (datosConexionStruct*)arg;
-
+	while(conexion->conectado){
 	if ((numbytes=recv(conexion->sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
 		perror("ERROR ejecutando recv");
 		
 	}
 	buf[numbytes] = '\0';
 	printf("Received: %s",buf);
-
+	}
 };
 
 // Es necesario que se haya conectado mediante el socket previamente
@@ -107,4 +108,15 @@ int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usua
 	// RETORNAR ID DE USUARIO(TENDRIA QUE MANDARLA EL SERVER) O -1
 
 	return 502; // Harcodeo para simular ID de usuario
+}
+void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
+	/*
+	ACA DEBERIA ELEGIR ENTRE LOS USUARIOS CONECTADOS PARA MANDAR MENSAJES A TODOS O 
+	A ALGUNO EN PARTICULAR
+	*/
+
+	char message[30]="_ID.LONG.___MENSAJE___";
+
+	send(datosConexion->sockfd, message , strlen(message) , 0);
+
 }

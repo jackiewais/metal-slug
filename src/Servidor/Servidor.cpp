@@ -56,15 +56,43 @@ void sigchld_handler(int s) {
 	while(wait(NULL) > 0);
 }
 
-void *nuevaConexion(void *nw_fd) {
+void *sendMessage(void *nw_fd){
+	
+	int new_fd = *(int *)nw_fd;
+	char buf[20] = "Conectado a Server";
+	send(new_fd, buf , 20, 0);
+	return 0;
+}
+
+void *recvMessage(void *nw_fd){
+	/*
+	ACA DEBERIA DE IR EL COMPORTAMIENTO DEL SERVER EN FUNCION AL ID DEL MENSAJE ( VALIDAR USARIO, MANDAR MENSAJES AL CLIENTES ..)
+	*/
+	
+	int new_fd = *(int *)nw_fd;
+	while(true){	
+	char buf[30]= "";
+	recv(new_fd, buf, 30, 0);
+	cout << "el cliente "<< new_fd <<" dice : " ;
+	cout << buf << endl;
+	}
+	return 0;
+}
+
+
+void Servidor::nuevaConexion(int new_fd) {
+
 	char buf[MAXDATASIZE];
 	char *usuario, *contrasenia;
 	int numbytes;
 	char * pch;
 	struct timeval timeout;
-	int new_fd = *(int *)nw_fd;
-	timeout.tv_sec = 10;
+	//int new_fd = *(int *)nw_fd;
+	timeout.tv_sec = 60;
 	timeout.tv_usec = 0;
+	pthread_t precvMessage;
+	pthread_t psendMessage;
+	
 
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
 		printf("ERROR setealdo el rcv timeout \n");
@@ -72,7 +100,7 @@ void *nuevaConexion(void *nw_fd) {
 		printf("ERROR setealdo el snd timeout \n");
 
 
-	if ((numbytes=recv(new_fd, (void*)&buf, MAXDATASIZE-1, 0)) == -1) {
+/*	if ((numbytes=recv(new_fd, (void*)&buf, MAXDATASIZE-1, 0)) == -1) {
 		perror("ERROR ejecutando recv");
 	}
 
@@ -83,16 +111,28 @@ void *nuevaConexion(void *nw_fd) {
 	contrasenia = pch;
 
 	cout << new_fd << endl;
-	printf("%s, %s\n", usuario, contrasenia);
+	printf("%s, %s\n", usuario, contrasenia);*/
+	
+	int rc = pthread_create(&precvMessage, NULL, recvMessage, (void*)&new_fd);
+	if (rc){
+		printf("ERROR creando el thread de recv %i \n",rc);
+	}
+	
+	rc = pthread_create(&precvMessage, NULL, sendMessage, (void*)&new_fd);
+	if (rc){
+		printf("ERROR creando el thread de send %i \n",rc);
+	}
+
+
 
 	// ACA HAY QUE CHECKEAR EL USUARIO Y LA CONTRASENIA
 	// SI SE PUDO LOGUEAR, HAY QUE DEVOLVERLE OK AL CLIENTE
 	// Y ADEMAS LANZAR UN THREAD PARA RECV Y OTRO PARA SEND
 	// SE PODRIA LANZAR SOLAMENTE UNO Y PARA EL OTRO APROVECHAR ESTE THREAD
 
-	close(new_fd);
+	//close(new_fd);
 
-	return 0;
+	
 }
 
 int Servidor::escuchar() {
@@ -108,9 +148,11 @@ int Servidor::escuchar() {
 			perror("ERROR ejecutando accept \n");
 			continue;
 		}
-		printf("server: got connection from %s\n", inet_ntoa(their_addr.sin_addr));
-
-		pthread_create(&thread, NULL, nuevaConexion, (void*)&new_fd);
+		cout << "NUEVA CONEXION:";
+		
+		printf(" got connection from %s\n", inet_ntoa(their_addr.sin_addr));
+		cout << "==============" << endl;
+		nuevaConexion(new_fd);
 	}
 
 	return 0;

@@ -20,7 +20,7 @@ private:
 	void createExitThread();
 	static void* exitManager(void* data);
 	void cerarSockets();
-
+	void nuevaConexion(int new_fd);
 
 public:
 	Servidor();

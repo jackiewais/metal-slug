@@ -17,6 +17,7 @@ class ConexionCli{
 
 		int conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 		int desconectar(datosConexionStruct* datosConexion);
+		void enviarMensajes(datosConexionStruct* datosConexion);
 		static void* recvMessage(void * arg);
 	private:
 		int autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
