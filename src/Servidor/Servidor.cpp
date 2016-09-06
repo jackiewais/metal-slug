@@ -59,7 +59,7 @@ void sigchld_handler(int s) {
 void *sendMessage(void *nw_fd){
 	
 	int new_fd = *(int *)nw_fd;
-	char buf[20] = "Conectado a Server";
+	char buf[20] = "Recibido.Cambio";
 	send(new_fd, buf , 20, 0);
 	return 0;
 }

@@ -82,7 +82,7 @@ void *ConexionCli::recvMessage(void * arg){
 
 	int numbytes;
 	char buf[MAXDATASIZE];
-	cout << "RESPUESTA SERVER : " ;
+	
 	datosConexionStruct* conexion = (datosConexionStruct*)arg;
 	while(conexion->conectado){
 	if ((numbytes=recv(conexion->sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
