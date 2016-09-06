@@ -27,14 +27,14 @@ int Cliente::seleccConectar(){
 		cout << "El usuario ya está conectado" << endl;
 		respuesta = 0;
 	}else{
-		//getUsuarioYContrasenia(usuario, contrasenia);
+		getUsuarioYContrasenia(usuario, contrasenia);
 		idUsuario = conectar(&this->datosConexion, usuario, contrasenia);
 		respuesta = 0;
-		/*if (idUsuario > 0){
+		if (idUsuario > 0){
 			this->datosConexion.idUsuario = idUsuario;
 			this->datosConexion.conectado = true;
 			respuesta = 0;
-		}*/
+		}
 
 	}
 
@@ -88,7 +88,7 @@ int Cliente::enviar(){
 }
 
 int Cliente::recibir(){
-
+	recibirMensajes(&this->datosConexion);
 	return 0;
 }
 
