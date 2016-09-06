@@ -1,17 +1,36 @@
+#ifndef MENSAJERIA_H_
+#define MENSAJERIA_H_
+
 
 #include <iostream>
+#include <string>
+
+/*
+ *  '01' = LOG_OK
+ *  '02' = LOG_NOTOK
+ *
+ *
+ *
+ *
+ *
+ * */
 
 class Mensajeria {
 
 public:
-	enum tipoMensajeEnum {LOG_OK = 001, LOG_NOTOK = 002};
+	#define BUFLEN 1000
 
 	struct mensajeStruct {
-		int longit;
-		tipoMensajeEnum tipo;
+		char longit[3];
+		char tipo[2];
 		std::string message;
+		int socketCli;
 
 	};
+
+	int encode(char output[BUFLEN], mensajeStruct* mensaje );
+	int decode(char output[BUFLEN], mensajeStruct* mensaje);
+	int encodeAndSend(int socketCli, mensajeStruct* mensaje);
 };
 
-
+#endif

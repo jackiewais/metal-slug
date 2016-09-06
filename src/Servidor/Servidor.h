@@ -7,8 +7,9 @@
 #include <netinet/in.h>
 #include <map>
 #include "../Common/ChatStruct.h"
+#include "../Common/Mensajeria.h"
 
-class Servidor {
+class Servidor:Mensajeria {
 private:
 	int sockfd = 0;
 	struct sockaddr_in my_addr;
@@ -21,6 +22,10 @@ private:
 	static void* exitManager(void* data);
 	void cerarSockets();
 	void nuevaConexion(int new_fd);
+	//void manejarNuevaConexion(int socketCli);
+	static void* recibirMensajesCliente(void* socketCli);
+
+	Mensajeria* mensajeria;
 
 public:
 	Servidor();

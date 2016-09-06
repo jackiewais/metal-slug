@@ -12,6 +12,11 @@
 #include <pthread.h>
 #include <sstream>
 
+struct argsForThread{
+	int* socketCli;
+	Servidor* context;
+};
+
 using namespace std;
 
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
@@ -45,12 +50,46 @@ int Servidor::openSocket(short puerto){
 	return 0;
 }
 
-Servidor::Servidor() {
+void* Servidor::recibirMensajesCliente(void* arguments){
+	struct argsForThread* args = (argsForThread*) arguments;
+	int socketCli = *(args->socketCli);
+	bool finish = false;
 
+   int n;
+   char buffer[BUFLEN];
+   mensajeStruct mensaje;
+
+   //Receive a message from client
+   while(!finish){
+	   mensaje = {}; //Reset struct
+		bzero(buffer,BUFLEN);
+		n = recv(socketCli, buffer, BUFLEN-1, 0);
+		if (n < 0) {
+			printf("ERROR ejecutano recv");
+			strcpy(mensaje.longit,"000");
+			strcpy(mensaje.tipo,"99");
+			mensaje.message = "Error leyendo del socket";
+			finish = true;
+		}else if (n == 0){
+			printf("Mensaje de salida recibido");
+			strcpy(mensaje.longit,"000");
+			strcpy(mensaje.tipo,"99");
+			mensaje.message = "Usuario desconectado";
+			finish = true;
+		}else{
+			args->context->mensajeria->decode(buffer,&mensaje);
+		}
+
+		mensaje.socketCli = socketCli;
+
+		//
+   }
+
+   close(socketCli);
+
+	return 0;
 }
-Servidor::~Servidor() {
-	// TODO Auto-generated destructor stub
-}
+
 
 void sigchld_handler(int s) {
 	while(wait(NULL) > 0);
@@ -63,12 +102,12 @@ void *sendMessage(void *nw_fd){
 	send(new_fd, buf , 20, 0);
 	return 0;
 }
-
+/*
 void *recvMessage(void *nw_fd){
-	/*
-	ACA DEBERIA DE IR EL COMPORTAMIENTO DEL SERVER EN FUNCION AL ID DEL MENSAJE ( VALIDAR USARIO, MANDAR MENSAJES AL CLIENTES ..)
-	*/
 	
+	//ACA DEBERIA DE IR EL COMPORTAMIENTO DEL SERVER EN FUNCION AL ID DEL MENSAJE ( VALIDAR USARIO, MANDAR MENSAJES AL CLIENTES ..)
+
+
 	int new_fd = *(int *)nw_fd;
 	while(true){	
 	char buf[30]= "";
@@ -77,7 +116,7 @@ void *recvMessage(void *nw_fd){
 	cout << buf << endl;
 	}
 	return 0;
-}
+}*/
 
 
 void Servidor::nuevaConexion(int new_fd) {
@@ -113,7 +152,7 @@ void Servidor::nuevaConexion(int new_fd) {
 	cout << new_fd << endl;
 	printf("%s, %s\n", usuario, contrasenia);*/
 	
-	int rc = pthread_create(&precvMessage, NULL, recvMessage, (void*)&new_fd);
+	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)&new_fd);
 	if (rc){
 		printf("ERROR creando el thread de recv %i \n",rc);
 	}
@@ -153,6 +192,21 @@ int Servidor::escuchar() {
 		printf(" got connection from %s\n", inet_ntoa(their_addr.sin_addr));
 		cout << "==============" << endl;
 		nuevaConexion(new_fd);
+
+		printf("server: got connection from %s\n", inet_ntoa(their_addr.sin_addr));
+
+
+		 close(new_fd);
+
+		/*if (!fork()) { // Este es el proceso hijo
+			close(this->sockfd); // El hijo no necesita este descriptor
+			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
+				perror("send");
+			close(new_fd);
+			exit(0);
+		}
+		close(new_fd); // El proceso padre no lo necesita*/
+
 	}
 
 	return 0;
@@ -181,12 +235,15 @@ short getPuerto(){
 
 void Servidor::runServer(){
 	cout << "Starting server app" << endl;
+	mensajeria = new Mensajeria();
 
 	short puerto = getPuerto();
 	createExitThread();
 
 	openSocket(puerto);
 	escuchar();
+
+	delete mensajeria;
 };
 
 
@@ -219,4 +276,12 @@ void Servidor::createExitThread(){
 	if (rc){
 		printf("ERROR creando el thread de salida %i \n",rc);
 	}
+}
+
+
+Servidor::Servidor() {
+
+}
+Servidor::~Servidor() {
+	// TODO Auto-generated destructor stub
 }
