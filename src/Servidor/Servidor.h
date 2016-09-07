@@ -14,6 +14,7 @@ private:
 	int sockfd = 0;
 	struct sockaddr_in my_addr;
 	std::multimap<int,chatStruct> waitingChats;
+	int colaPrincipal=0;
 
 	int openSocket(short puerto);
 	int escuchar();
@@ -22,8 +23,10 @@ private:
 	static void* exitManager(void* data);
 	void cerarSockets();
 	void nuevaConexion(int new_fd);
-	//void manejarNuevaConexion(int socketCli);
 	static void* recibirMensajesCliente(void* socketCli);
+	void createMainProcessorThread();
+	static void* procesarMensajesMain (void *data) ;
+	int procesarMensajeCola(mensajeStruct msg);
 
 	Mensajeria* mensajeria;
 
