@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <sstream>
+#include <string>
 
 struct argsForThread{
 	int* socketCli;
@@ -20,6 +21,42 @@ struct argsForThread{
 using namespace std;
 
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
+
+
+
+
+void* Servidor::procesarMensajesMain (void *data) {
+	mensajeStruct msg;
+	Servidor* context = (Servidor*)data;
+	bool finish = false;
+	int result;
+
+	if (!context->mensajeria->crearCola(context->colaPrincipal)) {
+		finish = true;
+	}
+
+	while(!finish){
+		if (!context->mensajeria->extraerMensajeCola(context->colaPrincipal, msg)) {
+			finish = true;
+		}else{
+			printf("Procesando Mensaje: %s",msg.message.c_str());
+			result = context->procesarMensajeCola(msg);
+			finish = (result != 0);
+		}
+	}
+
+	return 0;
+
+}
+
+int Servidor::procesarMensajeCola(mensajeStruct msg){
+	//EN FUNCIÓN AL TIPO DE MSJ VER QUE SE HACE
+
+	//Writes the message in the socket's queue
+	//	writeQueueMessage(msg.msocket,response, msg.minfo, true);
+
+	return 0;
+}
 
 int Servidor::openSocket(short puerto){
 	int conexiones_max = 10;
@@ -138,6 +175,8 @@ void Servidor::nuevaConexion(int new_fd) {
 	if (setsockopt (new_fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
 		printf("ERROR setealdo el snd timeout \n");
 
+	int cola_socket;
+	mensajeria->crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
 
 /*	if ((numbytes=recv(new_fd, (void*)&buf, MAXDATASIZE-1, 0)) == -1) {
 		perror("ERROR ejecutando recv");
@@ -235,15 +274,14 @@ short getPuerto(){
 
 void Servidor::runServer(){
 	cout << "Starting server app" << endl;
-	mensajeria = new Mensajeria();
 
 	short puerto = getPuerto();
 	createExitThread();
+	createMainProcessorThread();
 
 	openSocket(puerto);
 	escuchar();
 
-	delete mensajeria;
 };
 
 
@@ -278,10 +316,18 @@ void Servidor::createExitThread(){
 	}
 }
 
+void Servidor::createMainProcessorThread(){
+	pthread_t threadMain;
+
+	int rc = pthread_create(&threadMain, NULL,&Servidor::procesarMensajesMain, this);
+	if (rc){
+		printf("ERROR creando el thread de procesamiento principal %i \n",rc);
+	}
+}
 
 Servidor::Servidor() {
-
+	mensajeria = new Mensajeria();
 }
 Servidor::~Servidor() {
-	// TODO Auto-generated destructor stub
+	delete mensajeria;
 }
