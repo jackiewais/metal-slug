@@ -30,6 +30,8 @@ int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	struct sockaddr_in their_addr;
 	int idUsuario;
+	int numbytes;
+	char buf[MAXDATASIZE];
 
 	if ((datosConexion->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		perror("ERROR abriendo el socket");
@@ -66,33 +68,16 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 
 	printf("Usuario conectado con ID: %d\n", idUsuario);
 	
-	//CREO HILO PARA ESCUCHAR
-
-	pthread_t threadRecv;
-
-	int rc = pthread_create(&threadRecv, NULL,&ConexionCli::recvMessage,(void*)datosConexion);
-	if (rc){
-		printf("ERROR creando el thread  %i \n",rc);
+	if ((numbytes=recv(datosConexion->sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
+		perror("ERROR ejecutando recv");
+		
 	}
+	
 
 	return idUsuario;
 };
 
-void *ConexionCli::recvMessage(void * arg){
 
-	int numbytes;
-	char buf[MAXDATASIZE];
-	
-	datosConexionStruct* conexion = (datosConexionStruct*)arg;
-	while(conexion->conectado){
-	if ((numbytes=recv(conexion->sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
-		perror("ERROR ejecutando recv");
-		
-	}
-	buf[numbytes] = '\0';
-	printf("Received: %s",buf);
-	}
-};
 
 // Es necesario que se haya conectado mediante el socket previamente
 // Devuelve el ID de usuario si pudo autenticar con exito, o -1 en caso de error
@@ -124,10 +109,11 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 	send(datosConexion->sockfd, message , strlen(message) , 0);
 
 }
+/*
 void ConexionCli::recibirMensajes(datosConexionStruct* datosConexion){
-	/* SOLO MANDA EL MENSAJE CON ID CORRESPONDIENTE*/
+	/* SOLO MANDA EL MENSAJE CON ID CORRESPONDIENTE
 
 	char message[30]="RECIBIR MENSAJES";
 	send(datosConexion->sockfd, message , strlen(message) , 0);
 
-}
+}*/

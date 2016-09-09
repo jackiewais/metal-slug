@@ -5,7 +5,8 @@
 #include <errno.h>
 #include <iostream>
 #include <string.h>
-
+#include <sys/socket.h>
+#include <pthread.h>
 using namespace std;
 
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
@@ -27,9 +28,18 @@ int Cliente::seleccConectar(){
 		cout << "El usuario ya está conectado" << endl;
 		respuesta = 0;
 	}else{
+	
 		getUsuarioYContrasenia(usuario, contrasenia);
 		idUsuario = conectar(&this->datosConexion, usuario, contrasenia);
 		respuesta = 0;
+
+		//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
+		pthread_t threadRecv;	
+		int rc = pthread_create(&threadRecv, NULL,&Cliente::recvMessage,(void*)&this->datosConexion);
+		if (rc){
+		printf("ERROR creando el thread  %i \n",rc);
+		}
+
 		if (idUsuario > 0){
 			this->datosConexion.idUsuario = idUsuario;
 			this->datosConexion.conectado = true;
@@ -40,6 +50,32 @@ int Cliente::seleccConectar(){
 
 	return respuesta;
 }
+
+void *Cliente::recvMessage(void * arg){
+	// TODO ESTO SE TERMINA REEMPLAZANDO POR EL RCV&DECODE
+	int numbytes;
+	char buf[MAXDATASIZE];
+	bool finish = false;
+	int n;
+	datosConexionStruct* conexion = (datosConexionStruct*)arg;
+	while(!finish){
+	  
+		bzero(buf,MAXDATASIZE);
+		n = recv(conexion->sockfd, buf, MAXDATASIZE-1, 0);
+		if (n < 0) {
+			printf("ERROR ejecutano recv");		
+			finish = true;
+		}else if (n == 0){
+			printf("Mensaje de salida recibido");			
+			finish = true;
+		}else{
+			buf[n] = '\0';
+			printf("Received: %s",buf);
+		}	
+		//
+    }
+	
+};
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){
 	string inputUsuario, inputContrasenia;
@@ -88,7 +124,7 @@ int Cliente::enviar(){
 }
 
 int Cliente::recibir(){
-	recibirMensajes(&this->datosConexion);
+	//recibirMensajes(&this->datosConexion);
 	return 0;
 }
 
