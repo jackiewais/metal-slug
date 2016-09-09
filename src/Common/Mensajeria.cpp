@@ -10,16 +10,12 @@ using namespace std;
 
 int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
 
-	/*//Me devuelve el codigo de mensaje en 2 chars
-	char codigo[2] = {0};
-	snprintf(codigo, 2, "02%d", mensaje.tipo);*/
-
 	strcpy(output,mensaje->longit);
-	strcat(output,"%");
+	strcat(output,"#");
 	strcat(output,mensaje->tipo);
-	strcat(output,"%");
+	strcat(output,"#");
 	strcat(output,mensaje->otherCli);
-	strcat(output,"%");
+	strcat(output,"#");
 	strcat(output,mensaje->message.c_str());
 
 	return 0;
@@ -59,7 +55,7 @@ vector<string> split(const string &s, char delim) {
 
 int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 
-	vector<string> result = split(input, '%');
+	vector<string> result = split(input, '#');
 	string longitud = result[0];
 	string tipo = result[1];
 	strcpy(mensaje->longit, longitud.c_str());
@@ -68,6 +64,38 @@ int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 
 	return 0;
 }
+
+
+int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
+
+	 int n;
+	 char buffer[BUFLEN];
+	 int error = 0;
+
+	bzero(buffer,BUFLEN);
+	n = recv(socketCli, buffer, BUFLEN-1, 0);
+	if (n < 0) {
+		printf("ERROR ejecutano recv");
+		strcpy(mensaje->longit,"000");
+		strcpy(mensaje->tipo,"99");
+		mensaje->message = "Error leyendo del socket";
+		error = 1;
+	}else if (n == 0){
+		printf("Mensaje de salida recibido");
+		strcpy(mensaje->longit,"000");
+		strcpy(mensaje->tipo,"99");
+		mensaje->message = "Usuario desconectado";
+		error = 1;
+	}else{
+		decode(buffer,mensaje);
+		error = 0;
+	}
+
+	mensaje->socketCli = socketCli;
+
+	return error;
+}
+
 
 
 bool Mensajeria::insertarMensajeCola(int msgqid, mensajeStruct msg){

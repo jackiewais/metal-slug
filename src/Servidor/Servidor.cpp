@@ -51,6 +51,15 @@ void* Servidor::procesarMensajesMain (void *data) {
 
 int Servidor::procesarMensajeCola(mensajeStruct msg){
 	//EN FUNCIÓN AL TIPO DE MSJ VER QUE SE HACE
+	int tipo = atoi(msg.tipo);
+	switch (tipo){
+		case 05:
+			//loginInterpretar();
+			break;
+		case 10:
+			//enviarChat();
+			break;
+	}
 
 	//Writes the message in the socket's queue
 	//	writeQueueMessage(msg.msocket,response, msg.minfo, true);
@@ -90,41 +99,22 @@ int Servidor::openSocket(short puerto){
 void* Servidor::recibirMensajesCliente(void* arguments){
 	struct argsForThread* args = (argsForThread*) arguments;
 	int socketCli = *(args->socketCli);
-	bool finish = false;
+	int finish = 0;
 
-   int n;
-   char buffer[BUFLEN];
    mensajeStruct mensaje;
 
    //Receive a message from client
-   while(!finish){
+   while(finish == 0){
 	   mensaje = {}; //Reset struct
-		bzero(buffer,BUFLEN);
-		n = recv(socketCli, buffer, BUFLEN-1, 0);
-		if (n < 0) {
-			printf("ERROR ejecutano recv");
-			strcpy(mensaje.longit,"000");
-			strcpy(mensaje.tipo,"99");
-			mensaje.message = "Error leyendo del socket";
-			finish = true;
-		}else if (n == 0){
-			printf("Mensaje de salida recibido");
-			strcpy(mensaje.longit,"000");
-			strcpy(mensaje.tipo,"99");
-			mensaje.message = "Usuario desconectado";
-			finish = true;
-		}else{
-			args->context->mensajeria->decode(buffer,&mensaje);
-		}
+	   finish = args->context->mensajeria->receiveAndDecode(socketCli,&mensaje);
 
-		mensaje.socketCli = socketCli;
-
-		//
+	   //agrego a la cola principal
+	   args->context->mensajeria->insertarMensajeCola(args->context->colaPrincipal,mensaje);
    }
 
    close(socketCli);
 
-	return 0;
+   return 0;
 }
 
 

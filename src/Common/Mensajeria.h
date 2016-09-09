@@ -31,6 +31,7 @@ public:
 	int encode(char output[BUFLEN], mensajeStruct* mensaje );
 	int decode(char output[BUFLEN], mensajeStruct* mensaje);
 	int encodeAndSend(int socketCli, mensajeStruct* mensaje);
+	int receiveAndDecode(int socketCli, mensajeStruct* mensaje);
 
 	bool insertarMensajeCola(int msgqid, mensajeStruct msg);
 	bool crearCola(int &queue);

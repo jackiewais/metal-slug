@@ -3,8 +3,9 @@
 
 #include <iostream>
 #include <string.h>
+#include "../Common/Mensajeria.h"
 
-class ConexionCli{
+class ConexionCli:Mensajeria{
 
 	public:
 		struct datosConexionStruct{

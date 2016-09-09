@@ -41,9 +41,12 @@ int Cliente::seleccConectar(){
 		}
 
 		if (idUsuario > 0){
-			this->datosConexion.idUsuario = idUsuario;
+		//	this->datosConexion.idUsuario = idUsuario;
 			this->datosConexion.conectado = true;
 			respuesta = 0;
+			//Crear hilo rcv
+		}else{
+			//cierro socket
 		}
 
 	}
@@ -72,9 +75,9 @@ void *Cliente::recvMessage(void * arg){
 			buf[n] = '\0';
 			printf("Received: %s",buf);
 		}	
-		//
+
     }
-	
+	return 0;
 };
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){

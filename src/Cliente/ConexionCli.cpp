@@ -78,21 +78,32 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 };
 
 
-
 // Es necesario que se haya conectado mediante el socket previamente
 // Devuelve el ID de usuario si pudo autenticar con exito, o -1 en caso de error
 int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	std::string usuarioYContrasenia = usuario + ";" + contrasenia;
 
-	if (send(datosConexion->sockfd, usuarioYContrasenia.c_str(), strlen(usuarioYContrasenia.c_str()), 0) == -1) {
+	/*mensajeStruct mensaje;
+	mensaje.message = '';
+	mensaje.otherCli = '00';
+	mensaje.tipo = '03';
+	mensajeria.encodeAndSend(&mensaje);
+
+	mensajeStruct mensajeRespuesta;
+	mensajeria.receiveAndDecode(mensajerespuesta*);
+	string = mensajerespuesta.mensaje;
+	while (mensajeRespuesta.tipo = '004'){
+		mensajeria.receiveAndDecode(mensajerespuesta*);
+	}*/
+	/*if (send(datosConexion->sockfd, usuarioYContrasenia.c_str(), strlen(usuarioYContrasenia.c_str()), 0) == -1) {
 		perror("ERROR ejecutando send");
 		return -1;
-	}
+	}*/
 
 	// ACA HAY QUE ESPERAR RESPUESTA DEL SERVIDOR Y EN BASE A ESO
 	// RETORNAR ID DE USUARIO(TENDRIA QUE MANDARLA EL SERVER) O -1
 
-	return 502; // Harcodeo para simular ID de usuario
+	return 0; // Harcodeo para simular ID de usuario
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 	/*
@@ -117,3 +128,4 @@ void ConexionCli::recibirMensajes(datosConexionStruct* datosConexion){
 	send(datosConexion->sockfd, message , strlen(message) , 0);
 
 }*/
+
