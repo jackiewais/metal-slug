@@ -49,12 +49,18 @@ void* Servidor::procesarMensajesMain (void *data) {
 
 }
 
+int Servidor::loginInterpretarMensaje(mensajeStruct msg){
+	printf("LLEGOOO\n");
+
+	return 0;
+}
+
 int Servidor::procesarMensajeCola(mensajeStruct msg){
 	//EN FUNCIÓN AL TIPO DE MSJ VER QUE SE HACE
 	int tipo = atoi(msg.tipo);
 	switch (tipo){
 		case 05:
-			//loginInterpretar();
+			loginInterpretarMensaje(msg);
 			break;
 		case 10:
 			//enviarChat();
@@ -107,8 +113,10 @@ void* Servidor::recibirMensajesCliente(void* arguments){
    while(finish == 0){
 	   mensaje = {}; //Reset struct
 	   finish = args->context->mensajeria->receiveAndDecode(socketCli,&mensaje);
+	   cout << mensaje.message << endl;
 
 	   //agrego a la cola principal
+	   printf("Cola principal con ID: %d", args->context->colaPrincipal);
 	   args->context->mensajeria->insertarMensajeCola(args->context->colaPrincipal,mensaje);
    }
 
@@ -158,6 +166,9 @@ void Servidor::nuevaConexion(int new_fd) {
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;
+	argsForThread argsForThread;
+	argsForThread.context = this;
+	argsForThread.socketCli = &new_fd;
 	
 
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
@@ -181,12 +192,12 @@ void Servidor::nuevaConexion(int new_fd) {
 	cout << new_fd << endl;
 	printf("%s, %s\n", usuario, contrasenia);*/
 	
-	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)&new_fd);
+	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)&argsForThread);
 	if (rc){
 		printf("ERROR creando el thread de recv %i \n",rc);
 	}
 	
-	rc = pthread_create(&precvMessage, NULL, sendMessage, (void*)&new_fd);
+	rc = pthread_create(&psendMessage, NULL, sendMessage, (void*)&new_fd);
 	if (rc){
 		printf("ERROR creando el thread de send %i \n",rc);
 	}
@@ -224,8 +235,6 @@ int Servidor::escuchar() {
 
 		printf("server: got connection from %s\n", inet_ntoa(their_addr.sin_addr));
 
-
-		 close(new_fd);
 
 		/*if (!fork()) { // Este es el proceso hijo
 			close(this->sockfd); // El hijo no necesita este descriptor

@@ -27,6 +27,7 @@ private:
 	void createMainProcessorThread();
 	static void* procesarMensajesMain (void *data) ;
 	int procesarMensajeCola(mensajeStruct msg);
+	int loginInterpretarMensaje(mensajeStruct msg);
 
 	Mensajeria* mensajeria;
 

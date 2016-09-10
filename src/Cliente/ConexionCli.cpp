@@ -83,13 +83,18 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	std::string usuarioYContrasenia = usuario + ";" + contrasenia;
 
-	/*mensajeStruct mensaje;
-	mensaje.message = '';
-	mensaje.otherCli = '00';
-	mensaje.tipo = '03';
-	mensajeria.encodeAndSend(&mensaje);
+	mensajeStruct mensaje;
+	mensaje.message = usuarioYContrasenia;
+	mensaje.otherCli[0] = 0;
+	mensaje.otherCli[1] = 0;
+	mensaje.tipo[0] = 0;
+	mensaje.tipo[1] = 5;
+	mensaje.longit[0] = 1;
+	mensaje.longit[1] = 4;
+	printf("%s\n", mensaje.longit);
+	Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
 
-	mensajeStruct mensajeRespuesta;
+	/*mensajeStruct mensajeRespuesta;
 	mensajeria.receiveAndDecode(mensajerespuesta*);
 	string = mensajerespuesta.mensaje;
 	while (mensajeRespuesta.tipo = '004'){
