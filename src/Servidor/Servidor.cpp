@@ -53,6 +53,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 	}else{
 		std::cout << "DENEGADO" <<endl;
 		mensaje.tipo = LOG_NOTOK;
+		mensaje.message = "";
 	}
 
 	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);

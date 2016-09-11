@@ -78,7 +78,11 @@ int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 
 	mensaje->tipo = static_cast<tipoMensaje>(tipo);
 	mensaje->otherCli = otherCli;
-	mensaje->message = result[3];
+	if (result.size() < 4){
+		mensaje->message = "Sin contenido";
+	}else{
+		mensaje->message = result[3];
+	}
 
 	return 0;
 }
