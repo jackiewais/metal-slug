@@ -9,12 +9,15 @@
 #include "../Common/ChatStruct.h"
 #include "../Common/Mensajeria.h"
 #include <queue>
-using namespace std;
+#include "ContenedorUsuarios.h"
+
+//using namespace std;
+
 
 class Servidor:Mensajeria {
 private:
 	const int MAX_CON = 6;
-	std::queue <mensajeStruct> colaPrincipalMensajes;
+	std::queue<mensajeStruct> colaPrincipalMensajes;
 	int sockfd = 0;
 	int cantCon = 0;
 	struct sockaddr_in my_addr;
@@ -33,8 +36,10 @@ private:
 	static void* procesarMensajesMain (void *data) ;
 	int procesarMensajeCola(mensajeStruct msg);
 	int loginInterpretarMensaje(mensajeStruct msg);
-
-	Mensajeria* mensajeria;
+	int enviarChat(mensajeStruct msg);
+	int recibirTodosLosChats(mensajeStruct msg);
+	Mensajeria mensajeria;
+	//ContenedorUsuarios contenedor;
 
 public:
 	Servidor();

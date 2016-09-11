@@ -12,7 +12,7 @@
 #include <pthread.h>
 #include <sstream>
 #include <string>
-#include <queue>
+
 
 
 struct argsForThread{
@@ -23,7 +23,7 @@ struct argsForThread{
 
 using namespace std;
 
-#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
+//#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
 
 
 
@@ -66,19 +66,46 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 		case LOGIN:
 
 			loginInterpretarMensaje(msg);
-			//loginInterpretar();
+			break;
+		case ENVIAR_CHAT_FIN:
+			enviarChat(msg);
 			break;
 		case RECIBIR_CHATS:
-			//enviarChat();
+			recibirTodosLosChats(msg);
 			break;
 		
 	}
 
-	//Writes the message in the socket's queue
-	//	writeQueueMessage(msg.msocket,response, msg.minfo, true);
+	return 0;
+}
+
+int Servidor::enviarChat(mensajeStruct msg){
+	chatStruct chat;
+	chat.from = msg.socketCli; //CAMBIAR POR EL ID DE USUARIO!
+	chat.to = msg.otherCli;
+	chat.message = msg.message;
+
+	waitingChats.insert(pair<int,chatStruct>(chat.to,chat));
+	return 0;
+}
+
+int Servidor::recibirTodosLosChats(mensajeStruct msg){
+	int idCliente = msg.socketCli;
+	mensajeStruct msj;
+
+	multimap<int,chatStruct>::iterator elemento;
+
+	while (!((elemento = waitingChats.find(idCliente)) == waitingChats.end())){
+		msj.socketCli = msg.socketCli; //socket del que recibe los msjs
+		msg.otherCli = elemento->second.from;
+		msg.message = elemento->second.message;
+		waitingChats.erase (elemento);
+		//TODO: AGREGAR A COLA DE CLIENTE
+	}
 
 	return 0;
 }
+
 
 int Servidor::openSocket(short puerto){
 	int conexiones_max = 10;
@@ -114,18 +141,33 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 	int socketCli = *(args->socketCli);
 	int finish = 0;
 
-   mensajeStruct mensaje; 
+   mensajeStruct mensaje;
+   string mensajeParcial = "";
+   bool hayMsjParcial = false;
+
    //Receive a message from client
    while(finish == 0){
 	   mensaje = {}; //Reset struct
-	   finish = args->context->mensajeria->receiveAndDecode(socketCli,&mensaje);
+
+	   finish = args->context->mensajeria.receiveAndDecode(socketCli,&mensaje);
 	   cout << mensaje.message << endl;
 
-	   //agrego a la cola principal
-	   printf("Cola principal con ID: %d", args->context->colaPrincipal);
-	   //args->context->mensajeria->insertarMensajeCola(&this->colaPrincipalMensajes,&mensaje);
-	   args->context->colaPrincipalMensajes.push(mensaje);
-		cout << "mensaje en cola principal" <<endl;
+	   if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
+		   //si ya existia concateno el mensaje
+		   mensajeParcial += mensaje.message;
+		   hayMsjParcial = true;
+	   }else{
+		   if (hayMsjParcial){
+			   //primero concateno el mensaje y después lo asigno
+			   mensajeParcial += mensaje.message;
+			   mensaje.message = mensajeParcial;
+		   }
+		   //agrego a la cola principal
+		   printf("Cola principal con ID: %d", args->context->colaPrincipal);
+		   args->context->colaPrincipalMensajes.push(mensaje);
+		   hayMsjParcial = false;
+		   mensajeParcial = "";
+	   }
    }
 
    close(socketCli);
@@ -175,7 +217,7 @@ void Servidor::nuevaConexion(int new_fd) {
 	if (setsockopt (new_fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
 		printf("ERROR setealdo el snd timeout \n");
 	int cola_socket;
-	mensajeria->crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
+	mensajeria.crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
 
 	argsForThread* args = new argsForThread();
 	args->context = this;
@@ -217,12 +259,12 @@ int Servidor::escuchar() {
 		if (cantCon == MAX_CON){
 			messageAccept.tipo = CONECTAR_NOTOK;
 			messageAccept.message = "ERROR: Supera cantidad maxima de conexiones";
-			mensajeria->encodeAndSend(new_fd,&messageAccept);
+			mensajeria.encodeAndSend(new_fd,&messageAccept);
 			close(new_fd);
 		}else{
 			messageAccept.tipo = CONECTAR_OK;
 			messageAccept.message = "Se puede conectar";
-			mensajeria->encodeAndSend(new_fd,&messageAccept);
+			mensajeria.encodeAndSend(new_fd,&messageAccept);
 
 			cantCon ++;
 			nuevaConexion(new_fd);
@@ -307,8 +349,8 @@ void Servidor::createMainProcessorThread(){
 }
 
 Servidor::Servidor() {
-	mensajeria = new Mensajeria();
+
 }
 Servidor::~Servidor() {
-	delete mensajeria;
+
 }

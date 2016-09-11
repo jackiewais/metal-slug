@@ -7,7 +7,6 @@ using namespace std;
 
 
 ContenedorUsuarios::ContenedorUsuarios() {
-
 	this->importar = new ImportarCSV();
 }
 

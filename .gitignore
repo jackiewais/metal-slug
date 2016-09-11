@@ -37,4 +37,4 @@
 .project
 .cproject
 /Debug/
-metal 
+src/metal 
