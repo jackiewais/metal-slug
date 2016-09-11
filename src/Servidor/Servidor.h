@@ -16,6 +16,12 @@
 
 class Servidor:Mensajeria {
 private:
+
+	struct argsForThread{
+		int* socketCli;
+		Servidor* context;
+	};
+
 	const int MAX_CON = 6;
 	std::queue<mensajeStruct> colaPrincipalMensajes;
 	std::map<int,queue<mensajeStruct>*> socketIdQueue;
@@ -24,6 +30,7 @@ private:
 	struct sockaddr_in my_addr;
 	std::multimap<int,chatStruct> waitingChats;
 	int colaPrincipal=0;
+	argsForThread* args;
 
 	int openSocket(short puerto);
 	int escuchar();

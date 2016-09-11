@@ -2,6 +2,7 @@
 #define CLIENTE_H_
 
 #include "ConexionCli.h"
+#include "../Common/Mensajeria.h"
 #include <iostream>
 #include <string.h>
 
@@ -9,7 +10,7 @@ class Cliente:ConexionCli {
 private:
 
 	 datosConexionStruct datosConexion;
-
+	 ConexionCli conexionCli;
 	int seleccConectar();
 	int getIpAndPort();
 	int selectFromMenu();

@@ -19,7 +19,7 @@ int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 	memset(message,0,256);
 	message[0]= 'q';
 
-	send(datosConexion->sockfd, message , strlen(message) , 0);
+	//send(datosConexion->sockfd, message , strlen(message) , 0);
 	cerrarSocket(datosConexion->sockfd);
 	printf("Usuario desconectado\n");
 
@@ -99,9 +99,21 @@ int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usua
 	}
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
+	string input;
+	cout << "INGRESE MENSAJE:" << endl;
+	cin >> input;
 
-	char message[30]="_ID.LONG.___MENSAJE___";
-	send(datosConexion->sockfd, message , strlen(message) , 0);
+	mensajeStruct mensaje;
+	mensaje.message = input;
+	mensaje.otherCli = 0;
+	mensaje.tipo = ENVIAR_CHAT_FIN;
+	mensaje.socketCli = datosConexion->sockfd;
+	Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
+}
+
+int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje){
+	Mensajeria::receiveAndDecode(datosConexion->sockfd, mensaje);
+	return 0;
 
 }
 

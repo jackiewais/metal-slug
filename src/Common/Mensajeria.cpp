@@ -37,13 +37,12 @@ using namespace std;
 
 int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
 	char output[BUFLEN];
-
 	encode(output,mensaje);
 
 	cout << "Mensaje enviandose: " << output << endl;
 	int n = send(socketCli,output,strlen(output),0);
 	if (n < 0) {
-		printf("ERROR enviando mensaje");
+		perror("ERROR enviando mensaje");
 		return 1;
 	}
 
@@ -96,12 +95,12 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	n = recv(socketCli, buffer, BUFLEN-1, 0);
 	cout << "bzero" << endl;
 	if (n < 0) {
-		perror("ERROR ejecutano recv");
+		perror("ERROR ejecutano recv \n");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Error leyendo del socket";
 		error = 1;
 	}else if (n == 0){
-		printf("Mensaje de salida recibido");
+		printf("Mensaje de salida recibido \n");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Usuario desconectado";
 		error = 1;
@@ -112,6 +111,8 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	}
 
 	mensaje->socketCli = socketCli;
+
+	cout << "Exit receiveAndDecode" << endl;
 
 	return error;
 }

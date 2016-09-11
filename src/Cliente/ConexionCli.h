@@ -18,6 +18,7 @@ class ConexionCli:Mensajeria{
 		int conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 		int desconectar(datosConexionStruct* datosConexion);
 		void enviarMensajes(datosConexionStruct* datosConexion);
+		int recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje);
 		static void* recvMessage(void * arg);
 		int cerrarSocket(int socket);
 	private:

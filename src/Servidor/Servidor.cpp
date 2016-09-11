@@ -15,17 +15,9 @@
 #include "SDL2/SDL_thread.h"
 
 
-struct argsForThread{
-	int* socketCli;
-	Servidor* context;
-};
 SDL_mutex *mutexQueue;
 
 using namespace std;
-
-//#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
-
-
 
 
 void* Servidor::procesarMensajesMain (void *data) {
@@ -34,13 +26,8 @@ void* Servidor::procesarMensajesMain (void *data) {
 	bool finish = false;
 	int result;
 
-   
-
 	while(!finish){
-		//si la cola está vacia. 
-		if (context->colaPrincipalMensajes.empty()){
-			
-		}else{			
+		if (!context->colaPrincipalMensajes.empty()){
 			msg=context->colaPrincipalMensajes.front();
 			context->colaPrincipalMensajes.pop();
 			printf("Procesando Mensaje: %s",msg.message.c_str());
@@ -54,7 +41,6 @@ void* Servidor::procesarMensajesMain (void *data) {
 }
 
 int Servidor::loginInterpretarMensaje(mensajeStruct msg){
-	printf("LLEGOOO\n");
 
 	mensajeStruct mensaje;
 
@@ -79,7 +65,6 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 
 	switch (msg.tipo){
 		case LOGIN:
-
 			loginInterpretarMensaje(msg);
 			break;
 		case ENVIAR_CHAT_FIN:
@@ -88,6 +73,9 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 		case RECIBIR_CHATS:
 			recibirTodosLosChats(msg);
 			break;
+		case DISCONNECTED:
+			//por ahora no hacemos nada
+			break;
 		
 	}
 
@@ -95,8 +83,10 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 }
 
 int Servidor::enviarChat(mensajeStruct msg){
+	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
+
 	chatStruct chat;
-	chat.from = msg.socketCli; //CAMBIAR POR EL ID DE USUARIO!
+	chat.from = idCliente; //CAMBIAR POR EL ID DE USUARIO!
 	chat.to = msg.otherCli;
 	chat.message = msg.message;
 
@@ -105,7 +95,7 @@ int Servidor::enviarChat(mensajeStruct msg){
 }
 
 int Servidor::recibirTodosLosChats(mensajeStruct msg){
-	int idCliente = msg.socketCli;
+	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
 	mensajeStruct msj;
 
 	multimap<int,chatStruct>::iterator elemento;
@@ -172,7 +162,7 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 		   mensajeParcial += mensaje.message;
 		   hayMsjParcial = true;
 	   }else{
-		   if (hayMsjParcial){
+		   if (hayMsjParcial && !finish){
 			   //primero concateno el mensaje y después lo asigno
 			   mensajeParcial += mensaje.message;
 			   mensaje.message = mensajeParcial;
@@ -187,10 +177,10 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 			   //mutex unlock
 			   SDL_UnlockMutex(mutexQueue);
 			}
-		
 	   }
    }
-
+   //MARCAR USER COMO DESCONECTADO
+   delete((argsForThread*) arguments); //asegurarnos que esto no hace explotar al mundo
    close(socketCli);
 
    return 0;
@@ -223,22 +213,6 @@ void *Servidor::sendMessage(void *arguments){
 
 	return 0;
 }
-/*
-void *recvMessage(void *nw_fd){
-	ibi
-	//ACA DEBERIA DE IR EL COMPORTAMIENTO DEL SERVER EN FUNCION AL ID DEL MENSAJE ( VALIDAR USARIO, MANDAR MENSAJES AL CLIENTES ..)
-
-
-	int new_fd = *(int *)nw_fd;
-	while(true){	
-	char buf[30]= "";
-	recv(new_fd, buf, 30, 0);
-	cout << "el cliente "<< new_fd <<" dice : " ;
-	cout << buf << endl;
-	}
-	return 0;
-}*/
-
 
 void Servidor::nuevaConexion(int new_fd) {
 
@@ -259,7 +233,6 @@ void Servidor::nuevaConexion(int new_fd) {
 	//mensajeria.crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
     
 
-	argsForThread* args = new argsForThread();
 	args->context = this;
 	args->socketCli = &new_fd;
 
@@ -394,7 +367,11 @@ void Servidor::createMainProcessorThread(){
 
 Servidor::Servidor() {
 	this->contenedor = new ContenedorUsuarios();
+	contenedor  = new ContenedorUsuarios();
+	args = new argsForThread();
 }
 Servidor::~Servidor() {
 	delete this->contenedor;
+	delete args;
+
 }

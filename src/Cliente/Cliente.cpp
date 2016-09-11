@@ -38,7 +38,7 @@ int Cliente::seleccConectar(){
 			this->datosConexion.conectado = true;
 			//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
 			pthread_t threadRecv;
-			int rc = pthread_create(&threadRecv, NULL,&Cliente::recvMessage,(void*)&this->datosConexion);
+			int rc = pthread_create(&threadRecv, NULL,&recvMessage,(void*)this);
 			if (rc){
 				printf("ERROR creando el thread  %i \n",rc);
 			}
@@ -56,27 +56,19 @@ int Cliente::seleccConectar(){
 }
 
 void *Cliente::recvMessage(void * arg){
-	// TODO ESTO SE TERMINA REEMPLAZANDO POR EL RCV&DECODE
-	int numbytes;
-	char buf[MAXDATASIZE];
+	cout << "recvMessage" << endl;
+
 	bool finish = false;
-	int n;
-	datosConexionStruct* conexion = (datosConexionStruct*)arg;
+	Cliente* context = (Cliente*)arg;
+	cout << "ACA ENTRE" << endl;
+	mensajeStruct mensajeRta;
+
 	while(!finish){
-	  
-		bzero(buf,MAXDATASIZE);
-		n = recv(conexion->sockfd, buf, MAXDATASIZE-1, 0);
-		if (n < 0) {
-			printf("ERROR ejecutano recv \n");
-			conexion->conectado = false;
-			finish = true;
-		}else if (n == 0){
-			printf("Mensaje de salida recibido \n");
-			conexion->conectado = false;
-			finish = true;
-		}else{
-			buf[n] = '\0';
-			printf("Received: %s",buf);
+		cout << "antes  recibirMensaje" << endl;
+		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
+		cout << "despues  recibirMensaje" << endl;
+		if (!finish){
+			printf("Received: %s",mensajeRta.message.c_str());
 		}	
 
     }

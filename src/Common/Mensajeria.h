@@ -1,35 +1,15 @@
 #ifndef MENSAJERIA_H_
 #define MENSAJERIA_H_
 
-
 #include <iostream>
 #include <string>
 #include <queue>
+#include "MensajeStruct.h"
 
 class Mensajeria {
 
 public:
 	#define BUFLEN 1000
-	
-	
-	enum tipoMensaje {
-		LOG_OK = 01,
-		LOG_NOTOK = 02,
-		LOGIN = 03,
-		CONECTAR_OK = 04,
-		CONECTAR_NOTOK = 05,
-		ENVIAR_CHAT_SIGUE = 11,
-		ENVIAR_CHAT_FIN = 12,
-		RECIBIR_CHATS = 13,
-		DISCONNECTED = 99,
-
-	};
-	struct mensajeStruct {
-		tipoMensaje tipo;
-		int otherCli;
-		std::string message;
-		int socketCli;
-	};
 
 	int encode(char output[BUFLEN], mensajeStruct* mensaje );
 	int decode(char output[BUFLEN], mensajeStruct* mensaje);
