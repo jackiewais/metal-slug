@@ -5,10 +5,13 @@
 #include <vector>
 #include <sys/msg.h>
 #include <sys/errno.h>
+#include <queue>
 
 using namespace std;
+   
+    
 
-int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
+    int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
 
 	char tipo[3], otherCli[2], longit[4];
 	int tipoI = mensaje->tipo;
@@ -113,16 +116,17 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 
 
 
-bool Mensajeria::insertarMensajeCola(int msgqid, mensajeStruct msg){
-	int rc;
+bool Mensajeria::insertarMensajeCola(int msgqid, mensajeStruct *msg){
+	/*int rc;
 
 	rc = msgsnd(msgqid, &msg, sizeof(mensajeStruct), 0);
 	if (rc < 0) {
 		perror(strerror(errno));
 		printf("ERROR: agregando mensaje a la cola.\n");
 		return false;
-	}
-
+	}*/
+	//colaPrincipalMensajes.push(msg);
+	
 	return true;
 }
 

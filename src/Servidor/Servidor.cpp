@@ -12,11 +12,14 @@
 #include <pthread.h>
 #include <sstream>
 #include <string>
+#include <queue>
+
 
 struct argsForThread{
 	int* socketCli;
 	Servidor* context;
 };
+
 
 using namespace std;
 
@@ -31,14 +34,15 @@ void* Servidor::procesarMensajesMain (void *data) {
 	bool finish = false;
 	int result;
 
-	if (!context->mensajeria->crearCola(context->colaPrincipal)) {
-		finish = true;
-	}
+   
 
 	while(!finish){
-		if (!context->mensajeria->extraerMensajeCola(context->colaPrincipal, msg)) {
-			finish = true;
-		}else{
+		//si la cola está vacia. 
+		if (context->colaPrincipalMensajes.empty()){
+			
+		}else{			
+			msg=context->colaPrincipalMensajes.front();
+			context->colaPrincipalMensajes.pop();
 			printf("Procesando Mensaje: %s",msg.message.c_str());
 			result = context->procesarMensajeCola(msg);
 			finish = (result != 0);
@@ -60,12 +64,14 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 
 	switch (msg.tipo){
 		case LOGIN:
+
 			loginInterpretarMensaje(msg);
 			//loginInterpretar();
 			break;
 		case RECIBIR_CHATS:
 			//enviarChat();
 			break;
+		
 	}
 
 	//Writes the message in the socket's queue
@@ -108,8 +114,7 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 	int socketCli = *(args->socketCli);
 	int finish = 0;
 
-   mensajeStruct mensaje;
-
+   mensajeStruct mensaje; 
    //Receive a message from client
    while(finish == 0){
 	   mensaje = {}; //Reset struct
@@ -118,7 +123,9 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 
 	   //agrego a la cola principal
 	   printf("Cola principal con ID: %d", args->context->colaPrincipal);
-	   args->context->mensajeria->insertarMensajeCola(args->context->colaPrincipal,mensaje);
+	   //args->context->mensajeria->insertarMensajeCola(&this->colaPrincipalMensajes,&mensaje);
+	   args->context->colaPrincipalMensajes.push(mensaje);
+		cout << "mensaje en cola principal" <<endl;
    }
 
    close(socketCli);

@@ -107,18 +107,9 @@ int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usua
 	return 0; // Harcodeo para simular ID de usuario
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
-	/*
-	ACA DEBERIA ELEGIR ENTRE LOS USUARIOS CONECTADOS PARA MANDAR MENSAJES A TODOS O 
-	A ALGUNO EN PARTICULAR
-	*/
-	/*cout << "Ejemplo - Ahora manda automaticamente nada" << endl;
-	cout << " Elegir usuario : " << endl;
-	cout << " ================ " << endl;
-	cout << "1). Nahuel " << endl;
-	cout << "0). TODOS "  << endl;*/
 
-	char message[30]="_ID.LONG.___MENSAJE___";
-	send(datosConexion->sockfd, message , strlen(message) , 0);
+
+//	Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
 
 }
 /*

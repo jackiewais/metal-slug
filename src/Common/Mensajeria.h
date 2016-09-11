@@ -4,13 +4,14 @@
 
 #include <iostream>
 #include <string>
-
+#include <queue>
 
 class Mensajeria {
 
 public:
 	#define BUFLEN 1000
-
+	
+	
 	enum tipoMensaje {
 		LOG_OK = 01,
 		LOG_NOTOK = 02,
@@ -35,7 +36,7 @@ public:
 	int encodeAndSend(int socketCli, mensajeStruct* mensaje);
 	int receiveAndDecode(int socketCli, mensajeStruct* mensaje);
 
-	bool insertarMensajeCola(int msgqid, mensajeStruct msg);
+	bool insertarMensajeCola(int msgqid, mensajeStruct *msg);
 	bool crearCola(int &queue);
 	bool extraerMensajeCola(int queue, mensajeStruct &msg);
 };
