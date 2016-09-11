@@ -100,15 +100,37 @@ int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usua
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 	string input;
-	cout << "INGRESE MENSAJE:" << endl;
-	cin >> input;
-
+	string buf;
+	cout << "INRESE MENSAJE A ENVIAR "<< endl;
+	cin>> input;
+	int lengthInput = input.length();
+	int pini=0;
+	
 	mensajeStruct mensaje;
-	mensaje.message = input;
+	
 	mensaje.otherCli = 0;
-	mensaje.tipo = ENVIAR_CHAT_FIN;
+	
 	mensaje.socketCli = datosConexion->sockfd;
-	Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
+
+		while(lengthInput>MAXDATASIZE){
+		 	buf = input.substr(pini,MAXDATASIZE);
+		 	pini+=MAXDATASIZE;
+		 	lengthInput -= MAXDATASIZE;
+		 	//ENVIAR MENSAJE SIGUIENTE
+		 	mensaje.tipo = ENVIAR_CHAT_SIGUE;
+		 	mensaje.message = buf;
+		 	Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
+		}
+		if (lengthInput!=0){
+			buf= input.substr(pini,lengthInput);
+			//ENVIAR MENSAJE CON FIN
+			mensaje.tipo = ENVIAR_CHAT_FIN;
+			mensaje.message=buf;
+			Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
+		}	
+
+	
+	
 }
 
 int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje){

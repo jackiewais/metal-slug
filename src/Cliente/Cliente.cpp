@@ -10,7 +10,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>
-#include <ctime>;
+#include <ctime>
 #include <exception>
 #include <sstream>
 #include <sys/socket.h>
