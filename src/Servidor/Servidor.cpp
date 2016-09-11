@@ -12,14 +12,14 @@
 #include <pthread.h>
 #include <sstream>
 #include <string>
-
+#include "SDL2/SDL_thread.h"
 
 
 struct argsForThread{
 	int* socketCli;
 	Servidor* context;
 };
-
+SDL_mutex *mutexQueue;
 
 using namespace std;
 
@@ -163,10 +163,16 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 			   mensaje.message = mensajeParcial;
 		   }
 		   //agrego a la cola principal
-		   printf("Cola principal con ID: %d", args->context->colaPrincipal);
-		   args->context->colaPrincipalMensajes.push(mensaje);
-		   hayMsjParcial = false;
-		   mensajeParcial = "";
+		   //mutex lock.
+			if (SDL_LockMutex(mutexQueue) == 0) {
+			   printf("Cola principal con ID: %d", args->context->colaPrincipal);
+			   args->context->colaPrincipalMensajes.push(mensaje);
+			   hayMsjParcial = false;
+		   	   mensajeParcial = "";
+			   //mutex unlock
+			   SDL_UnlockMutex(mutexQueue);
+			}
+		
 	   }
    }
 
@@ -297,6 +303,7 @@ short getPuerto(){
 
 void Servidor::runServer(){
 	cout << "Starting server app" << endl;
+	mutexQueue = SDL_CreateMutex();
 
 	short puerto = getPuerto();
 	createExitThread();
