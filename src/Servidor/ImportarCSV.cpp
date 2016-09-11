@@ -14,7 +14,7 @@ ImportarCSV::ImportarCSV() {
 	this->tablaUsuarios = new string*[this->cantidadUsuarios];
 
 	for(int i=0; i < this->cantidadUsuarios ;i++)
-		this->tablaUsuarios = new string*[this->datos];
+		this->tablaUsuarios[i] = new string[this->datos];
 }
 
 ImportarCSV::~ImportarCSV() {
@@ -27,7 +27,7 @@ ImportarCSV::~ImportarCSV() {
 
 string** ImportarCSV::importar(string csv) {
 
-	ifstream archivo("usuarios.csv");
+	ifstream archivo(csv.c_str());
 	string  nombre, pass;
 
 	if(archivo.fail()) {
