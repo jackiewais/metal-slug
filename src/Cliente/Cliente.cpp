@@ -28,25 +28,27 @@ int Cliente::seleccConectar(){
 		cout << "El usuario ya está conectado" << endl;
 		respuesta = 0;
 	}else{
-	
+
 		getUsuarioYContrasenia(usuario, contrasenia);
 		idUsuario = conectar(&this->datosConexion, usuario, contrasenia);
 		respuesta = 0;
 
-		//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
-		pthread_t threadRecv;	
-		int rc = pthread_create(&threadRecv, NULL,&Cliente::recvMessage,(void*)&this->datosConexion);
-		if (rc){
-		printf("ERROR creando el thread  %i \n",rc);
-		}
-
 		if (idUsuario > 0){
 		//	this->datosConexion.idUsuario = idUsuario;
+			printf("Logueado correctamente");
 			this->datosConexion.conectado = true;
+			//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
+			pthread_t threadRecv;
+			int rc = pthread_create(&threadRecv, NULL,&Cliente::recvMessage,(void*)&this->datosConexion);
+			if (rc){
+				printf("ERROR creando el thread  %i \n",rc);
+			}
+
 			respuesta = 0;
 			//Crear hilo rcv
 		}else{
-			//cierro socket
+			cerrarSocket(this->datosConexion.sockfd);
+			respuesta = 1;
 		}
 
 	}
@@ -66,10 +68,12 @@ void *Cliente::recvMessage(void * arg){
 		bzero(buf,MAXDATASIZE);
 		n = recv(conexion->sockfd, buf, MAXDATASIZE-1, 0);
 		if (n < 0) {
-			printf("ERROR ejecutano recv");		
+			printf("ERROR ejecutano recv \n");
+			conexion->conectado = false;
 			finish = true;
 		}else if (n == 0){
-			printf("Mensaje de salida recibido");			
+			printf("Mensaje de salida recibido \n");
+			conexion->conectado = false;
 			finish = true;
 		}else{
 			buf[n] = '\0';
@@ -188,6 +192,7 @@ int Cliente::selectFromMenu(){
 	bool ok = false;
 	int status;
 
+	cout << endl;
 	cout << "---------------" << endl;
 	cout << "Seleccione una opción del menú:" << endl;
 

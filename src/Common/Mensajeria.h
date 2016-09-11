@@ -5,25 +5,27 @@
 #include <iostream>
 #include <string>
 
-/*
- *  '01' = LOG_OK
- *  '02' = LOG_NOTOK
- *
- *
- *
- *
- *
- * */
 
 class Mensajeria {
 
 public:
 	#define BUFLEN 1000
 
+	enum tipoMensaje {
+		LOG_OK = 01,
+		LOG_NOTOK = 02,
+		LOGIN = 03,
+		CONECTAR_OK = 04,
+		CONECTAR_NOTOK = 05,
+		ENVIAR_CHAT_SIGUE = 11,
+		ENVIAR_CHAT_FIN = 12,
+		RECIBIR_CHATS = 13,
+		DISCONNECTED = 99,
+
+	};
 	struct mensajeStruct {
-		char longit[3];
-		char tipo[2];
-		char otherCli[2];
+		tipoMensaje tipo;
+		int otherCli;
 		std::string message;
 		int socketCli;
 	};

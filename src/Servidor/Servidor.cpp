@@ -57,12 +57,13 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
 int Servidor::procesarMensajeCola(mensajeStruct msg){
 	//EN FUNCIÓN AL TIPO DE MSJ VER QUE SE HACE
-	int tipo = atoi(msg.tipo);
-	switch (tipo){
-		case 05:
+
+	switch (msg.tipo){
+		case LOGIN:
 			loginInterpretarMensaje(msg);
+			//loginInterpretar();
 			break;
-		case 10:
+		case RECIBIR_CHATS:
 			//enviarChat();
 			break;
 	}
@@ -103,7 +104,7 @@ int Servidor::openSocket(short puerto){
 }
 
 void* Servidor::recibirMensajesCliente(void* arguments){
-	struct argsForThread* args = (argsForThread*) arguments;
+	argsForThread* args = (argsForThread*) arguments;
 	int socketCli = *(args->socketCli);
 	int finish = 0;
 
@@ -131,10 +132,10 @@ void sigchld_handler(int s) {
 }
 
 void *sendMessage(void *nw_fd){
-	
+	/*
 	int new_fd = *(int *)nw_fd;
 	char buf[20] = "Recibido.Cambio";
-	send(new_fd, buf , 20, 0);
+	send(new_fd, buf , 20, 0);*/
 	return 0;
 }
 /*
@@ -156,95 +157,69 @@ void *recvMessage(void *nw_fd){
 
 void Servidor::nuevaConexion(int new_fd) {
 
-	char buf[MAXDATASIZE];
-	char *usuario, *contrasenia;
-	int numbytes;
-	char * pch;
 	struct timeval timeout;
-	//int new_fd = *(int *)nw_fd;
 	timeout.tv_sec = 60;
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;
-	argsForThread argsForThread;
-	argsForThread.context = this;
-	argsForThread.socketCli = &new_fd;
 	
-
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
 		printf("ERROR setealdo el rcv timeout \n");
 	if (setsockopt (new_fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
 		printf("ERROR setealdo el snd timeout \n");
-
 	int cola_socket;
 	mensajeria->crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
 
-/*	if ((numbytes=recv(new_fd, (void*)&buf, MAXDATASIZE-1, 0)) == -1) {
-		perror("ERROR ejecutando recv");
-	}
+	argsForThread* args = new argsForThread();
+	args->context = this;
+	args->socketCli = &new_fd;
 
-	buf[numbytes] = '\0';
-	pch = strtok( buf, ";" );
-	usuario = pch;
-	pch = strtok( NULL, ";" );
-	contrasenia = pch;
-
-	cout << new_fd << endl;
-	printf("%s, %s\n", usuario, contrasenia);*/
-	
-	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)&argsForThread);
+	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)args);
 	if (rc){
 		printf("ERROR creando el thread de recv %i \n",rc);
 	}
-	
-	rc = pthread_create(&psendMessage, NULL, sendMessage, (void*)&new_fd);
+
+	rc = pthread_create(&psendMessage, NULL, sendMessage, (void*)args);
 	if (rc){
 		printf("ERROR creando el thread de send %i \n",rc);
 	}
 
+	//delete args;
 
-
-	// ACA HAY QUE CHECKEAR EL USUARIO Y LA CONTRASENIA
-	// SI SE PUDO LOGUEAR, HAY QUE DEVOLVERLE OK AL CLIENTE
-	// Y ADEMAS LANZAR UN THREAD PARA RECV Y OTRO PARA SEND
-	// SE PODRIA LANZAR SOLAMENTE UNO Y PARA EL OTRO APROVECHAR ESTE THREAD
-
-	//close(new_fd);
-
-	
 }
 
 int Servidor::escuchar() {
 	socklen_t sin_size;
-	//struct sigaction sa;
 	int new_fd;
 	struct sockaddr_in their_addr; // información sobre la dirección del cliente
-	pthread_t thread;
+
+	mensajeStruct messageAccept;
 
 	while(1) { // main accept() loop
 		sin_size = sizeof(struct sockaddr_in);
-		if ((new_fd = accept(this->sockfd, (struct sockaddr *)&their_addr, &sin_size)) == -1) {
+		new_fd = accept(this->sockfd, (struct sockaddr *)&their_addr, &sin_size);
+		if (new_fd == -1) {
 			perror("ERROR ejecutando accept \n");
 			continue;
 		}
-		cout << "NUEVA CONEXION:";
-		
-		printf(" got connection from %s\n", inet_ntoa(their_addr.sin_addr));
-		cout << "==============" << endl;
-		nuevaConexion(new_fd);
 
 		printf("server: got connection from %s\n", inet_ntoa(their_addr.sin_addr));
-
-
-		/*if (!fork()) { // Este es el proceso hijo
-			close(this->sockfd); // El hijo no necesita este descriptor
-			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
-				perror("send");
+		
+		messageAccept.socketCli = new_fd;
+		messageAccept.otherCli = 0;
+		if (cantCon == MAX_CON){
+			messageAccept.tipo = CONECTAR_NOTOK;
+			messageAccept.message = "ERROR: Supera cantidad maxima de conexiones";
+			mensajeria->encodeAndSend(new_fd,&messageAccept);
 			close(new_fd);
-			exit(0);
-		}
-		close(new_fd); // El proceso padre no lo necesita*/
+		}else{
+			messageAccept.tipo = CONECTAR_OK;
+			messageAccept.message = "Se puede conectar";
+			mensajeria->encodeAndSend(new_fd,&messageAccept);
 
+			cantCon ++;
+			nuevaConexion(new_fd);
+		}
 	}
 
 	return 0;

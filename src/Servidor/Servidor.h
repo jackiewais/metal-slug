@@ -11,7 +11,10 @@
 
 class Servidor:Mensajeria {
 private:
+	const int MAX_CON = 6;
+
 	int sockfd = 0;
+	int cantCon = 0;
 	struct sockaddr_in my_addr;
 	std::multimap<int,chatStruct> waitingChats;
 	int colaPrincipal=0;

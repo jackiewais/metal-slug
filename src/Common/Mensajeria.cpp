@@ -10,12 +10,20 @@ using namespace std;
 
 int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
 
-	strcpy(output,mensaje->longit);
-	strcat(output,"#");
-	strcat(output,mensaje->tipo);
-	strcat(output,"#");
-	strcat(output,mensaje->otherCli);
-	strcat(output,"#");
+	char tipo[3], otherCli[2], longit[4];
+	int tipoI = mensaje->tipo;
+	snprintf(tipo, 3, "%02d", tipoI);
+	snprintf(otherCli, 3, "%02d", mensaje->otherCli);
+
+	int longitudI = strlen(mensaje->message.c_str()) + 2 + 2 + 3 + 4; //mensaje + tipo + otherCli + separadores + longit
+	snprintf(longit, 5, "%04d", longitudI);
+
+	strcpy(output,longit);
+	strcat(output,"|");
+	strcat(output,tipo);
+	strcat(output,"|");
+	strcat(output,otherCli);
+	strcat(output,"|");
 	strcat(output,mensaje->message.c_str());
 
 	return 0;
@@ -26,7 +34,9 @@ int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
 	char output[BUFLEN];
 
 	encode(output,mensaje);
-	int n = send(socketCli,output,atoi(mensaje->longit),0);
+
+	cout << "Mensaje enviandose: " << output << endl;
+	int n = send(socketCli,output,strlen(output),0);
 	if (n < 0) {
 		printf("ERROR enviando mensaje");
 		return 1;
@@ -46,7 +56,7 @@ void split(const string &s, char delim, vector<string> &elems) {
 }
 
 
-vector<string> split(const string &s, char delim) {
+vector<string> split(const string &s, const char delim) {
     vector<string> elems;
     split(s, delim, elems);
     return elems;
@@ -55,12 +65,16 @@ vector<string> split(const string &s, char delim) {
 
 int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 
-	vector<string> result = split(input, '#');
+	vector<string> result = split(input, '|');
 	string longitud = result[0];
-	string tipo = result[1];
-	strcpy(mensaje->longit, longitud.c_str());
-	strcpy(mensaje->tipo, tipo.c_str());
-	mensaje->message = result[2];
+	string tipoS = result[1];
+	int tipo = atoi(tipoS.c_str());
+	string otherCliS = result[2];
+	int otherCli = atoi(otherCliS.c_str());
+
+	mensaje->tipo = static_cast<tipoMensaje>(tipo);
+	mensaje->otherCli = otherCli;
+	mensaje->message = result[3];
 
 	return 0;
 }
@@ -72,21 +86,22 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	 char buffer[BUFLEN];
 	 int error = 0;
 
+	 cout << "Enter receiveAndDecode" << endl;
 	bzero(buffer,BUFLEN);
 	n = recv(socketCli, buffer, BUFLEN-1, 0);
+	cout << "bzero" << endl;
 	if (n < 0) {
-		printf("ERROR ejecutano recv");
-		strcpy(mensaje->longit,"000");
-		strcpy(mensaje->tipo,"99");
+		perror("ERROR ejecutano recv");
+		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Error leyendo del socket";
 		error = 1;
 	}else if (n == 0){
 		printf("Mensaje de salida recibido");
-		strcpy(mensaje->longit,"000");
-		strcpy(mensaje->tipo,"99");
+		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Usuario desconectado";
 		error = 1;
 	}else{
+		cout << "Mensaje recibido: " << buffer << endl;
 		decode(buffer,mensaje);
 		error = 0;
 	}

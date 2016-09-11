@@ -20,6 +20,7 @@ class ConexionCli:Mensajeria{
 		int desconectar(datosConexionStruct* datosConexion);
 		void enviarMensajes(datosConexionStruct* datosConexion);
 		static void* recvMessage(void * arg);
+		int cerrarSocket(int socket);
 	private:
 		int autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 };
