@@ -186,16 +186,31 @@ void sigchld_handler(int s) {
 	while(wait(NULL) > 0);
 }
 
-void *sendMessage(void *nw_fd){
-	/*
-	int new_fd = *(int *)nw_fd;
-	char buf[20] = "Recibido.Cambio";
-	send(new_fd, buf , 20, 0);*/
+void *Servidor::sendMessage(void *arguments){
+
+ 	argsForThread* args = (argsForThread*) arguments;
+	int socketCli = *(args->socketCli);
+	bool finish=false;
+	int result=0;
+	queue<mensajeStruct>* queueCli=args->context->socketIdQueue[socketCli];
+   	mensajeStruct msg;
+    
+    	while(!finish){
+		    if(!queueCli->empty()){
+			msg=queueCli->front();
+			queueCli->pop();
+			cout << msg.message << endl;
+			result=args->context->encodeAndSend(socketCli,&msg);
+			finish = (result != 0);
+		}
+		
+	}
+
 	return 0;
 }
 /*
 void *recvMessage(void *nw_fd){
-	
+	ibi
 	//ACA DEBERIA DE IR EL COMPORTAMIENTO DEL SERVER EN FUNCION AL ID DEL MENSAJE ( VALIDAR USARIO, MANDAR MENSAJES AL CLIENTES ..)
 
 
@@ -222,8 +237,12 @@ void Servidor::nuevaConexion(int new_fd) {
 		printf("ERROR setealdo el rcv timeout \n");
 	if (setsockopt (new_fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
 		printf("ERROR setealdo el snd timeout \n");
-	int cola_socket;
-	mensajeria.crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
+	//CREO LA COLA DE CLIENTE Y GUARDO EN UN MAP
+  	queue<mensajeStruct> * queueClient =new queue<mensajeStruct>;
+	socketIdQueue[new_fd]= queueClient;
+
+	//mensajeria.crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
+    
 
 	argsForThread* args = new argsForThread();
 	args->context = this;

@@ -18,6 +18,7 @@ class Servidor:Mensajeria {
 private:
 	const int MAX_CON = 6;
 	std::queue<mensajeStruct> colaPrincipalMensajes;
+	std::map<int,queue<mensajeStruct>*> socketIdQueue;
 	int sockfd = 0;
 	int cantCon = 0;
 	struct sockaddr_in my_addr;
@@ -31,7 +32,8 @@ private:
 	static void* exitManager(void* data);
 	void cerarSockets();
 	void nuevaConexion(int new_fd);
-	static void* recibirMensajesCliente(void* socketCli);
+	static void* recibirMensajesCliente(void* arguments);
+	static void* sendMessage(void*arguments);
 	void createMainProcessorThread();
 	static void* procesarMensajesMain (void *data) ;
 	int procesarMensajeCola(mensajeStruct msg);
