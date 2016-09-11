@@ -5,8 +5,12 @@
 #include <sstream>
 
 using namespace std;
+#define NIVEL 3
+#define TAMANIO 100
+#define SERVER "src/Servidor/log.txt"
+#define CLIENT "src/Cliente/log.txt"
 
-void write_file(char* file_name,char* message){
+void write_file(char* file_name,string message){
 
     time_t now = time(0);
     tm *ltm =localtime(&now);
@@ -26,81 +30,37 @@ void write_file(char* file_name,char* message){
 	file.close();
 }
 
-void log_servidor(int nivel, int tipo, char msg[],char* usuario){
-char message[128];
+void log(char tipo_arch,int tipo_msg,string mensaje ,string chat){
+	string msg;
 
-   if (nivel != 1){
-		switch (tipo){
-			case 1:case 2:case 3:
-				strcpy(message,"INFO  - El usuario ");
-				strcat(message, usuario);
-				if (tipo == 1){
-					strcat(message, " envia un mensaje");
-				}else if (tipo == 2){
-					strcat(message, " recibe un mensaje");
-				}else if (tipo == 3){
-					strcat(message, " envia un Lorem Ipsum");
+		   if (NIVEL != 1){
+				switch (tipo_msg){
+					case 1:
+						msg = "INFO  - ";
+						break;
+					case 2:
+						msg = "WARNING  - ";
+						break;
+					case 3:
+						msg = "ERROR  - ";
+				        break;
+
+					default:
+						break;
 				}
-                if (nivel == 3){
-                	strcat(message, ": ");
-                	strcat(message, msg);
-                }
-				break;
-			case 4:
-                strcpy(message,"INFO  - Se conecto el usuario ");
-                strcat(message, usuario);
-				break;
-			case 5:
-				strcpy(message,"INFO  - Se desconecto el usuario ");
-				strcat(message, usuario);
-				break;
-			case 6:
-				strcpy(message,"ERROR - Password del usuario " );
-				strcat(message, usuario);
-				strcat(message, " incorrecta");
-				break;
-			case 7:
-				strcpy(message,"ERROR - Password del usuario");
-				strcat(message, usuario);
-				strcat(message, "no cumple con las condiciones");
-				break;
-			case 8:
-				strcpy(message,"ERROR - Salida forzada del usuario");
-				strcat(message, usuario);
-				break;
-			default:
-				break;
-		}
-		write_file("src/Servidor/log.txt",message);
-   }
-}
-
-void log_cliente(int nivel, int tipo){
-char message[128];
-
-   if (nivel != 1){
-		switch (tipo){
-			case 1:
-				break;
-			case 2:
-                strcpy(message,"INFO  - Se conecto el usuario ");
-				break;
-			case 3:
-				strcpy(message,"INFO  - Se desconecto el usuario ");
-				break;
-			case 4:
-				strcpy(message,"ERROR - Password del usuario " );
-				break;
-			case 5:
-				strcpy(message,"ERROR - Password del usuario");
-				break;
-			case 6:
-				strcpy(message,"ERROR - Salida forzada del usuario");
-				break;
-			default:
-				break;
-		}
-		write_file("src/Cliente/log.txt",message);
-   }
+				msg = msg + mensaje;
+				if ((NIVEL == 3 || NIVEL == 4) && chat.length()>0){
+					msg = msg + ": ";
+					if (NIVEL==4){
+						chat = chat.substr(0,TAMANIO);
+					}
+					msg = msg + chat;
+				}
+				if (tipo_arch == 's'){
+					write_file(SERVER,msg);
+				}else if ('c'){
+					write_file(CLIENT,msg);
+				}
+		   }
 }
 

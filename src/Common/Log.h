@@ -7,20 +7,18 @@
 #include <iomanip>
 #include <sstream>
 
+using namespace std;
 class Log {
 private:
 
-	void write_file(char* file_name,char* message);
+	void write_file(char* file_name,string message);
 
 public:
 
-	void log_servidor(int nivel, int tipo, char msg[], char* usuario);
-	//Puede tener 4 niveles, 1.Productivo, 2.Debugin Simple sin msg ingresado,
-	//3.Debugin con 128 caracteres de msg ingresado, 4.Debugin con mensaje ingresado completo
-	void log_cliente(int nivel, int tipo);
-	//Solo puede tener 2 niveles, 1.Productivo, 2.Debugin
-
-//En ambos casos "tipo" corresponde al tipo de mensaje para cada caso.
-
+	void log(char tipo_arch,int tipo msg, string mensaje, string chat);
+	//tipo char -> 'c':indica archivo del cliente,'s': indica archivo del servidor
+	//tipo_msg -> 1:INFO,2:WARNNING,3:ERROR
+	//mensaje -> mensaje basico del log
+	//chat -> mensaje emitido y recibido por el cliente
 };
 #endif /* LOG_H_ */
