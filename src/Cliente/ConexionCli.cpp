@@ -33,7 +33,6 @@ int ConexionCli::cerrarSocket(int socket){
 
 int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	struct sockaddr_in their_addr;
-	int idUsuario = 5;
 
 	if ((datosConexion->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		perror("ERROR abriendo el socket");
@@ -69,14 +68,11 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 		return -1;
 	}
 
-	idUsuario = autenticar(datosConexion, usuario, contrasenia);
-	if ( idUsuario == -1 ) {
-		perror("ERROR al momento de autenticar usuario y password");
-		return -1;
+	if ( autenticar(datosConexion, usuario, contrasenia) == -1 ) {
+			perror("ERROR al momento de autenticar usuario y password");
+			return -1;
 	}
-
-
-	return idUsuario;
+	return 0;
 };
 
 
@@ -95,7 +91,12 @@ int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usua
 	mensajeStruct mensajeRespuesta;
 	Mensajeria::receiveAndDecode(datosConexion->sockfd,&mensajeRespuesta);
 
-	return 0; // Harcodeo para simular ID de usuario
+	std::cout << mensajeRespuesta.message << endl;
+	if (mensajeRespuesta.tipo == LOG_OK)
+		return 0;
+	else {
+		return -1;
+	}
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 

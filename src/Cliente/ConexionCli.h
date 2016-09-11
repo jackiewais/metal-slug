@@ -13,7 +13,6 @@ class ConexionCli:Mensajeria{
 			short puerto;
 			char ip[16];
 			bool conectado = false;
-			int idUsuario = -1;
 		};
 
 		int conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);

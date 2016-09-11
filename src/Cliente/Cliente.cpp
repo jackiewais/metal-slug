@@ -21,7 +21,7 @@ Cliente::~Cliente() {
 
 
 int Cliente::seleccConectar(){
-	int respuesta = 1, idUsuario;
+	int respuesta = 1;
 	string usuario, contrasenia;
 
 	if (this->datosConexion.conectado){
@@ -30,10 +30,9 @@ int Cliente::seleccConectar(){
 	}else{
 
 		getUsuarioYContrasenia(usuario, contrasenia);
-		idUsuario = conectar(&this->datosConexion, usuario, contrasenia);
 		respuesta = 0;
 
-		if (idUsuario > 0){
+		if (conectar(&this->datosConexion, usuario, contrasenia) == 0){
 		//	this->datosConexion.idUsuario = idUsuario;
 			printf("Logueado correctamente");
 			this->datosConexion.conectado = true;

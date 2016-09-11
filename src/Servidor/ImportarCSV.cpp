@@ -44,8 +44,8 @@ string** ImportarCSV::importar(string csv) {
 	    	if (nombre != "" && pass != "") {
 	        	this->tablaUsuarios[i][this->datos-2] = nombre;
 	        	this->tablaUsuarios[i][this->datos-1] = pass;
+	        	i++;
 	        }
-	        i++;
 	    }
 	    this->cantidadUsuarios = i;
 	 }

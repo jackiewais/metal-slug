@@ -56,6 +56,21 @@ void* Servidor::procesarMensajesMain (void *data) {
 int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 	printf("LLEGOOO\n");
 
+	mensajeStruct mensaje;
+
+	mensaje.otherCli = 0;
+
+	if (this->contenedor->iniciarSesion(msg.message, msg.socketCli)) {
+		std::cout << "OK"  <<endl;
+		mensaje.tipo = LOG_OK;
+		mensaje.message = this->contenedor->getIdNombresUsuarios();
+	}else{
+		std::cout << "DENEGADO" <<endl;
+		mensaje.tipo = LOG_NOTOK;
+	}
+
+	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);
+
 	return 0;
 }
 
@@ -302,6 +317,9 @@ void Servidor::runServer(){
 	createExitThread();
 	createMainProcessorThread();
 
+	this->contenedor->inicializarContenedor("usuarios.csv");
+
+
 	openSocket(puerto);
 	escuchar();
 
@@ -350,7 +368,9 @@ void Servidor::createMainProcessorThread(){
 
 Servidor::Servidor() {
 
+	this->contenedor = new ContenedorUsuarios();
 }
 Servidor::~Servidor() {
 
+	delete this->contenedor;
 }

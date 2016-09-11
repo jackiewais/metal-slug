@@ -6,6 +6,8 @@
 #include <sys/msg.h>
 #include <sys/errno.h>
 #include <queue>
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
    
