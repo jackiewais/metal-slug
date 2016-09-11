@@ -67,21 +67,19 @@ int Cliente::seleccConectar(){
 }
 
 void *Cliente::recvMessage(void * arg){
-	cout << "recvMessage" << endl;
 
 	bool finish = false;
 	Cliente* context = (Cliente*)arg;
-	cout << "ACA ENTRE" << endl;
 	mensajeStruct mensajeRta;
 
 	while(!finish){
-		cout << "antes  recibirMensaje" << endl;
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
-		cout << "despues  recibirMensaje" << endl;
 		if (!finish){
 			printf("Received: %s",mensajeRta.message.c_str());
+		}else{
+			context->datosConexion.conectado = false;
+			context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
 		}	
-
     }
 	return 0;
 };

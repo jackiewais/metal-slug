@@ -16,19 +16,20 @@
 
 using namespace std;
 int ConexionCli::desconectar(datosConexionStruct* datosConexion){
-	char message[256];
-	memset(message,0,256);
-	message[0]= 'q';
+	mensajeStruct mensaje;
+	mensaje.tipo = DISCONNECTED;
+	mensaje.message = "Usuario desconectado";
+	mensaje.otherCli = 0;
 
-	//send(datosConexion->sockfd, message , strlen(message) , 0);
+	encodeAndSend(datosConexion->sockfd, &mensaje);
 	cerrarSocket(datosConexion->sockfd);
-	printf("Usuario desconectado\n");
 
 	return 0;
 }
 
 int ConexionCli::cerrarSocket(int socket){
 	close(socket);
+	printf("Usuario desconectado\n");
 	return 0;
 }
 
@@ -135,9 +136,7 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 }
 
 int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje){
-	Mensajeria::receiveAndDecode(datosConexion->sockfd, mensaje);
-	return 0;
-
+	return Mensajeria::receiveAndDecode(datosConexion->sockfd, mensaje);
 }
 
 

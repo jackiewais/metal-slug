@@ -94,19 +94,19 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	 char buffer[BUFLEN];
 	 int error = 0;
 
-	 cout << "Enter receiveAndDecode" << endl;
 	bzero(buffer,BUFLEN);
 	n = recv(socketCli, buffer, BUFLEN-1, 0);
-	cout << "bzero" << endl;
 	if (n < 0) {
 		perror("ERROR ejecutano recv \n");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Error leyendo del socket";
+		mensaje->otherCli = 0;
 		error = 1;
 	}else if (n == 0){
 		printf("Mensaje de salida recibido \n");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Usuario desconectado";
+		mensaje->otherCli = 0;
 		error = 1;
 	}else{
 		cout << "Mensaje recibido: " << buffer << endl;
@@ -115,8 +115,6 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	}
 
 	mensaje->socketCli = socketCli;
-
-	cout << "Exit receiveAndDecode" << endl;
 
 	return error;
 }
