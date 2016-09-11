@@ -16,12 +16,12 @@ private:
 	map<string, Usuario*> mapUsuarios;
 	map<int, Usuario*> socket_usuario;
 
-	void inicializarContenedor(string csv);
 	Usuario* autentificar(string nombre, string pass);
 
 public:
-	ContenedorUsuarios(string csv);
+	ContenedorUsuarios();
 	virtual ~ContenedorUsuarios();
+	void inicializarContenedor(string csv);
 	bool iniciarSesion(string nombre, string pass, int idSocket);
 	bool cerrarSesion(int idSocket);
 	int getCantidadUsuarios();

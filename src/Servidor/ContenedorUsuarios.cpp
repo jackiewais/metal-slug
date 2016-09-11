@@ -6,10 +6,9 @@
 using namespace std;
 
 
-ContenedorUsuarios::ContenedorUsuarios(string csv) {
+ContenedorUsuarios::ContenedorUsuarios() {
 
 	this->importar = new ImportarCSV();
-	this->inicializarContenedor(csv);
 }
 
 ContenedorUsuarios::~ContenedorUsuarios() {
