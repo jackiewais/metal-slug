@@ -1,3 +1,4 @@
+metal
 # Compiled Object files
 *.slo
 *.lo
@@ -37,4 +38,4 @@
 .project
 .cproject
 /Debug/
-src/metal 
+

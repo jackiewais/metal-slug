@@ -41,7 +41,7 @@ private:
 	int enviarChat(mensajeStruct msg);
 	int recibirTodosLosChats(mensajeStruct msg);
 	Mensajeria mensajeria;
-	ContenedorUsuarios *contenedor;
+	ContenedorUsuarios* contenedor;
 
 public:
 	Servidor();

@@ -13,8 +13,8 @@ ContenedorUsuarios::ContenedorUsuarios() {
 }
 
 ContenedorUsuarios::~ContenedorUsuarios() {
-
-	delete[] this->importar;
+	delete importar;
+	//delete[] this->importar;
 }
 
 

@@ -393,10 +393,8 @@ void Servidor::createMainProcessorThread(){
 }
 
 Servidor::Servidor() {
-
 	this->contenedor = new ContenedorUsuarios();
 }
 Servidor::~Servidor() {
-
 	delete this->contenedor;
 }
