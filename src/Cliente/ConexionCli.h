@@ -3,8 +3,9 @@
 
 #include <iostream>
 #include <string.h>
+#include "../Common/Mensajeria.h"
 
-class ConexionCli{
+class ConexionCli:Mensajeria{
 
 	public:
 		struct datosConexionStruct{
@@ -12,14 +13,14 @@ class ConexionCli{
 			short puerto;
 			char ip[16];
 			bool conectado = false;
-			int idUsuario = -1;
 		};
 
 		int conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 		int desconectar(datosConexionStruct* datosConexion);
 		void enviarMensajes(datosConexionStruct* datosConexion);
-		void recibirMensajes(datosConexionStruct* datosConexion);
+		int recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje);
 		static void* recvMessage(void * arg);
+		int cerrarSocket(int socket);
 	private:
 		int autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 };

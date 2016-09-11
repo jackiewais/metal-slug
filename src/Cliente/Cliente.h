@@ -2,14 +2,15 @@
 #define CLIENTE_H_
 
 #include "ConexionCli.h"
+#include "../Common/Mensajeria.h"
 #include <iostream>
 #include <string.h>
 
 class Cliente:ConexionCli {
 private:
 
-	datosConexionStruct datosConexion;
-
+	 datosConexionStruct datosConexion;
+	 ConexionCli conexionCli;
 	int seleccConectar();
 	int getIpAndPort();
 	int selectFromMenu();
@@ -19,7 +20,7 @@ private:
 	int recibir();
 	int loremIpsum();
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
-
+	static void *recvMessage(void * arg);
 public:
 	Cliente();
 	virtual ~Cliente();

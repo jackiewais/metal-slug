@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string.h>
 
-
 #include <fstream>
 #include <iomanip>
 #include <sstream>
@@ -14,6 +13,8 @@
 #include <ctime>;
 #include <exception>
 #include <sstream>
+#include <sys/socket.h>
+#include <pthread.h>
 
 using namespace std;
 
@@ -29,26 +30,59 @@ Cliente::~Cliente() {
 
 
 int Cliente::seleccConectar(){
-	int respuesta = 1, idUsuario;
+	int respuesta = 1;
 	string usuario, contrasenia;
 
 	if (this->datosConexion.conectado){
 		cout << "El usuario ya está conectado" << endl;
 		respuesta = 0;
 	}else{
+
 		getUsuarioYContrasenia(usuario, contrasenia);
-		idUsuario = conectar(&this->datosConexion, usuario, contrasenia);
 		respuesta = 0;
-		if (idUsuario > 0){
-			this->datosConexion.idUsuario = idUsuario;
+
+		if (conectar(&this->datosConexion, usuario, contrasenia) == 0){
+		//	this->datosConexion.idUsuario = idUsuario;
+			printf("Logueado correctamente");
 			this->datosConexion.conectado = true;
+			//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
+			pthread_t threadRecv;
+			int rc = pthread_create(&threadRecv, NULL,&recvMessage,(void*)this);
+			if (rc){
+				printf("ERROR creando el thread  %i \n",rc);
+			}
+
 			respuesta = 0;
+			//Crear hilo rcv
+		}else{
+			cerrarSocket(this->datosConexion.sockfd);
+			respuesta = 1;
 		}
 
 	}
 
 	return respuesta;
 }
+
+void *Cliente::recvMessage(void * arg){
+	cout << "recvMessage" << endl;
+
+	bool finish = false;
+	Cliente* context = (Cliente*)arg;
+	cout << "ACA ENTRE" << endl;
+	mensajeStruct mensajeRta;
+
+	while(!finish){
+		cout << "antes  recibirMensaje" << endl;
+		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
+		cout << "despues  recibirMensaje" << endl;
+		if (!finish){
+			printf("Received: %s",mensajeRta.message.c_str());
+		}	
+
+    }
+	return 0;
+};
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){
 	string inputUsuario, inputContrasenia;
@@ -97,7 +131,7 @@ int Cliente::enviar(){
 }
 
 int Cliente::recibir(){
-	recibirMensajes(&this->datosConexion);
+	//recibirMensajes(&this->datosConexion);
 	return 0;
 }
 
@@ -230,6 +264,7 @@ int Cliente::selectFromMenu(){
 	bool ok = false;
 	int status;
 
+	cout << endl;
 	cout << "---------------" << endl;
 	cout << "Seleccione una opción del menú:" << endl;
 

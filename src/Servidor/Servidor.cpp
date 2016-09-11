@@ -12,17 +12,12 @@
 #include <pthread.h>
 #include <sstream>
 #include <string>
+#include "SDL2/SDL_thread.h"
 
-struct argsForThread{
-	int* socketCli;
-	Servidor* context;
-};
+
+SDL_mutex *mutexQueue;
 
 using namespace std;
-
-#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
-
-
 
 
 void* Servidor::procesarMensajesMain (void *data) {
@@ -31,14 +26,10 @@ void* Servidor::procesarMensajesMain (void *data) {
 	bool finish = false;
 	int result;
 
-	if (!context->mensajeria->crearCola(context->colaPrincipal)) {
-		finish = true;
-	}
-
 	while(!finish){
-		if (!context->mensajeria->extraerMensajeCola(context->colaPrincipal, msg)) {
-			finish = true;
-		}else{
+		if (!context->colaPrincipalMensajes.empty()){
+			msg=context->colaPrincipalMensajes.front();
+			context->colaPrincipalMensajes.pop();
 			printf("Procesando Mensaje: %s",msg.message.c_str());
 			result = context->procesarMensajeCola(msg);
 			finish = (result != 0);
@@ -49,14 +40,77 @@ void* Servidor::procesarMensajesMain (void *data) {
 
 }
 
-int Servidor::procesarMensajeCola(mensajeStruct msg){
-	//EN FUNCIÓN AL TIPO DE MSJ VER QUE SE HACE
+int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
-	//Writes the message in the socket's queue
-	//	writeQueueMessage(msg.msocket,response, msg.minfo, true);
+	mensajeStruct mensaje;
+
+	mensaje.otherCli = 0;
+
+	if (this->contenedor->iniciarSesion(msg.message, msg.socketCli)) {
+		std::cout << "OK"  <<endl;
+		mensaje.tipo = LOG_OK;
+		mensaje.message = this->contenedor->getIdNombresUsuarios();
+	}else{
+		std::cout << "DENEGADO" <<endl;
+		mensaje.tipo = LOG_NOTOK;
+	}
+
+	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);
 
 	return 0;
 }
+
+int Servidor::procesarMensajeCola(mensajeStruct msg){
+	//EN FUNCIÓN AL TIPO DE MSJ VER QUE SE HACE
+
+	switch (msg.tipo){
+		case LOGIN:
+			loginInterpretarMensaje(msg);
+			break;
+		case ENVIAR_CHAT_FIN:
+			enviarChat(msg);
+			break;
+		case RECIBIR_CHATS:
+			recibirTodosLosChats(msg);
+			break;
+		case DISCONNECTED:
+			//por ahora no hacemos nada
+			break;
+		
+	}
+
+	return 0;
+}
+
+int Servidor::enviarChat(mensajeStruct msg){
+	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
+
+	chatStruct chat;
+	chat.from = idCliente; //CAMBIAR POR EL ID DE USUARIO!
+	chat.to = msg.otherCli;
+	chat.message = msg.message;
+
+	waitingChats.insert(pair<int,chatStruct>(chat.to,chat));
+	return 0;
+}
+
+int Servidor::recibirTodosLosChats(mensajeStruct msg){
+	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
+	mensajeStruct msj;
+
+	multimap<int,chatStruct>::iterator elemento;
+
+	while (!((elemento = waitingChats.find(idCliente)) == waitingChats.end())){
+		msj.socketCli = msg.socketCli; //socket del que recibe los msjs
+		msg.otherCli = elemento->second.from;
+		msg.message = elemento->second.message;
+		waitingChats.erase (elemento);
+		//TODO: AGREGAR A COLA DE CLIENTE
+	}
+
+	return 0;
+}
+
 
 int Servidor::openSocket(short puerto){
 	int conexiones_max = 10;
@@ -88,43 +142,48 @@ int Servidor::openSocket(short puerto){
 }
 
 void* Servidor::recibirMensajesCliente(void* arguments){
-	struct argsForThread* args = (argsForThread*) arguments;
+	argsForThread* args = (argsForThread*) arguments;
 	int socketCli = *(args->socketCli);
-	bool finish = false;
+	int finish = 0;
 
-   int n;
-   char buffer[BUFLEN];
    mensajeStruct mensaje;
+   string mensajeParcial = "";
+   bool hayMsjParcial = false;
 
    //Receive a message from client
-   while(!finish){
+   while(finish == 0){
 	   mensaje = {}; //Reset struct
-		bzero(buffer,BUFLEN);
-		n = recv(socketCli, buffer, BUFLEN-1, 0);
-		if (n < 0) {
-			printf("ERROR ejecutano recv");
-			strcpy(mensaje.longit,"000");
-			strcpy(mensaje.tipo,"99");
-			mensaje.message = "Error leyendo del socket";
-			finish = true;
-		}else if (n == 0){
-			printf("Mensaje de salida recibido");
-			strcpy(mensaje.longit,"000");
-			strcpy(mensaje.tipo,"99");
-			mensaje.message = "Usuario desconectado";
-			finish = true;
-		}else{
-			args->context->mensajeria->decode(buffer,&mensaje);
-		}
 
-		mensaje.socketCli = socketCli;
+	   finish = args->context->mensajeria.receiveAndDecode(socketCli,&mensaje);
+	   cout << mensaje.message << endl;
 
-		//
+	   if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
+		   //si ya existia concateno el mensaje
+		   mensajeParcial += mensaje.message;
+		   hayMsjParcial = true;
+	   }else{
+		   if (hayMsjParcial && !finish){
+			   //primero concateno el mensaje y después lo asigno
+			   mensajeParcial += mensaje.message;
+			   mensaje.message = mensajeParcial;
+		   }
+		   //agrego a la cola principal
+		   //mutex lock.
+			if (SDL_LockMutex(mutexQueue) == 0) {
+			   printf("Cola principal con ID: %d", args->context->colaPrincipal);
+			   args->context->colaPrincipalMensajes.push(mensaje);
+			   hayMsjParcial = false;
+		   	   mensajeParcial = "";
+			   //mutex unlock
+			   SDL_UnlockMutex(mutexQueue);
+			}
+	   }
    }
-
+   //MARCAR USER COMO DESCONECTADO
+   delete((argsForThread*) arguments); //asegurarnos que esto no hace explotar al mundo
    close(socketCli);
 
-	return 0;
+   return 0;
 }
 
 
@@ -132,120 +191,97 @@ void sigchld_handler(int s) {
 	while(wait(NULL) > 0);
 }
 
-void *sendMessage(void *nw_fd){
-	
-	int new_fd = *(int *)nw_fd;
-	char buf[20] = "Recibido.Cambio";
-	send(new_fd, buf , 20, 0);
+void *Servidor::sendMessage(void *arguments){
+
+ 	argsForThread* args = (argsForThread*) arguments;
+	int socketCli = *(args->socketCli);
+	bool finish=false;
+	int result=0;
+	queue<mensajeStruct>* queueCli=args->context->socketIdQueue[socketCli];
+   	mensajeStruct msg;
+    
+    	while(!finish){
+		    if(!queueCli->empty()){
+			msg=queueCli->front();
+			queueCli->pop();
+			cout << msg.message << endl;
+			result=args->context->encodeAndSend(socketCli,&msg);
+			finish = (result != 0);
+		}
+		
+	}
+
 	return 0;
 }
-/*
-void *recvMessage(void *nw_fd){
-	
-	//ACA DEBERIA DE IR EL COMPORTAMIENTO DEL SERVER EN FUNCION AL ID DEL MENSAJE ( VALIDAR USARIO, MANDAR MENSAJES AL CLIENTES ..)
-
-
-	int new_fd = *(int *)nw_fd;
-	while(true){	
-	char buf[30]= "";
-	recv(new_fd, buf, 30, 0);
-	cout << "el cliente "<< new_fd <<" dice : " ;
-	cout << buf << endl;
-	}
-	return 0;
-}*/
-
 
 void Servidor::nuevaConexion(int new_fd) {
 
-	char buf[MAXDATASIZE];
-	char *usuario, *contrasenia;
-	int numbytes;
-	char * pch;
 	struct timeval timeout;
-	//int new_fd = *(int *)nw_fd;
 	timeout.tv_sec = 60;
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;
 	
-
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
 		printf("ERROR setealdo el rcv timeout \n");
 	if (setsockopt (new_fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
 		printf("ERROR setealdo el snd timeout \n");
+	//CREO LA COLA DE CLIENTE Y GUARDO EN UN MAP
+  	queue<mensajeStruct> * queueClient =new queue<mensajeStruct>;
+	socketIdQueue[new_fd]= queueClient;
 
-	int cola_socket;
-	mensajeria->crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
+	//mensajeria.crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
+    
 
-/*	if ((numbytes=recv(new_fd, (void*)&buf, MAXDATASIZE-1, 0)) == -1) {
-		perror("ERROR ejecutando recv");
-	}
+	args->context = this;
+	args->socketCli = &new_fd;
 
-	buf[numbytes] = '\0';
-	pch = strtok( buf, ";" );
-	usuario = pch;
-	pch = strtok( NULL, ";" );
-	contrasenia = pch;
-
-	cout << new_fd << endl;
-	printf("%s, %s\n", usuario, contrasenia);*/
-	
-	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)&new_fd);
+	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)args);
 	if (rc){
 		printf("ERROR creando el thread de recv %i \n",rc);
 	}
-	
-	rc = pthread_create(&precvMessage, NULL, sendMessage, (void*)&new_fd);
+
+	rc = pthread_create(&psendMessage, NULL, sendMessage, (void*)args);
 	if (rc){
 		printf("ERROR creando el thread de send %i \n",rc);
 	}
 
+	//delete args;
 
-
-	// ACA HAY QUE CHECKEAR EL USUARIO Y LA CONTRASENIA
-	// SI SE PUDO LOGUEAR, HAY QUE DEVOLVERLE OK AL CLIENTE
-	// Y ADEMAS LANZAR UN THREAD PARA RECV Y OTRO PARA SEND
-	// SE PODRIA LANZAR SOLAMENTE UNO Y PARA EL OTRO APROVECHAR ESTE THREAD
-
-	//close(new_fd);
-
-	
 }
 
 int Servidor::escuchar() {
 	socklen_t sin_size;
-	//struct sigaction sa;
 	int new_fd;
 	struct sockaddr_in their_addr; // información sobre la dirección del cliente
-	pthread_t thread;
+
+	mensajeStruct messageAccept;
 
 	while(1) { // main accept() loop
 		sin_size = sizeof(struct sockaddr_in);
-		if ((new_fd = accept(this->sockfd, (struct sockaddr *)&their_addr, &sin_size)) == -1) {
+		new_fd = accept(this->sockfd, (struct sockaddr *)&their_addr, &sin_size);
+		if (new_fd == -1) {
 			perror("ERROR ejecutando accept \n");
 			continue;
 		}
-		cout << "NUEVA CONEXION:";
-		
-		printf(" got connection from %s\n", inet_ntoa(their_addr.sin_addr));
-		cout << "==============" << endl;
-		nuevaConexion(new_fd);
 
 		printf("server: got connection from %s\n", inet_ntoa(their_addr.sin_addr));
-
-
-		 close(new_fd);
-
-		/*if (!fork()) { // Este es el proceso hijo
-			close(this->sockfd); // El hijo no necesita este descriptor
-			if (send(new_fd, "Hello, world!\n", 14, 0) == -1)
-				perror("send");
+		
+		messageAccept.socketCli = new_fd;
+		messageAccept.otherCli = 0;
+		if (cantCon == MAX_CON){
+			messageAccept.tipo = CONECTAR_NOTOK;
+			messageAccept.message = "ERROR: Supera cantidad maxima de conexiones";
+			mensajeria.encodeAndSend(new_fd,&messageAccept);
 			close(new_fd);
-			exit(0);
-		}
-		close(new_fd); // El proceso padre no lo necesita*/
+		}else{
+			messageAccept.tipo = CONECTAR_OK;
+			messageAccept.message = "Se puede conectar";
+			mensajeria.encodeAndSend(new_fd,&messageAccept);
 
+			cantCon ++;
+			nuevaConexion(new_fd);
+		}
 	}
 
 	return 0;
@@ -274,10 +310,14 @@ short getPuerto(){
 
 void Servidor::runServer(){
 	cout << "Starting server app" << endl;
+	mutexQueue = SDL_CreateMutex();
 
 	short puerto = getPuerto();
 	createExitThread();
 	createMainProcessorThread();
+
+	this->contenedor->inicializarContenedor("usuarios.csv");
+
 
 	openSocket(puerto);
 	escuchar();
@@ -326,8 +366,12 @@ void Servidor::createMainProcessorThread(){
 }
 
 Servidor::Servidor() {
-	mensajeria = new Mensajeria();
+	this->contenedor = new ContenedorUsuarios();
+	contenedor  = new ContenedorUsuarios();
+	args = new argsForThread();
 }
 Servidor::~Servidor() {
-	delete mensajeria;
+	delete this->contenedor;
+	delete args;
+
 }

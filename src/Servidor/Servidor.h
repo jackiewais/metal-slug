@@ -8,13 +8,29 @@
 #include <map>
 #include "../Common/ChatStruct.h"
 #include "../Common/Mensajeria.h"
+#include <queue>
+#include "ContenedorUsuarios.h"
+
+//using namespace std;
+
 
 class Servidor:Mensajeria {
 private:
+
+	struct argsForThread{
+		int* socketCli;
+		Servidor* context;
+	};
+
+	const int MAX_CON = 6;
+	std::queue<mensajeStruct> colaPrincipalMensajes;
+	std::map<int,queue<mensajeStruct>*> socketIdQueue;
 	int sockfd = 0;
+	int cantCon = 0;
 	struct sockaddr_in my_addr;
 	std::multimap<int,chatStruct> waitingChats;
 	int colaPrincipal=0;
+	argsForThread* args;
 
 	int openSocket(short puerto);
 	int escuchar();
@@ -23,12 +39,16 @@ private:
 	static void* exitManager(void* data);
 	void cerarSockets();
 	void nuevaConexion(int new_fd);
-	static void* recibirMensajesCliente(void* socketCli);
+	static void* recibirMensajesCliente(void* arguments);
+	static void* sendMessage(void*arguments);
 	void createMainProcessorThread();
 	static void* procesarMensajesMain (void *data) ;
 	int procesarMensajeCola(mensajeStruct msg);
-
-	Mensajeria* mensajeria;
+	int loginInterpretarMensaje(mensajeStruct msg);
+	int enviarChat(mensajeStruct msg);
+	int recibirTodosLosChats(mensajeStruct msg);
+	Mensajeria mensajeria;
+	ContenedorUsuarios* contenedor;
 
 public:
 	Servidor();

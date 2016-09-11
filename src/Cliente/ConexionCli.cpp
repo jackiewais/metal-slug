@@ -19,17 +19,20 @@ int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 	memset(message,0,256);
 	message[0]= 'q';
 
-	send(datosConexion->sockfd, message , strlen(message) , 0);
-	close(datosConexion->sockfd);
+	//send(datosConexion->sockfd, message , strlen(message) , 0);
+	cerrarSocket(datosConexion->sockfd);
 	printf("Usuario desconectado\n");
 
 	return 0;
 }
 
+int ConexionCli::cerrarSocket(int socket){
+	close(socket);
+	return 0;
+}
 
 int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	struct sockaddr_in their_addr;
-	int idUsuario;
 
 	if ((datosConexion->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		perror("ERROR abriendo el socket");
@@ -49,7 +52,6 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 
 	their_addr.sin_family = AF_INET;
 	their_addr.sin_port = htons(datosConexion->puerto);
-	//this->their_addr.sin_addr = *((struct in_addr *)he->h_addr);
 	their_addr.sin_addr.s_addr = inet_addr(datosConexion->ip);
 	memset(&(their_addr.sin_zero), '\0', 8); // poner a cero el resto de la estructura
 
@@ -58,76 +60,61 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 		return -1;
 	} else {cout << "conectado al servidor" << endl;}
 
-	idUsuario = autenticar(datosConexion, usuario, contrasenia);
-	if ( idUsuario == -1 ) {
-		perror("ERROR al momento de autenticar usuario y password");
+	Mensajeria mensajeria;
+	mensajeStruct rtaServer;
+	mensajeria.receiveAndDecode(datosConexion->sockfd,&rtaServer);
+	if (rtaServer.tipo == CONECTAR_NOTOK){
+		printf("El servidor rechazó la conexión: Demasiados usuarios \n");
 		return -1;
 	}
 
-	printf("Usuario conectado con ID: %d\n", idUsuario);
-	
-	//CREO HILO PARA ESCUCHAR
-
-	pthread_t threadRecv;
-
-	int rc = pthread_create(&threadRecv, NULL,&ConexionCli::recvMessage,(void*)datosConexion);
-	if (rc){
-		printf("ERROR creando el thread  %i \n",rc);
+	if ( autenticar(datosConexion, usuario, contrasenia) == -1 ) {
+			perror("ERROR al momento de autenticar usuario y password");
+			return -1;
 	}
-
-	return idUsuario;
+	return 0;
 };
 
-void *ConexionCli::recvMessage(void * arg){
-
-	int numbytes;
-	char buf[MAXDATASIZE];
-	
-	datosConexionStruct* conexion = (datosConexionStruct*)arg;
-	while(conexion->conectado){
-	if ((numbytes=recv(conexion->sockfd, buf, MAXDATASIZE-1, 0)) == -1) {
-		perror("ERROR ejecutando recv");
-		
-	}
-	buf[numbytes] = '\0';
-	printf("Received: %s",buf);
-	}
-};
 
 // Es necesario que se haya conectado mediante el socket previamente
 // Devuelve el ID de usuario si pudo autenticar con exito, o -1 en caso de error
 int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	std::string usuarioYContrasenia = usuario + ";" + contrasenia;
+	//Mensajeria mensajeria;
 
-	if (send(datosConexion->sockfd, usuarioYContrasenia.c_str(), strlen(usuarioYContrasenia.c_str()), 0) == -1) {
-		perror("ERROR ejecutando send");
+	mensajeStruct mensaje;
+	mensaje.message = usuarioYContrasenia;
+	mensaje.otherCli = 0;
+	mensaje.tipo = LOGIN;
+	Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
+
+	mensajeStruct mensajeRespuesta;
+	Mensajeria::receiveAndDecode(datosConexion->sockfd,&mensajeRespuesta);
+
+	std::cout << mensajeRespuesta.message << endl;
+	if (mensajeRespuesta.tipo == LOG_OK)
+		return 0;
+	else {
 		return -1;
 	}
-
-	// ACA HAY QUE ESPERAR RESPUESTA DEL SERVIDOR Y EN BASE A ESO
-	// RETORNAR ID DE USUARIO(TENDRIA QUE MANDARLA EL SERVER) O -1
-
-	return 502; // Harcodeo para simular ID de usuario
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
-	/*
-	ACA DEBERIA ELEGIR ENTRE LOS USUARIOS CONECTADOS PARA MANDAR MENSAJES A TODOS O 
-	A ALGUNO EN PARTICULAR
-	*/
-	/*cout << "Ejemplo - Ahora manda automaticamente nada" << endl;
-	cout << " Elegir usuario : " << endl;
-	cout << " ================ " << endl;
-	cout << "1). Nahuel " << endl;
-	cout << "0). TODOS "  << endl;*/
+	string input;
+	cout << "INGRESE MENSAJE:" << endl;
+	cin >> input;
 
-	char message[30]="_ID.LONG.___MENSAJE___";
-	send(datosConexion->sockfd, message , strlen(message) , 0);
+	mensajeStruct mensaje;
+	mensaje.message = input;
+	mensaje.otherCli = 0;
+	mensaje.tipo = ENVIAR_CHAT_FIN;
+	mensaje.socketCli = datosConexion->sockfd;
+	Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
+}
+
+int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje){
+	Mensajeria::receiveAndDecode(datosConexion->sockfd, mensaje);
+	return 0;
 
 }
-void ConexionCli::recibirMensajes(datosConexionStruct* datosConexion){
-	/* SOLO MANDA EL MENSAJE CON ID CORRESPONDIENTE*/
 
-	char message[30]="RECIBIR MENSAJES";
-	send(datosConexion->sockfd, message , strlen(message) , 0);
 
-}

@@ -5,21 +5,30 @@
 #include <vector>
 #include <sys/msg.h>
 #include <sys/errno.h>
+#include <queue>
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
+   
+    
 
-int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
+    int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
 
-	/*//Me devuelve el codigo de mensaje en 2 chars
-	char codigo[2] = {0};
-	snprintf(codigo, 2, "02%d", mensaje.tipo);*/
+	char tipo[3], otherCli[2], longit[4];
+	int tipoI = mensaje->tipo;
+	snprintf(tipo, 3, "%02d", tipoI);
+	snprintf(otherCli, 3, "%02d", mensaje->otherCli);
 
-	strcpy(output,mensaje->longit);
-	strcat(output,"%");
-	strcat(output,mensaje->tipo);
-	strcat(output,"%");
-	strcat(output,mensaje->otherCli);
-	strcat(output,"%");
+	int longitudI = strlen(mensaje->message.c_str()) + 2 + 2 + 3 + 4; //mensaje + tipo + otherCli + separadores + longit
+	snprintf(longit, 5, "%04d", longitudI);
+
+	strcpy(output,longit);
+	strcat(output,"|");
+	strcat(output,tipo);
+	strcat(output,"|");
+	strcat(output,otherCli);
+	strcat(output,"|");
 	strcat(output,mensaje->message.c_str());
 
 	return 0;
@@ -28,11 +37,12 @@ int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
 
 int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
 	char output[BUFLEN];
-
 	encode(output,mensaje);
-	int n = send(socketCli,output,atoi(mensaje->longit),0);
+
+	cout << "Mensaje enviandose: " << output << endl;
+	int n = send(socketCli,output,strlen(output),0);
 	if (n < 0) {
-		printf("ERROR enviando mensaje");
+		perror("ERROR enviando mensaje");
 		return 1;
 	}
 
@@ -50,7 +60,7 @@ void split(const string &s, char delim, vector<string> &elems) {
 }
 
 
-vector<string> split(const string &s, char delim) {
+vector<string> split(const string &s, const char delim) {
     vector<string> elems;
     split(s, delim, elems);
     return elems;
@@ -59,27 +69,67 @@ vector<string> split(const string &s, char delim) {
 
 int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 
-	vector<string> result = split(input, '%');
+	vector<string> result = split(input, '|');
 	string longitud = result[0];
-	string tipo = result[1];
-	strcpy(mensaje->longit, longitud.c_str());
-	strcpy(mensaje->tipo, tipo.c_str());
-	mensaje->message = result[2];
+	string tipoS = result[1];
+	int tipo = atoi(tipoS.c_str());
+	string otherCliS = result[2];
+	int otherCli = atoi(otherCliS.c_str());
+
+	mensaje->tipo = static_cast<tipoMensaje>(tipo);
+	mensaje->otherCli = otherCli;
+	mensaje->message = result[3];
 
 	return 0;
 }
 
 
-bool Mensajeria::insertarMensajeCola(int msgqid, mensajeStruct msg){
-	int rc;
+int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
+
+	 int n;
+	 char buffer[BUFLEN];
+	 int error = 0;
+
+	 cout << "Enter receiveAndDecode" << endl;
+	bzero(buffer,BUFLEN);
+	n = recv(socketCli, buffer, BUFLEN-1, 0);
+	cout << "bzero" << endl;
+	if (n < 0) {
+		perror("ERROR ejecutano recv \n");
+		mensaje->tipo = DISCONNECTED;
+		mensaje->message = "Error leyendo del socket";
+		error = 1;
+	}else if (n == 0){
+		printf("Mensaje de salida recibido \n");
+		mensaje->tipo = DISCONNECTED;
+		mensaje->message = "Usuario desconectado";
+		error = 1;
+	}else{
+		cout << "Mensaje recibido: " << buffer << endl;
+		decode(buffer,mensaje);
+		error = 0;
+	}
+
+	mensaje->socketCli = socketCli;
+
+	cout << "Exit receiveAndDecode" << endl;
+
+	return error;
+}
+
+
+
+bool Mensajeria::insertarMensajeCola(int msgqid, mensajeStruct *msg){
+	/*int rc;
 
 	rc = msgsnd(msgqid, &msg, sizeof(mensajeStruct), 0);
 	if (rc < 0) {
 		perror(strerror(errno));
 		printf("ERROR: agregando mensaje a la cola.\n");
 		return false;
-	}
-
+	}*/
+	//colaPrincipalMensajes.push(msg);
+	
 	return true;
 }
 
