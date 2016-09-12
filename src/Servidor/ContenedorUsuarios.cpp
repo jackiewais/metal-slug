@@ -95,7 +95,7 @@ Usuario* ContenedorUsuarios::getUsuarioBySocket(int idSocket) {
 }
 
 
-string ContenedorUsuarios::getIdNombresUsuarios() {
+string ContenedorUsuarios::getIdNombresUsuarios(string message) {
 
 	map<string, Usuario*>::iterator it;
 	Usuario *usuario;
@@ -104,14 +104,36 @@ string ContenedorUsuarios::getIdNombresUsuarios() {
 
 	for(it = this->mapUsuarios.begin(); it != this->mapUsuarios.end(); it++) {
 
-	    usuario = it->second;
+		if (message != it->first) {
+			usuario = it->second;
 
-	    idUsuario = usuario->getIdUsuario();
-	    stringstream ss;
-	    ss << idUsuario;
+			idUsuario = usuario->getIdUsuario();
+			stringstream ss;
+			ss << idUsuario;
 
-	    idNombresUsuarios += ss.str() + "_" + usuario->getNombre() + ";";
+			idNombresUsuarios += ss.str() + "_" + usuario->getNombre() + ";";
+		}
 	}
 
 	return idNombresUsuarios;
+}
+
+
+list<int> ContenedorUsuarios::getIdOtrosUsuarios(int idUsuarioActual) {
+
+	list<int> idOtrosUsuarios;
+	map<string, Usuario*>::iterator it;
+	Usuario *usuario;
+	string idNombresUsuarios = "";
+	int idUsuario;
+
+	for(it = this->mapUsuarios.begin(); it != this->mapUsuarios.end(); it++) {
+
+		usuario = it->second;
+		idUsuario = usuario->getIdUsuario();
+		if (idUsuarioActual != idUsuario) {
+			idOtrosUsuarios.push_back(idUsuario);
+		}
+	}
+	return idOtrosUsuarios;
 }

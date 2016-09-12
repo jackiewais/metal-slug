@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <map>
 #include <string>
+#include <list>
 
 using namespace std;
 
@@ -26,7 +27,8 @@ public:
 	bool cerrarSesion(int idSocket);
 	int getCantidadUsuarios();
 	Usuario* getUsuarioBySocket(int idSocket);
-	string getIdNombresUsuarios();
+	string getIdNombresUsuarios(string message);
+	list<int> getIdOtrosUsuarios(int idUsuarioActual);
 };
 
 #endif /* CONTENEDORUSUARIOS_H_ */

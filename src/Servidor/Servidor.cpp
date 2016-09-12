@@ -49,7 +49,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 	if (this->contenedor->iniciarSesion(msg.message, msg.socketCli)) {
 		std::cout << "OK"  <<endl;
 		mensaje.tipo = LOG_OK;
-		mensaje.message = this->contenedor->getIdNombresUsuarios();
+		mensaje.message = this->contenedor->getIdNombresUsuarios(msg.message);
 	}else{
 		std::cout << "DENEGADO" <<endl;
 		mensaje.tipo = LOG_NOTOK;
