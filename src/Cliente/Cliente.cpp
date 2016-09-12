@@ -71,15 +71,25 @@ void *Cliente::recvMessage(void * arg){
 	bool finish = false;
 	Cliente* context = (Cliente*)arg;
 	mensajeStruct mensajeRta;
+	string nombre;
 
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
-		if (!finish){
-			printf("Received: %s",mensajeRta.message.c_str());
-		}else{
-			context->datosConexion.conectado = false;
-			context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
-		}	
+		switch (mensajeRta.tipo){
+			case RECIBIR_CHATS:
+				//nombre = mapa_usuarios[mensajeRta.otherCli];
+				nombre = "PEPE";
+				printf((nombre + " escribió: " + mensajeRta.message + "\n").c_str());
+				break;
+			case FIN_RECIBIR_CHATS:
+				context->semaforoReceive = false;
+				break;
+			case DISCONNECTED:
+				context->datosConexion.conectado = false;
+				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
+				context->imprimirConsigna();
+				break;
+		}
     }
 	return 0;
 };
@@ -126,12 +136,19 @@ int Cliente::salir(){
 }
 
 int Cliente::enviar(){
-    enviarMensajes(&this->datosConexion);
+
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado" << endl;
+	}else{
+		enviarMensajes(&this->datosConexion);
+	}
 	return 0;
 }
 
 int Cliente::recibir(){
-	//recibirMensajes(&this->datosConexion);
+	conexionCli.pedirMensajes(&datosConexion);
+	semaforoReceive = true;
+	while (semaforoReceive){}
 	return 0;
 }
 
@@ -147,7 +164,7 @@ int Cliente::loremIpsum(){
     string linea_aux;
     string linea_aux2;
     string linea_final;
-    int tamanio_aux=0;
+    unsigned int tamanio_aux=0;
     int cont = 1;
 
     cout << "Frecuencia:";
@@ -168,7 +185,7 @@ int Cliente::loremIpsum(){
 	while (!file2.eof() && (cont <= cantMax) ){
 	    getline(file2, linea);
 
-	    int pos=0;
+	    unsigned int pos=0;
 	    while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
            linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
            linea_final = linea_aux + linea_aux2;
@@ -200,7 +217,7 @@ int Cliente::loremIpsum(){
 	    cout << tamanio_aux<< endl;
         try{
             linea_aux = linea.substr(pos,tamanio_aux);
-        }catch(exception e){
+        }catch(exception* e){
         //	log('c',3,"Error en tamaño de string","");
         }
         linea = "";
@@ -258,15 +275,18 @@ int printMenu(){
 
 	return 0;
 }
+void Cliente::imprimirConsigna(){
+	cout << endl;
+	cout << "---------------" << endl;
+	cout << "Seleccione una opción del menú:" << endl;
+}
 
 int Cliente::selectFromMenu(){
 	int input;
 	bool ok = false;
 	int status;
 
-	cout << endl;
-	cout << "---------------" << endl;
-	cout << "Seleccione una opción del menú:" << endl;
+	imprimirConsigna();
 
 	while (!ok){
 		cin >> input;

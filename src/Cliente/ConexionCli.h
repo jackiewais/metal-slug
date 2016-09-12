@@ -22,6 +22,7 @@ class ConexionCli:Mensajeria{
 		int desconectar(datosConexionStruct* datosConexion);
 		void enviarMensajes(datosConexionStruct* datosConexion);
 		int recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje);
+		int pedirMensajes(datosConexionStruct* datosConexion);
 		static void* recvMessage(void * arg);
 		int cerrarSocket(int socket);
 	private:

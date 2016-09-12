@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <vector>
+#include <limits>
 
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
 
@@ -105,12 +106,14 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 	string buf;
 	cout << "INRESE MENSAJE A ENVIAR "<< endl;
 	cin>> input;
-	int lengthInput = input.length();
+	int lengthInput =  strlen(input.c_str());//input.length();
 	int pini=0;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	
 	mensajeStruct mensaje;
 	
-	mensaje.otherCli = 0;
+	mensaje.otherCli = 2;
 	
 	mensaje.socketCli = datosConexion->sockfd;
 
@@ -139,6 +142,14 @@ int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruc
 	return Mensajeria::receiveAndDecode(datosConexion->sockfd, mensaje);
 }
 
+int ConexionCli::pedirMensajes(datosConexionStruct* datosConexion){
+	mensajeStruct mensaje;
+	mensaje.tipo = RECIBIR_CHATS;
+	mensaje.otherCli = 0;
+	mensaje.message = "Quiero los chats";
+	encodeAndSend(datosConexion->sockfd, &mensaje);
+	return 0;
+}
 
 void split2(const string &s, char delim, vector<string> &elems) {
     stringstream ss;
