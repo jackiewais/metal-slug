@@ -21,6 +21,8 @@ private:
 	int loremIpsum();
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 	static void *recvMessage(void * arg);
+	map<int, string> mapIdNombreUsuario;
+
 public:
 	Cliente();
 	virtual ~Cliente();

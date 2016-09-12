@@ -41,7 +41,9 @@ int Cliente::seleccConectar(){
 		getUsuarioYContrasenia(usuario, contrasenia);
 		respuesta = 0;
 
-		if (conectar(&this->datosConexion, usuario, contrasenia) == 0){
+		this->mapIdNombreUsuario = conectar(&this->datosConexion, usuario, contrasenia);
+
+		if (!this->mapIdNombreUsuario.empty()){
 		//	this->datosConexion.idUsuario = idUsuario;
 			printf("Logueado correctamente");
 			this->datosConexion.conectado = true;

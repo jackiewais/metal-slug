@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <vector>
 
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
 
@@ -31,12 +32,13 @@ int ConexionCli::cerrarSocket(int socket){
 	return 0;
 }
 
-int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
+map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	struct sockaddr_in their_addr;
+	map<int, string> mapIdNombre;
 
 	if ((datosConexion->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		perror("ERROR abriendo el socket");
-		return -1;
+		return mapIdNombre;
 	}
 
 	struct timeval timeout;
@@ -57,7 +59,7 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 
 	if (connect(datosConexion->sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
 		perror("ERROR ejecutando connect");
-		return -1;
+		return mapIdNombre;
 	} else {cout << "conectado al servidor" << endl;}
 
 	Mensajeria mensajeria;
@@ -65,20 +67,22 @@ int ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuari
 	mensajeria.receiveAndDecode(datosConexion->sockfd,&rtaServer);
 	if (rtaServer.tipo == CONECTAR_NOTOK){
 		printf("El servidor rechazó la conexión: Demasiados usuarios \n");
-		return -1;
+		return mapIdNombre;
 	}
 
-	if ( autenticar(datosConexion, usuario, contrasenia) == -1 ) {
+	mapIdNombre = this->autenticar(datosConexion, usuario, contrasenia);
+
+	if (mapIdNombre.empty()) {
 			perror("ERROR al momento de autenticar usuario y password");
-			return -1;
+			return mapIdNombre;
 	}
-	return 0;
+	return mapIdNombre;
 };
 
 
 // Es necesario que se haya conectado mediante el socket previamente
 // Devuelve el ID de usuario si pudo autenticar con exito, o -1 en caso de error
-int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
+map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	std::string usuarioYContrasenia = usuario + ";" + contrasenia;
 	//Mensajeria mensajeria;
 
@@ -92,11 +96,8 @@ int ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usua
 	Mensajeria::receiveAndDecode(datosConexion->sockfd,&mensajeRespuesta);
 
 	std::cout << mensajeRespuesta.message << endl;
-	if (mensajeRespuesta.tipo == LOG_OK)
-		return 0;
-	else {
-		return -1;
-	}
+
+	return this->getMapIdNombre(mensajeRespuesta.message);
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 	string input;
@@ -137,6 +138,47 @@ int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruc
 	Mensajeria::receiveAndDecode(datosConexion->sockfd, mensaje);
 	return 0;
 
+}
+
+
+void split2(const string &s, char delim, vector<string> &elems) {
+    stringstream ss;
+    ss.str(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
+
+
+vector<string> split2(const string &s, const char delim) {
+    vector<string> elems;
+    split2(s, delim, elems);
+    return elems;
+}
+
+
+map<int, string> ConexionCli::getMapIdNombre(string idNombresUsuarios) {
+
+	map<int, string> mapIdNombre;
+
+	if(idNombresUsuarios != "") {
+
+		vector<string> vectorIdNombresUsuarios = split2(idNombresUsuarios, ';');
+		vector<string> vectorUnElem;
+
+		for(unsigned int i=0; i < vectorIdNombresUsuarios.size()-1; i++) {
+
+			string unIdNombreUsuario = vectorIdNombresUsuarios[i];
+			vectorUnElem = split2(unIdNombreUsuario, '_');
+			int idUsuario =  atoi(vectorUnElem[0].c_str());
+			string nombre = vectorUnElem[1];
+
+			mapIdNombre[idUsuario] = nombre;
+		}
+	}
+
+	return mapIdNombre;
 }
 
 
