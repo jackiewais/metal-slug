@@ -329,6 +329,8 @@ int Cliente::selectFromMenu(){
 
 
 }
+
+
 int Cliente::runCliente(){
 	cout << "Starting client app" << endl;
 
@@ -344,3 +346,30 @@ int Cliente::runCliente(){
 	return 0;
 
 };
+
+
+string Cliente::getNombreUsuarioById(int idUsuario) {
+
+	string nombre = "";
+
+	map<int, string>::iterator it;
+
+	if((it = this->mapIdNombreUsuario.find(idUsuario)) != this->mapIdNombreUsuario.end())
+		nombre = this->mapIdNombreUsuario[idUsuario];
+
+	return nombre;
+}
+
+
+list<int> Cliente::getIdUsuarios() {
+
+	list<int> idUsuarios;
+	map<int, string>::iterator it;
+
+	for(it = this->mapIdNombreUsuario.begin(); it != this->mapIdNombreUsuario.end(); it++) {
+
+		    idUsuarios.push_back(it->first);
+	}
+
+	return idUsuarios;
+}

@@ -5,6 +5,8 @@
 #include "../Common/Mensajeria.h"
 #include <iostream>
 #include <string.h>
+#include <map>
+#include <list>
 
 class Cliente:ConexionCli {
 private:
@@ -29,6 +31,8 @@ public:
 	Cliente();
 	virtual ~Cliente();
 	int runCliente();
+	string getNombreUsuarioById(int idUsuario);
+	list<int> getIdUsuarios();
 };
 
 #endif /* CLIENTE_H_ */
