@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <sstream>
 
-using namespace std;
 #define NIVEL 3
 #define TAMANIO 100
 #define SERVER "src/Servidor/log.txt"
@@ -23,7 +22,7 @@ void Log::write_file(char* file_name,string message){
 
 	fstream file(file_name,ios::in | ios::out | ios::app);
 	if (!file.is_open()){
-          perror("Error apertura de archivo");
+        //  perror("Error apertura de archivo");
 	}
 
 	file<< s.str() <<endl;

@@ -1,4 +1,5 @@
 #include "ImportarCSV.h"
+#include "../Common/Log.h"
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,13 +27,13 @@ ImportarCSV::~ImportarCSV() {
 
 
 string** ImportarCSV::importar(string csv) {
-
+Log *log = new Log();
 	ifstream archivo(csv.c_str());
 	string  nombre, pass;
 
 	if(archivo.fail()) {
 		cerr << "Error al abrir el archivo " + string(csv) << endl;
-
+        log->log('s',3,"Al abrir el archivo " + string(csv),"");
 	}else{
 		int i = 0;
 
@@ -50,6 +51,7 @@ string** ImportarCSV::importar(string csv) {
 	    this->cantidadUsuarios = i;
 	 }
 	 archivo.close();
+	 delete log;
 	 return this->tablaUsuarios;
 }
 

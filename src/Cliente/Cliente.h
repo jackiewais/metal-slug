@@ -3,6 +3,7 @@
 
 #include "ConexionCli.h"
 #include "../Common/Mensajeria.h"
+#include "../Common/Log.h"
 #include <iostream>
 #include <string.h>
 #include <map>

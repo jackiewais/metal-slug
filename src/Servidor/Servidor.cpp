@@ -1,5 +1,6 @@
 #include "Servidor.h"
 #include "../Common/Mensajeria.h"
+#include "../Common/Log.h"
 #include <iostream>
 #include <limits>
 #include <stdio.h>
@@ -21,6 +22,7 @@ using namespace std;
 
 
 void* Servidor::procesarMensajesMain (void *data) {
+	Log *log = new Log();
 	mensajeStruct msg;
 	Servidor* context = (Servidor*)data;
 	bool finish = false;
@@ -31,11 +33,12 @@ void* Servidor::procesarMensajesMain (void *data) {
 			msg=context->colaPrincipalMensajes.front();
 			context->colaPrincipalMensajes.pop();
 			printf("Procesando Mensaje: %s",msg.message.c_str());
+			log->log('s',1,"Procesando Mensaje: %s",msg.message.c_str());
 			result = context->procesarMensajeCola(msg);
 			finish = (result != 0);
 		}
 	}
-
+    delete log;
 	return 0;
 
 }
@@ -162,13 +165,18 @@ int Servidor::enviarMensajeSegmentado(int socketCli, chatStruct* chat ){
 int Servidor::openSocket(short puerto){
 	int conexiones_max = 10;
 	int yes=1;
+	Log *log = new Log();
 
 	if ((this->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		perror("ERROR abriendo el socket \n");
+		log->log('s',3,"Abriendo el socket \n","");
+		delete log;
 		return 1;
 	}
 	if (setsockopt(this->sockfd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(int)) == -1) {
 		perror("ERROR ejecutando setsockopt \n");
+		log->log('s',3,"Ejecutando setsockopt \n","");
+		delete log;
 		return 1;
 	}
 	this->my_addr.sin_family = AF_INET;
@@ -177,14 +185,18 @@ int Servidor::openSocket(short puerto){
 	memset(&(this->my_addr.sin_zero), '\0', 8); // Poner a cero el resto de la estructura
 	if (bind(this->sockfd, (struct sockaddr *)&this->my_addr, sizeof(struct sockaddr)) == -1) {
 		perror("ERROR ejecutando bind \n");
+		log->log('s',3,"Ejecutando bind \n","");
+		delete log;
 		return 1;
 	}
 
 	if (listen(this->sockfd, conexiones_max) == -1) {
 		perror("ERROR ejecutando listen \n");
+		log->log('s',3,"Ejecutando listen \n","");
+		delete log;
 		return 1;
 	}
-
+    delete log;
 	return 0;
 }
 
@@ -263,6 +275,7 @@ void *Servidor::sendMessage(void *arguments){
 
 void Servidor::nuevaConexion(int new_fd) {
 
+	Log *log = new Log();
 	struct timeval timeout;
 	timeout.tv_sec = 60;
 	timeout.tv_usec = 0;
@@ -270,9 +283,11 @@ void Servidor::nuevaConexion(int new_fd) {
 	pthread_t psendMessage;
 	
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
-		printf("ERROR setealdo el rcv timeout \n");
+		log->log('s',3,"Setealdo el rcv timeout \n","");
+	//	printf("ERROR setealdo el rcv timeout \n");
 	if (setsockopt (new_fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
-		printf("ERROR setealdo el snd timeout \n");
+		log->log('s',3,"Setealdo el snd timeout \n","");
+	//	printf("ERROR setealdo el snd timeout \n");
 	//CREO LA COLA DE CLIENTE Y GUARDO EN UN MAP
   	queue<mensajeStruct> * queueClient =new queue<mensajeStruct>;
 	socketIdQueue[new_fd]= queueClient;
@@ -282,19 +297,23 @@ void Servidor::nuevaConexion(int new_fd) {
 
 	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)arguments);
 	if (rc){
-		printf("ERROR creando el thread de recv %i \n",rc);
+	//	printf("ERROR creando el thread de recv %i \n",rc);
+		log->log('s',3,"Creando el thread de recv %i \n","");
 	}
 
 	rc = pthread_create(&psendMessage, NULL, sendMessage, (void*)arguments);
 	if (rc){
-		printf("ERROR creando el thread de send %i \n",rc);
+		//printf("ERROR creando el thread de send %i \n",rc);
+		log->log('s',3,"Creando el thread de send %i \n","");
 	}
-
+    delete log;
 	//delete args;
 
 }
 
 int Servidor::escuchar() {
+
+	Log *log = new Log();
 	socklen_t sin_size;
 	int new_fd;
 	struct sockaddr_in their_addr; // información sobre la dirección del cliente
@@ -305,7 +324,8 @@ int Servidor::escuchar() {
 		sin_size = sizeof(struct sockaddr_in);
 		new_fd = accept(this->sockfd, (struct sockaddr *)&their_addr, &sin_size);
 		if (new_fd == -1) {
-			perror("ERROR ejecutando accept \n");
+		//	perror("ERROR ejecutando accept \n");
+			log->log('s',3,"Ejecutando accept \n","");
 			continue;
 		}
 
@@ -327,7 +347,7 @@ int Servidor::escuchar() {
 			nuevaConexion(new_fd);
 		}
 	}
-
+    delete log;
 	return 0;
 }
 
@@ -393,20 +413,25 @@ void* Servidor::exitManager(void* context) {
 
 void Servidor::createExitThread(){
 	pthread_t threadExit;
+	Log *log = new Log();
 
 	int rc = pthread_create(&threadExit, NULL,&Servidor::exitManager, this);
 	if (rc){
 		printf("ERROR creando el thread de salida %i \n",rc);
+		log->log('s',3,"creando el thread de salida %i \n","");
 	}
+delete log;
 }
 
 void Servidor::createMainProcessorThread(){
 	pthread_t threadMain;
-
+    Log *log = new Log;
 	int rc = pthread_create(&threadMain, NULL,&Servidor::procesarMensajesMain, this);
 	if (rc){
 		printf("ERROR creando el thread de procesamiento principal %i \n",rc);
+		log->log('s',3,"Creando el thread de procesamiento principal %i \n","");
 	}
+	delete log;
 }
 
 Servidor::Servidor() {
