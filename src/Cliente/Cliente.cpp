@@ -19,6 +19,7 @@
 using namespace std;
 
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
+#define LOREMIPSUM "src/Cliente/loremIpsum.txt"
 
 Cliente::Cliente() {
 
@@ -140,6 +141,7 @@ int Cliente::loremIpsum(){
 	int tamanio;
 	srand(unsigned(time(0)));
 	tamanio = rand()%200+1;
+
 	int frecuencia;
 	int cantMax;
 	int milisegundos;
@@ -148,31 +150,30 @@ int Cliente::loremIpsum(){
     string linea_aux2;
     string linea_final;
     int tamanio_aux=0;
-    int cont = 1;
-
-    cout << "Frecuencia:";
+    int pos;
+    cout << "Frecuencia de envio:";
     cin >> frecuencia;
-    cout << "Cantidad Màxima:";
+    cout << "Cantidad maxima de mensajes:";
     cin >> cantMax;
     milisegundos= 1000/frecuencia;
+    int cont = 1;
     clock_t t = clock();
     int actual = (t*1000)/double(CLOCKS_PER_SEC);
     int cada = actual + milisegundos;
 
    while(cont <= cantMax){
-	fstream file2("src/Ipsum.txt",ios::in | ios::out | ios::app);
+	fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
 	if (!file2.is_open()){
           perror("Error apertura de archivo");
-       //   log('c',3,"Apertura de archivo","");
 	}
 	while (!file2.eof() && (cont <= cantMax) ){
 	    getline(file2, linea);
+	    pos=0;
 
-	    int pos=0;
 	    while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
            linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
            linea_final = linea_aux + linea_aux2;
-           tamanio_aux = 0;
+
            linea_aux = "";
            linea_aux2 = "";
 
@@ -180,7 +181,6 @@ int Cliente::loremIpsum(){
 
            	if (actual == cada){
                 cout << linea_final << endl;
-        //        Funcion enviar y enviar una estructura
            		cada = actual + milisegundos;
            	    cont++;
            	    break;
@@ -191,19 +191,16 @@ int Cliente::loremIpsum(){
 
            }while(cont <= cantMax);
 
-           pos = pos + tamanio;
+           pos = (pos + tamanio)-tamanio_aux;
+           tamanio_aux = 0;
 	   }
-
-	    tamanio_aux = linea.length()- pos;
-	    cout << linea.length()<< endl;
-	    cout << pos << endl;
-	    cout << tamanio_aux<< endl;
-        try{
-            linea_aux = linea.substr(pos,tamanio_aux);
-        }catch(exception e){
-        //	log('c',3,"Error en tamaño de string","");
-        }
-        linea = "";
+       if ((pos == 0) && ((tamanio_aux+linea.length()) < tamanio)){
+    		   linea_aux = linea_aux + linea;
+    		   tamanio_aux = tamanio_aux + linea.length();
+       }else{
+	         tamanio_aux = linea.length()- pos;
+             linea_aux = linea.substr(pos,tamanio_aux);
+       }
 	}
 	file2.seekg(0);
 	file2.close();
