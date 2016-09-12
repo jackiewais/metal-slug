@@ -105,11 +105,11 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 	string input;
 	string buf;
 	cout << "INRESE MENSAJE A ENVIAR "<< endl;
-	cin>> input;
+	getline (cin,input);
 	int lengthInput =  strlen(input.c_str());//input.length();
 	int pini=0;
-	cin.clear();
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	//cin.clear();
+	//cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	
 	mensajeStruct mensaje;
 	
