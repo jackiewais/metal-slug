@@ -30,7 +30,7 @@ private:
 	struct sockaddr_in my_addr;
 	std::multimap<int,chatStruct> waitingChats;
 	int colaPrincipal=0;
-	argsForThread* args;
+	argsForThread* arguments;
 
 	int openSocket(short puerto);
 	int escuchar();

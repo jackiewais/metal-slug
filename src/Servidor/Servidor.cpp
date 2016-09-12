@@ -53,6 +53,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 	}else{
 		std::cout << "DENEGADO" <<endl;
 		mensaje.tipo = LOG_NOTOK;
+		mensaje.message = "";
 	}
 
 	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);
@@ -96,6 +97,8 @@ int Servidor::enviarChat(mensajeStruct msg){
 
 int Servidor::recibirTodosLosChats(mensajeStruct msg){
 	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
+	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+
 	mensajeStruct msj;
 
 	multimap<int,chatStruct>::iterator elemento;
@@ -104,9 +107,17 @@ int Servidor::recibirTodosLosChats(mensajeStruct msg){
 		msj.socketCli = msg.socketCli; //socket del que recibe los msjs
 		msg.otherCli = elemento->second.from;
 		msg.message = elemento->second.message;
+		msg.tipo = RECIBIR_CHATS;
 		waitingChats.erase (elemento);
-		//TODO: AGREGAR A COLA DE CLIENTE
+		colaCliente->push(msg);
+
 	}
+
+	msj.socketCli = msg.socketCli; //socket del que recibe los msjs
+	msg.otherCli = 0;
+	msg.message = "Fin de chats";
+	msg.tipo = FIN_RECIBIR_CHATS;
+	colaCliente->push(msg);
 
 	return 0;
 }
@@ -180,7 +191,7 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 	   }
    }
    //MARCAR USER COMO DESCONECTADO
-   delete((argsForThread*) arguments); //asegurarnos que esto no hace explotar al mundo
+   //delete((argsForThread*) arguments); //asegurarnos que esto no hace explotar al mundo
    close(socketCli);
 
    return 0;
@@ -233,15 +244,15 @@ void Servidor::nuevaConexion(int new_fd) {
 	//mensajeria.crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
     
 
-	args->context = this;
-	args->socketCli = &new_fd;
+	arguments->context = this;
+	arguments->socketCli = &new_fd;
 
-	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)args);
+	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)arguments);
 	if (rc){
 		printf("ERROR creando el thread de recv %i \n",rc);
 	}
 
-	rc = pthread_create(&psendMessage, NULL, sendMessage, (void*)args);
+	rc = pthread_create(&psendMessage, NULL, sendMessage, (void*)arguments);
 	if (rc){
 		printf("ERROR creando el thread de send %i \n",rc);
 	}
@@ -368,10 +379,10 @@ void Servidor::createMainProcessorThread(){
 Servidor::Servidor() {
 	this->contenedor = new ContenedorUsuarios();
 	contenedor  = new ContenedorUsuarios();
-	args = new argsForThread();
+	arguments = new argsForThread();
 }
 Servidor::~Servidor() {
 	delete this->contenedor;
-	delete args;
+	delete arguments;
 
 }

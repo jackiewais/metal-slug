@@ -2,8 +2,11 @@
 #define CONEXIONCLI_H_
 
 #include <iostream>
-#include <string.h>
 #include "../Common/Mensajeria.h"
+#include <map>
+#include <string>
+
+using namespace std;
 
 class ConexionCli:Mensajeria{
 
@@ -15,14 +18,16 @@ class ConexionCli:Mensajeria{
 			bool conectado = false;
 		};
 
-		int conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
+		map<int, string> conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 		int desconectar(datosConexionStruct* datosConexion);
 		void enviarMensajes(datosConexionStruct* datosConexion);
 		int recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje);
+		int pedirMensajes(datosConexionStruct* datosConexion);
 		static void* recvMessage(void * arg);
 		int cerrarSocket(int socket);
 	private:
-		int autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
+		map<int, string> autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
+		map<int, string> getMapIdNombre(string idNombresUsuarios);
 };
 
 #endif

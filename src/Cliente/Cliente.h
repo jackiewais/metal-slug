@@ -11,7 +11,9 @@ private:
 
 	 datosConexionStruct datosConexion;
 	 ConexionCli conexionCli;
-	int seleccConectar();
+	 bool semaforoReceive = false;
+	 map<int, string> mapIdNombreUsuario;
+	 int seleccConectar();
 	int getIpAndPort();
 	int selectFromMenu();
 	int seleccDesconectar();
@@ -21,6 +23,8 @@ private:
 	int loremIpsum();
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 	static void *recvMessage(void * arg);
+	void imprimirConsigna();
+
 public:
 	Cliente();
 	virtual ~Cliente();

@@ -10,7 +10,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>
-#include <ctime>;
+#include <ctime>
 #include <exception>
 #include <sstream>
 #include <sys/socket.h>
@@ -42,7 +42,9 @@ int Cliente::seleccConectar(){
 		getUsuarioYContrasenia(usuario, contrasenia);
 		respuesta = 0;
 
-		if (conectar(&this->datosConexion, usuario, contrasenia) == 0){
+		this->mapIdNombreUsuario = conectar(&this->datosConexion, usuario, contrasenia);
+
+		if (!this->mapIdNombreUsuario.empty()){
 		//	this->datosConexion.idUsuario = idUsuario;
 			printf("Logueado correctamente");
 			this->datosConexion.conectado = true;
@@ -66,21 +68,29 @@ int Cliente::seleccConectar(){
 }
 
 void *Cliente::recvMessage(void * arg){
-	cout << "recvMessage" << endl;
 
 	bool finish = false;
 	Cliente* context = (Cliente*)arg;
-	cout << "ACA ENTRE" << endl;
 	mensajeStruct mensajeRta;
+	string nombre;
 
 	while(!finish){
-		cout << "antes  recibirMensaje" << endl;
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
-		cout << "despues  recibirMensaje" << endl;
-		if (!finish){
-			printf("Received: %s",mensajeRta.message.c_str());
-		}	
-
+		switch (mensajeRta.tipo){
+			case RECIBIR_CHATS:
+				//nombre = mapa_usuarios[mensajeRta.otherCli];
+				nombre = "PEPE";
+				printf((nombre + " escribió: " + mensajeRta.message + "\n").c_str());
+				break;
+			case FIN_RECIBIR_CHATS:
+				context->semaforoReceive = false;
+				break;
+			case DISCONNECTED:
+				context->datosConexion.conectado = false;
+				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
+				context->imprimirConsigna();
+				break;
+		}
     }
 	return 0;
 };
@@ -127,12 +137,19 @@ int Cliente::salir(){
 }
 
 int Cliente::enviar(){
-    enviarMensajes(&this->datosConexion);
+
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado" << endl;
+	}else{
+		enviarMensajes(&this->datosConexion);
+	}
 	return 0;
 }
 
 int Cliente::recibir(){
-	//recibirMensajes(&this->datosConexion);
+	conexionCli.pedirMensajes(&datosConexion);
+	semaforoReceive = true;
+	while (semaforoReceive){}
 	return 0;
 }
 
@@ -194,6 +211,7 @@ int Cliente::loremIpsum(){
            pos = (pos + tamanio)-tamanio_aux;
            tamanio_aux = 0;
 	   }
+
        if ((pos == 0) && ((tamanio_aux+linea.length()) < tamanio)){
     		   linea_aux = linea_aux + linea;
     		   tamanio_aux = tamanio_aux + linea.length();
@@ -255,15 +273,18 @@ int printMenu(){
 
 	return 0;
 }
+void Cliente::imprimirConsigna(){
+	cout << endl;
+	cout << "---------------" << endl;
+	cout << "Seleccione una opción del menú:" << endl;
+}
 
 int Cliente::selectFromMenu(){
 	int input;
 	bool ok = false;
 	int status;
 
-	cout << endl;
-	cout << "---------------" << endl;
-	cout << "Seleccione una opción del menú:" << endl;
+	imprimirConsigna();
 
 	while (!ok){
 		cin >> input;
