@@ -13,8 +13,6 @@
 #include <vector>
 #include <limits>
 
-#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
-
 using namespace std;
 int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 	mensajeStruct mensaje;
@@ -72,13 +70,7 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 		return mapIdNombre;
 	}
 
-	mapIdNombre = this->autenticar(datosConexion, usuario, contrasenia);
-
-	if (mapIdNombre.empty()) {
-			perror("ERROR al momento de autenticar usuario y password");
-			return mapIdNombre;
-	}
-	return mapIdNombre;
+	return this->autenticar(datosConexion, usuario, contrasenia);
 };
 
 
@@ -99,7 +91,16 @@ map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std
 
 	std::cout << mensajeRespuesta.message << endl;
 
-	return this->getMapIdNombre(mensajeRespuesta.message);
+	map<int, string> mapIdNombre = this->getMapIdNombre(mensajeRespuesta.message);
+
+	if (mensajeRespuesta.tipo == LOG_NOTOK) {
+			printf("ERROR al momento de autenticar usuario y password ");
+
+	}else if(mapIdNombre.empty() && mensajeRespuesta.tipo == LOG_OK) {
+			printf("No Hay Usuarios Disponibles \n");
+	}
+
+	return mapIdNombre;
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 	string input;
@@ -132,10 +133,7 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 			mensaje.tipo = ENVIAR_CHAT_FIN;
 			mensaje.message=buf;
 			Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
-		}	
-
-	
-	
+		}
 }
 
 int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje){
