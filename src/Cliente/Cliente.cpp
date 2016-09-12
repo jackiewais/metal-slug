@@ -71,18 +71,31 @@ void *Cliente::recvMessage(void * arg){
 
 	bool finish = false;
 	Cliente* context = (Cliente*)arg;
+	string mensajeParcial = "";
+	bool hayMsjParcial = false;
 	mensajeStruct mensajeRta;
 	string nombre;
+	string mensajeAMostrar;
 
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		switch (mensajeRta.tipo){
-			case RECIBIR_CHATS:
-				//nombre = mapa_usuarios[mensajeRta.otherCli];
-				nombre = "PEPE";
-				printf((nombre + " escribió: " + mensajeRta.message + "\n").c_str());
+			case RECIBIR_CHAT_SIGUE:
+			   //si ya existia concateno el mensaje
+			   mensajeParcial += mensajeRta.message;
+			   hayMsjParcial = true;
+			   break;
+			case RECIBIR_CHAT_FIN:
+				if (hayMsjParcial && !finish){
+				   //primero concateno el mensaje y después lo asigno
+				   mensajeParcial += mensajeRta.message;
+				   mensajeRta.message = mensajeParcial;
+				}
+				nombre = context->getNombreUsuarioById(mensajeRta.otherCli);
+				mensajeAMostrar = nombre + " escribió: " + mensajeRta.message + "\n";
+				printf("%s",mensajeAMostrar.c_str());
 				break;
-			case FIN_RECIBIR_CHATS:
+			case RECIBIR_CHATS_LISTO: //Terminé de recibir todos los mensajes
 				context->semaforoReceive = false;
 				break;
 			case DISCONNECTED:

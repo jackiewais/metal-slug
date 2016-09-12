@@ -13,8 +13,6 @@
 #include <vector>
 #include <limits>
 
-#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
-
 using namespace std;
 int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 	mensajeStruct mensaje;
@@ -132,10 +130,7 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 			mensaje.tipo = ENVIAR_CHAT_FIN;
 			mensaje.message=buf;
 			Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
-		}	
-
-	
-	
+		}
 }
 
 int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje){

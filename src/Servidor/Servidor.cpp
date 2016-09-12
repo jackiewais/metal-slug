@@ -104,24 +104,51 @@ int Servidor::recibirTodosLosChats(mensajeStruct msg){
 	multimap<int,chatStruct>::iterator elemento;
 
 	while (!((elemento = waitingChats.find(idCliente)) == waitingChats.end())){
-		msj.socketCli = msg.socketCli; //socket del que recibe los msjs
-		msg.otherCli = elemento->second.from;
-		msg.message = elemento->second.message;
-		msg.tipo = RECIBIR_CHATS;
+		enviarMensajeSegmentado(msg.socketCli, &(elemento->second));
 		waitingChats.erase (elemento);
 		colaCliente->push(msg);
-
 	}
 
 	msj.socketCli = msg.socketCli; //socket del que recibe los msjs
 	msg.otherCli = 0;
 	msg.message = "Fin de chats";
-	msg.tipo = FIN_RECIBIR_CHATS;
+	msg.tipo = RECIBIR_CHATS_LISTO;
 	colaCliente->push(msg);
 
 	return 0;
 }
 
+int Servidor::enviarMensajeSegmentado(int socketCli, chatStruct* chat ){
+
+	string buf;
+	int pini=0;
+
+	string input = chat->message;
+	int lengthInput = strlen(input.c_str());
+
+	mensajeStruct mensaje;
+	mensaje.otherCli = chat->from;
+	mensaje.socketCli = socketCli;
+
+	while(lengthInput>MAXDATASIZE){
+		buf = input.substr(pini,MAXDATASIZE);
+		pini+=MAXDATASIZE;
+		lengthInput -= MAXDATASIZE;
+		//ENVIAR MENSAJE SIGUIENTE
+		mensaje.tipo = RECIBIR_CHAT_SIGUE;
+		mensaje.message = buf;
+		encodeAndSend(socketCli, &mensaje);
+	}
+	if (lengthInput!=0){
+		buf= input.substr(pini,lengthInput);
+		//ENVIAR MENSAJE CON FIN
+		mensaje.tipo = RECIBIR_CHAT_FIN;
+		mensaje.message=buf;
+		encodeAndSend(socketCli, &mensaje);
+	}
+
+	return 0;
+}
 
 int Servidor::openSocket(short puerto){
 	int conexiones_max = 10;
@@ -240,9 +267,6 @@ void Servidor::nuevaConexion(int new_fd) {
 	//CREO LA COLA DE CLIENTE Y GUARDO EN UN MAP
   	queue<mensajeStruct> * queueClient =new queue<mensajeStruct>;
 	socketIdQueue[new_fd]= queueClient;
-
-	//mensajeria.crearCola(cola_socket); //TODO: AGREGAR ESTO A LOS DATOS DEL USER
-    
 
 	arguments->context = this;
 	arguments->socketCli = &new_fd;
