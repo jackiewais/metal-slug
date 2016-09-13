@@ -105,6 +105,8 @@ void *Cliente::recvMessage(void * arg){
 					context->printMenu();
 					context->imprimirConsigna();
 				}else{
+					context->printMenu();
+					cout << endl;
 					cout << "Presione cualquier tecla y después ENTER para continuar" << endl;
 				}
 				break;
