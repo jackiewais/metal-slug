@@ -114,7 +114,7 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 	
 	mensajeStruct mensaje;
 	
-	mensaje.otherCli = 2;
+	mensaje.otherCli = 99;
 	
 	mensaje.socketCli = datosConexion->sockfd;
 
