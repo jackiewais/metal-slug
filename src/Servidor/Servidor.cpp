@@ -85,13 +85,22 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 
 int Servidor::enviarChat(mensajeStruct msg){
 	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
-
+    list<int> otroUsuarios = contenedor->getIdOtrosUsuarios(idCliente);
+	
 	chatStruct chat;
+	chat.message = msg.message;
 	chat.from = idCliente; //CAMBIAR POR EL ID DE USUARIO!
 	chat.to = msg.otherCli;
-	chat.message = msg.message;
 
-	waitingChats.insert(pair<int,chatStruct>(chat.to,chat));
+	list<int>::iterator it=otroUsuarios.begin();
+	if (chat.to == 99){ // si quiere enviar a todos los usuarios
+		for(it ; it != otroUsuarios.end();it++){
+		waitingChats.insert(pair<int,chatStruct>(*it,chat));
+		}
+	}else {//ENVIA MENSAJE A UN SOLO USUARIO
+		waitingChats.insert(pair<int,chatStruct>(chat.to,chat));
+	}
+		
 	return 0;
 }
 
