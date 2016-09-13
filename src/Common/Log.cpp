@@ -1,3 +1,4 @@
+#include "Log.h"
 #include <iostream>
 #include <string.h>
 #include <fstream>
@@ -10,7 +11,7 @@ using namespace std;
 #define SERVER "src/Servidor/log.txt"
 #define CLIENT "src/Cliente/log.txt"
 
-void write_file(char* file_name,string message){
+void Log::write_file(char* file_name,string message){
 
     time_t now = time(0);
     tm *ltm =localtime(&now);
@@ -30,7 +31,7 @@ void write_file(char* file_name,string message){
 	file.close();
 }
 
-void log(char tipo_arch,int tipo_msg,string mensaje ,string chat){
+void Log::log(char tipo_arch,int tipo_msg,string mensaje ,string chat){
 	string msg;
 
 		   if (NIVEL != 1){
