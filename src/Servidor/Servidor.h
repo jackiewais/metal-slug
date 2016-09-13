@@ -47,7 +47,7 @@ private:
 	int loginInterpretarMensaje(mensajeStruct msg);
 	int enviarChat(mensajeStruct msg);
 	int recibirTodosLosChats(mensajeStruct msg);
-	int enviarMensajeSegmentado(int socketCli, chatStruct* elemento );
+	int enviarMensajeSegmentado(int socketCli, chatStruct* elemento, queue<mensajeStruct>* colaCliente );
 	Mensajeria mensajeria;
 	ContenedorUsuarios* contenedor;
 

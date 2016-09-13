@@ -199,83 +199,92 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 }
 
 int Cliente::recibir(){
-	conexionCli.pedirMensajes(&datosConexion);
-	semaforoReceive = true;
-	while (semaforoReceive){}
+
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado" << endl;
+	}else{
+		conexionCli.pedirMensajes(&datosConexion);
+		semaforoReceive = true;
+		while (semaforoReceive){}
+	}
 	return 0;
 }
 
 int Cliente::loremIpsum(){
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado" << endl;
+	}else{
 
-	int tamanio;
-	srand(unsigned(time(0)));
-	tamanio = rand()%200+1;
+		int tamanio;
+		srand(unsigned(time(0)));
+		tamanio = rand()%200+1;
 
-	int frecuencia;
-	int cantMax;
-	int milisegundos;
-    string linea;
-    string linea_aux;
-    string linea_aux2;
-    string linea_final;
-    int tamanio_aux=0;
-    int pos;
-    cout << "Frecuencia de envio:";
-    cin >> frecuencia;
-    cout << "Cantidad maxima de mensajes:";
-    cin >> cantMax;
-    milisegundos= 1000/frecuencia;
-    int cont = 1;
-    clock_t t = clock();
-    int actual = (t*1000)/double(CLOCKS_PER_SEC);
-    int cada = actual + milisegundos;
+		int frecuencia;
+		int cantMax;
+		int milisegundos;
+		string linea;
+		string linea_aux;
+		string linea_aux2;
+		string linea_final;
+		int tamanio_aux=0;
+		int pos;
+		cout << "Frecuencia de envio:";
+		cin >> frecuencia;
+		cout << "Cantidad maxima de mensajes:";
+		cin >> cantMax;
+		milisegundos= 1000/frecuencia;
+		int cont = 1;
+		clock_t t = clock();
+		int actual = (t*1000)/double(CLOCKS_PER_SEC);
+		int cada = actual + milisegundos;
 
-   while(cont <= cantMax){
-	fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
-	if (!file2.is_open()){
-          perror("Error apertura de archivo");
+	   while(cont <= cantMax){
+		fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
+		if (!file2.is_open()){
+			  perror("Error apertura de archivo");
+		}
+		while (!file2.eof() && (cont <= cantMax) ){
+			getline(file2, linea);
+			pos=0;
+
+			while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
+			   linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
+			   linea_final = linea_aux + linea_aux2;
+
+			   linea_aux = "";
+			   linea_aux2 = "";
+
+			   do{
+
+				if (actual == cada){
+					cout << linea_final << endl;
+					cada = actual + milisegundos;
+					cont++;
+					break;
+				}
+
+				t = clock();
+				actual = (t*1000)/double(CLOCKS_PER_SEC);
+
+			   }while(cont <= cantMax);
+
+			   pos = (pos + tamanio)-tamanio_aux;
+			   tamanio_aux = 0;
+		   }
+
+		   if ((pos == 0) && ((tamanio_aux+linea.length()) < tamanio)){
+				   linea_aux = linea_aux + linea;
+				   tamanio_aux = tamanio_aux + linea.length();
+		   }else{
+				 tamanio_aux = linea.length()- pos;
+				 linea_aux = linea.substr(pos,tamanio_aux);
+		   }
+		}
+		file2.seekg(0);
+		file2.close();
+
+	  }
 	}
-	while (!file2.eof() && (cont <= cantMax) ){
-	    getline(file2, linea);
-	    pos=0;
-
-	    while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
-           linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
-           linea_final = linea_aux + linea_aux2;
-
-           linea_aux = "";
-           linea_aux2 = "";
-
-           do{
-
-           	if (actual == cada){
-                cout << linea_final << endl;
-           		cada = actual + milisegundos;
-           	    cont++;
-           	    break;
-           	}
-
-           	t = clock();
-           	actual = (t*1000)/double(CLOCKS_PER_SEC);
-
-           }while(cont <= cantMax);
-
-           pos = (pos + tamanio)-tamanio_aux;
-           tamanio_aux = 0;
-	   }
-
-       if ((pos == 0) && ((tamanio_aux+linea.length()) < tamanio)){
-    		   linea_aux = linea_aux + linea;
-    		   tamanio_aux = tamanio_aux + linea.length();
-       }else{
-	         tamanio_aux = linea.length()- pos;
-             linea_aux = linea.substr(pos,tamanio_aux);
-       }
-	}
-	file2.seekg(0);
-	file2.close();
-
-}
 	return 0;
 }
 
@@ -342,7 +351,7 @@ int Cliente::selectFromMenu(){
 		cin >> input;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
-		}else if(input<1 || input > 6){
+		}else if(input<1 || input > 7){
 			cout << "Error: Ingrese una de las opciones dadas" << endl;
 		}else
 			ok = true;
