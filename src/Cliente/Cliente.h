@@ -26,6 +26,7 @@ private:
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 	static void *recvMessage(void * arg);
 	void imprimirConsigna();
+	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
 
 public:
 	Cliente();

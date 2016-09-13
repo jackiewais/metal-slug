@@ -102,22 +102,18 @@ map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std
 
 	return mapIdNombre;
 }
-void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
-	string input;
+void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion,int usuarioTo, string input){
 	string buf;
-	cout << "INRESE MENSAJE A ENVIAR "<< endl;
-	getline (cin,input);
-	int lengthInput =  strlen(input.c_str());//input.length();
 	int pini=0;
-	//cin.clear();
-	//cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	
+	int lengthInput =  strlen(input.c_str());
+
 	mensajeStruct mensaje;
 	
-	mensaje.otherCli = 99;
-	
+	mensaje.otherCli = usuarioTo;
 	mensaje.socketCli = datosConexion->sockfd;
 
+	if (datosConexion->conectado){
 		while(lengthInput>MAXDATASIZE){
 		 	buf = input.substr(pini,MAXDATASIZE);
 		 	pini+=MAXDATASIZE;
@@ -134,6 +130,9 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 			mensaje.message=buf;
 			Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
 		}
+	}else{
+		cout << "Usuario desconectado " << endl;
+	}
 }
 
 int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje){

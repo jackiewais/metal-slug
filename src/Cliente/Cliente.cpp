@@ -150,12 +150,51 @@ int Cliente::salir(){
 }
 
 int Cliente::enviar(){
+	int usuario = 0;
+	string mensaje = "";
 
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado" << endl;
 	}else{
-		enviarMensajes(&this->datosConexion);
+		ingresarUsuarioYMensaje(&usuario,&mensaje);
+		enviarMensajes(&this->datosConexion,usuario,mensaje);
 	}
+	return 0;
+}
+
+int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
+	bool ok = false;
+	int usuario;
+	string inputMsj;
+	cout << "----------------------" << endl;
+	cout << "ID - Nombre Usuario" << endl;
+	cout << "----------------------" << endl;
+	for(auto const &user : mapIdNombreUsuario) {
+		cout << user.first << " - " << user.second << endl;
+	}
+	cout << "99 - Enviar a todos" << endl;
+	cout << "----------------------" << endl;
+	cout << endl;
+	cout << "Ingrese el id del destinatario:" << endl;
+	while (!ok){
+		cin >> usuario;
+		if (!cin){ //Validates if its a number
+			cout << "Error: Debe ingresar un número" << endl;
+		}else if((usuario != 99) && (mapIdNombreUsuario.find(usuario) == mapIdNombreUsuario.end())){
+			cout << "Error: Ingrese un id válido" << endl;
+		}else{
+			ok = true;
+		}
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
+	cout << endl;
+	cout << "Inserte el Mensaje a Enviar: "<< endl;
+	getline (cin,inputMsj);
+
+	*idUsuario = usuario;
+	*mensaje = inputMsj;
+
 	return 0;
 }
 
