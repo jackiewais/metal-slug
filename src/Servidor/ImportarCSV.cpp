@@ -31,6 +31,7 @@ string** ImportarCSV::importar(string csv) {
 	ifstream archivo(csv.c_str());
 	string  nombre, pass;
 	Log *log = new Log();
+	stringstream lineaError;
 
 	if(archivo.fail()) {
 		cerr << "Error al abrir el archivo " + string(csv) << endl;
@@ -49,7 +50,8 @@ string** ImportarCSV::importar(string csv) {
 					(nombre.find('#') != string::npos) || (pass.find('#') != string::npos) ) {
 
 	    		printf("ERROR al leer archivo CSV, se cargaron %d usuarios\n", i);
-	    		log->log('s', 3, "Caracter invalido al leer archivo CSV", "");
+	    		lineaError << (i + 1);
+	    		log->log('s', 3, "Caracter invalido al leer archivo CSV. Linea: " + lineaError.str(), "");
 	    		break;
 	    	}
 
