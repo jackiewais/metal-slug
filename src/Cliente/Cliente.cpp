@@ -305,7 +305,7 @@ int Cliente::loremIpsum(){
 
 		file2.seekg(0);
 		file2.close();
-
+}
 	  }
 	}
 	return 0;
