@@ -104,8 +104,6 @@ map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std
 	mensajeStruct mensajeRespuesta;
 	Mensajeria::receiveAndDecode(datosConexion->sockfd,&mensajeRespuesta);
 
-	std::cout << mensajeRespuesta.message << endl;
-
 	map<int, string> mapIdNombre = this->getMapIdNombre(mensajeRespuesta.message);
 
 	if (mensajeRespuesta.tipo == LOG_NOTOK) {
@@ -119,22 +117,18 @@ map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std
     delete log;
 	return mapIdNombre;
 }
-void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
-	string input;
+void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion,int usuarioTo, string input){
 	string buf;
-	cout << "INRESE MENSAJE A ENVIAR "<< endl;
-	getline (cin,input);
-	int lengthInput =  strlen(input.c_str());//input.length();
 	int pini=0;
-	//cin.clear();
-	//cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	
+	int lengthInput =  strlen(input.c_str());
+
 	mensajeStruct mensaje;
 	
-	mensaje.otherCli = 99;
-	
+	mensaje.otherCli = usuarioTo;
 	mensaje.socketCli = datosConexion->sockfd;
 
+	if (datosConexion->conectado){
 		while(lengthInput>MAXDATASIZE){
 		 	buf = input.substr(pini,MAXDATASIZE);
 		 	pini+=MAXDATASIZE;
@@ -151,6 +145,9 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion){
 			mensaje.message=buf;
 			Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
 		}
+	}else{
+		cout << "Usuario desconectado " << endl;
+	}
 }
 
 int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje){
@@ -187,12 +184,12 @@ map<int, string> ConexionCli::getMapIdNombre(string idNombresUsuarios) {
 
 	map<int, string> mapIdNombre;
 
-	if(idNombresUsuarios != "") {
+	if((idNombresUsuarios != "Sin contenido") && (idNombresUsuarios != "")) {
 
 		vector<string> vectorIdNombresUsuarios = split2(idNombresUsuarios, ';');
 		vector<string> vectorUnElem;
 
-		for(unsigned int i=0; i < vectorIdNombresUsuarios.size()-1; i++) {
+		for(unsigned int i=0; i <= vectorIdNombresUsuarios.size()-1; i++) {
 
 			string unIdNombreUsuario = vectorIdNombresUsuarios[i];
 			vectorUnElem = split2(unIdNombreUsuario, '_');

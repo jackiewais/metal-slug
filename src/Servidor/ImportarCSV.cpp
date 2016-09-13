@@ -27,9 +27,10 @@ ImportarCSV::~ImportarCSV() {
 
 
 string** ImportarCSV::importar(string csv) {
-Log *log = new Log();
+    Log *log = new Log();
 	ifstream archivo(csv.c_str());
 	string  nombre, pass;
+	stringstream lineaError;
 
 	if(archivo.fail()) {
 		cerr << "Error al abrir el archivo " + string(csv) << endl;
@@ -42,11 +43,24 @@ Log *log = new Log();
 	    	getline(archivo, nombre, ';');
 	    	getline(archivo, pass, '\n');
 
+	    	if ( (pass.find(';') != string::npos) ||
+	    			(nombre.find('|') != string::npos) || (pass.find('|') != string::npos) ||
+					(nombre.find('%') != string::npos) || (pass.find('%') != string::npos) ||
+					(nombre.find('#') != string::npos) || (pass.find('#') != string::npos) ) {
+
+	    		printf("ERROR al leer archivo CSV, se cargaron %d usuarios\n", i);
+	    		lineaError << (i + 1);
+	    		log->log('s', 3, "Caracter invalido al leer archivo CSV. Linea: " + lineaError.str(), "");
+	    		break;
+	    	}
+
 	    	if (nombre != "" && pass != "") {
 	        	this->tablaUsuarios[i][this->datos-2] = nombre;
 	        	this->tablaUsuarios[i][this->datos-1] = pass;
 	        	i++;
 	        }
+	    	nombre = "";
+	    	pass = "";
 	    }
 	    this->cantidadUsuarios = i;
 	 }

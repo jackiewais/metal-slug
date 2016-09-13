@@ -15,10 +15,11 @@
 #include <string>
 #include "SDL2/SDL_thread.h"
 
+using namespace std;
+
 
 SDL_mutex *mutexQueue;
 
-using namespace std;
 
 
 void* Servidor::procesarMensajesMain (void *data) {
@@ -98,7 +99,7 @@ int Servidor::enviarChat(mensajeStruct msg){
 	list<int>::iterator it=otroUsuarios.begin();
 	if (chat.to == 99){ // si quiere enviar a todos los usuarios
 		for(it ; it != otroUsuarios.end();it++){
-		waitingChats.insert(pair<int,chatStruct>(*it,chat));
+			waitingChats.insert(pair<int,chatStruct>(*it,chat));
 		}
 	}else {//ENVIA MENSAJE A UN SOLO USUARIO
 		waitingChats.insert(pair<int,chatStruct>(chat.to,chat));
@@ -107,30 +108,30 @@ int Servidor::enviarChat(mensajeStruct msg){
 	return 0;
 }
 
-int Servidor::recibirTodosLosChats(mensajeStruct msg){
-	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
-	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+int Servidor::recibirTodosLosChats(mensajeStruct msgPedido){
+	int socketCli = msgPedido.socketCli;
+	int idCliente = contenedor->getUsuarioBySocket(socketCli)->getIdUsuario();
+	queue<mensajeStruct>* colaCliente = socketIdQueue[msgPedido.socketCli];
 
 	mensajeStruct msj;
 
 	multimap<int,chatStruct>::iterator elemento;
 
 	while (!((elemento = waitingChats.find(idCliente)) == waitingChats.end())){
-		enviarMensajeSegmentado(msg.socketCli, &(elemento->second));
+		enviarMensajeSegmentado(socketCli, &(elemento->second), colaCliente);
 		waitingChats.erase (elemento);
-		colaCliente->push(msg);
 	}
 
-	msj.socketCli = msg.socketCli; //socket del que recibe los msjs
-	msg.otherCli = 0;
-	msg.message = "Fin de chats";
-	msg.tipo = RECIBIR_CHATS_LISTO;
-	colaCliente->push(msg);
+	msj.socketCli = socketCli;//socket del que recibe los msjs
+	msj.otherCli = 0;
+	msj.message = "Fin de chats";
+	msj.tipo = RECIBIR_CHATS_LISTO;
+	colaCliente->push(msj);
 
 	return 0;
 }
 
-int Servidor::enviarMensajeSegmentado(int socketCli, chatStruct* chat ){
+int Servidor::enviarMensajeSegmentado(int socketCli, chatStruct* chat, queue<mensajeStruct>* colaCliente ){
 
 	string buf;
 	int pini=0;
@@ -149,14 +150,14 @@ int Servidor::enviarMensajeSegmentado(int socketCli, chatStruct* chat ){
 		//ENVIAR MENSAJE SIGUIENTE
 		mensaje.tipo = RECIBIR_CHAT_SIGUE;
 		mensaje.message = buf;
-		encodeAndSend(socketCli, &mensaje);
+		colaCliente->push(mensaje);
 	}
 	if (lengthInput!=0){
 		buf= input.substr(pini,lengthInput);
 		//ENVIAR MENSAJE CON FIN
 		mensaje.tipo = RECIBIR_CHAT_FIN;
 		mensaje.message=buf;
-		encodeAndSend(socketCli, &mensaje);
+		colaCliente->push(mensaje);
 	}
 
 	return 0;
@@ -214,7 +215,6 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 	   mensaje = {}; //Reset struct
 
 	   finish = args->context->mensajeria.receiveAndDecode(socketCli,&mensaje);
-	   cout << mensaje.message << endl;
 
 	   if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
 		   //si ya existia concateno el mensaje
@@ -229,7 +229,6 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 		   //agrego a la cola principal
 		   //mutex lock.
 			if (SDL_LockMutex(mutexQueue) == 0) {
-			   printf("Cola principal con ID: %d", args->context->colaPrincipal);
 			   args->context->colaPrincipalMensajes.push(mensaje);
 			   hayMsjParcial = false;
 		   	   mensajeParcial = "";
@@ -263,7 +262,6 @@ void *Servidor::sendMessage(void *arguments){
 		    if(!queueCli->empty()){
 			msg=queueCli->front();
 			queueCli->pop();
-			cout << msg.message << endl;
 			result=args->context->encodeAndSend(socketCli,&msg);
 			finish = (result != 0);
 		}

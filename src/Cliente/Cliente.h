@@ -16,6 +16,7 @@ private:
 	 ConexionCli conexionCli;
 	 bool semaforoReceive = false;
 	 map<int, string> mapIdNombreUsuario;
+	 bool mainCin = false;
 	 int seleccConectar();
 	int getIpAndPort();
 	int selectFromMenu();
@@ -26,7 +27,10 @@ private:
 	int loremIpsum();
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 	static void *recvMessage(void * arg);
+	int printMenu();
 	void imprimirConsigna();
+	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
+
 
 public:
 	Cliente();

@@ -107,7 +107,14 @@ void *Cliente::recvMessage(void * arg){
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
-				context->imprimirConsigna();
+				if (context->mainCin){
+					context->printMenu();
+					context->imprimirConsigna();
+				}else{
+					context->printMenu();
+					cout << endl;
+					cout << "Presione cualquier tecla y después ENTER para continuar" << endl;
+				}
 				break;
 		}
     }
@@ -157,25 +164,77 @@ int Cliente::salir(){
 
 int Cliente::enviar(){
 	Log *log = new Log();
-	if (!this->datosConexion.conectado){
-		cout << "El usuario no está conectado" << endl;
-        log->log('c',2,"El usuario no está conectado","");
+	int usuario = 0;
+	string mensaje = "";
 
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado, no puede enviar mensajes." << endl;
+		log->log('c',2,"El usuario no está conectado","");
 	}else{
-		enviarMensajes(&this->datosConexion);
+		ingresarUsuarioYMensaje(&usuario,&mensaje);
+		enviarMensajes(&this->datosConexion,usuario,mensaje);
 	}
 	delete log;
 	return 0;
 }
 
+int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
+	bool ok = false;
+	int usuario;
+	string inputMsj;
+	cout << "----------------------" << endl;
+	cout << "ID - Nombre Usuario" << endl;
+	cout << "----------------------" << endl;
+	for(auto const &user : mapIdNombreUsuario) {
+		cout << user.first << " - " << user.second << endl;
+	}
+	cout << "99 - Enviar a todos" << endl;
+	cout << "----------------------" << endl;
+	cout << endl;
+	cout << "Ingrese el id del destinatario:" << endl;
+	while (!ok){
+		cin >> usuario;
+		if (!datosConexion.conectado){
+			ok = true;
+		}else if (!cin){ //Validates if its a number
+			cout << "Error: Debe ingresar un número" << endl;
+		}else if((usuario != 99) && (mapIdNombreUsuario.find(usuario) == mapIdNombreUsuario.end())){
+			cout << "Error: Ingrese un id válido" << endl;
+		}else{
+			ok = true;
+		}
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	}
+	if (datosConexion.conectado){
+		cout << endl;
+		cout << "Inserte el Mensaje a Enviar: "<< endl;
+		getline (cin,inputMsj);
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+		*idUsuario = usuario;
+		*mensaje = inputMsj;
+	}
+	return 0;
+}
+
 int Cliente::recibir(){
-	conexionCli.pedirMensajes(&datosConexion);
-	semaforoReceive = true;
-	while (semaforoReceive){}
+
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado, no puede recibir mensajes" << endl;
+	}else{
+		conexionCli.pedirMensajes(&datosConexion);
+		semaforoReceive = true;
+		while (semaforoReceive){}
+	}
 	return 0;
 }
 
 int Cliente::loremIpsum(){
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado. Opción inválida." << endl;
+	}else{
 
     Log *log = new Log();
 
@@ -255,10 +314,12 @@ int Cliente::loremIpsum(){
              linea_aux = linea.substr(pos,tamanio_aux);
        }
 	}
-	file2.seekg(0);
-	file2.close();
 
-}
+		file2.seekg(0);
+		file2.close();
+
+	  }
+	}
 	return 0;
 }
 
@@ -298,8 +359,9 @@ int Cliente::getIpAndPort(){
 }
 
 
-int printMenu(){
+int Cliente::printMenu(){
 
+	cout << endl;
 	cout << "-----   MENÚ   -----------------------" << endl;
 	cout << "1 - Conectar" << endl;
 	cout << "2 - Desconectar" << endl;
@@ -314,8 +376,7 @@ int printMenu(){
 }
 void Cliente::imprimirConsigna(){
 	cout << endl;
-	cout << "---------------" << endl;
-	cout << "Seleccione una opción del menú:" << endl;
+	cout << "----- Seleccione una opción del menú: -------" << endl;
 }
 
 int Cliente::selectFromMenu(){
@@ -325,14 +386,14 @@ int Cliente::selectFromMenu(){
 	int status;
 
 	imprimirConsigna();
-
 	while (!ok){
+		mainCin = true;
 		cin >> input;
+		mainCin = false;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
 			log->log('c',3,"Debe ingresar un número","");
-
-		}else if(input<1 || input > 6){
+		}else if(input<1 || input > 7){
 			cout << "Error: Ingrese una de las opciones dadas" << endl;
 			log->log('c',3,"Ingrese una de las opciones dadas","");
 		}else

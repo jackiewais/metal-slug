@@ -20,7 +20,7 @@ class ConexionCli:Mensajeria{
 
 		map<int, string> conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 		int desconectar(datosConexionStruct* datosConexion);
-		void enviarMensajes(datosConexionStruct* datosConexion);
+		void enviarMensajes(datosConexionStruct* datosConexion,int usuarioTo, string msj);
 		int recibirMensaje(datosConexionStruct* datosConexion, mensajeStruct* mensaje);
 		int pedirMensajes(datosConexionStruct* datosConexion);
 		static void* recvMessage(void * arg);
