@@ -19,7 +19,7 @@
 using namespace std;
 
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
-#define LOREMIPSUM "src/Cliente/loremIpsum.txt"
+#define LOREMIPSUM "Cliente/loremIpsum.txt"
 
 Cliente::Cliente() {
 
@@ -225,6 +225,15 @@ int Cliente::loremIpsum(){
 		cout << "El usuario no está conectado. Opción inválida." << endl;
 	}else{
 
+		list<int> clientes = getIdUsuarios();
+		int numCli;
+		srand(unsigned(time(0)));
+		numCli = (rand()%clientes.size());
+
+		list<int>::iterator it=clientes.begin();
+		advance(it,numCli);
+		int idCliente=*it;
+		cout << "los mensajes se envian a : " << idCliente<< endl;
 		int tamanio;
 		srand(unsigned(time(0)));
 		tamanio = rand()%200+1;
@@ -267,7 +276,7 @@ int Cliente::loremIpsum(){
 			   do{
 
 				if (actual == cada){
-					cout << linea_final << endl;
+					enviarMensajes(&this->datosConexion,idCliente,linea_final);
 					cada = actual + milisegundos;
 					cont++;
 					break;
