@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string>
 #include <fstream>
+#include "../Common/Log.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ string** ImportarCSV::importar(string csv) {
 
 	ifstream archivo(csv.c_str());
 	string  nombre, pass;
+	Log *log = new Log();
 
 	if(archivo.fail()) {
 		cerr << "Error al abrir el archivo " + string(csv) << endl;
@@ -41,15 +43,28 @@ string** ImportarCSV::importar(string csv) {
 	    	getline(archivo, nombre, ';');
 	    	getline(archivo, pass, '\n');
 
+	    	if ( (pass.find(';') != string::npos) ||
+	    			(nombre.find('|') != string::npos) || (pass.find('|') != string::npos) ||
+					(nombre.find('%') != string::npos) || (pass.find('%') != string::npos) ||
+					(nombre.find('#') != string::npos) || (pass.find('#') != string::npos) ) {
+
+	    		printf("ERROR al leer archivo CSV, se cargaron %d usuarios\n", i);
+	    		log->log('s', 3, "Caracter invalido al leer archivo CSV", "");
+	    		break;
+	    	}
+
 	    	if (nombre != "" && pass != "") {
 	        	this->tablaUsuarios[i][this->datos-2] = nombre;
 	        	this->tablaUsuarios[i][this->datos-1] = pass;
 	        	i++;
 	        }
+	    	nombre = "";
+	    	pass = "";
 	    }
 	    this->cantidadUsuarios = i;
 	 }
 	 archivo.close();
+	 delete log;
 	 return this->tablaUsuarios;
 }
 

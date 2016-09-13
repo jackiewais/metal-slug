@@ -89,8 +89,6 @@ map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std
 	mensajeStruct mensajeRespuesta;
 	Mensajeria::receiveAndDecode(datosConexion->sockfd,&mensajeRespuesta);
 
-	std::cout << mensajeRespuesta.message << endl;
-
 	map<int, string> mapIdNombre = this->getMapIdNombre(mensajeRespuesta.message);
 
 	if (mensajeRespuesta.tipo == LOG_NOTOK) {
@@ -169,12 +167,12 @@ map<int, string> ConexionCli::getMapIdNombre(string idNombresUsuarios) {
 
 	map<int, string> mapIdNombre;
 
-	if(idNombresUsuarios != "") {
+	if((idNombresUsuarios != "Sin contenido") && (idNombresUsuarios != "")) {
 
 		vector<string> vectorIdNombresUsuarios = split2(idNombresUsuarios, ';');
 		vector<string> vectorUnElem;
 
-		for(unsigned int i=0; i < vectorIdNombresUsuarios.size()-1; i++) {
+		for(unsigned int i=0; i <= vectorIdNombresUsuarios.size()-1; i++) {
 
 			string unIdNombreUsuario = vectorIdNombresUsuarios[i];
 			vectorUnElem = split2(unIdNombreUsuario, '_');

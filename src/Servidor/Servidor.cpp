@@ -14,10 +14,11 @@
 #include <string>
 #include "SDL2/SDL_thread.h"
 
+using namespace std;
+
 
 SDL_mutex *mutexQueue;
 
-using namespace std;
 
 
 void* Servidor::procesarMensajesMain (void *data) {
