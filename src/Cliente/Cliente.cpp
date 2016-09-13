@@ -1,4 +1,5 @@
 #include "Cliente.h"
+#include "../Common/Log.h"
 #include <limits>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +17,7 @@
 #include <sys/socket.h>
 #include <pthread.h>
 
-using namespace std;
+//using namespace std;
 
 #define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
 #define LOREMIPSUM "Cliente/loremIpsum.txt"
@@ -31,11 +32,14 @@ Cliente::~Cliente() {
 
 
 int Cliente::seleccConectar(){
+	Log *log = new Log();
 	int respuesta = 1;
 	string usuario, contrasenia;
 
+
 	if (this->datosConexion.conectado){
 		cout << "El usuario ya está conectado" << endl;
+		log->log('s',1,"El usuario " + usuario + " ya está conectado","");
 		respuesta = 0;
 	}else{
 
@@ -46,13 +50,15 @@ int Cliente::seleccConectar(){
 
 		if (!this->mapIdNombreUsuario.empty()){
 		//	this->datosConexion.idUsuario = idUsuario;
-			printf("Logueado correctamente");
+		//	printf("Logueado correctamente");
+			log->log('s',1,"Usuario " + usuario + " logueado correctamente","");
 			this->datosConexion.conectado = true;
 			//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
 			pthread_t threadRecv;
 			int rc = pthread_create(&threadRecv, NULL,&recvMessage,(void*)this);
 			if (rc){
-				printf("ERROR creando el thread  %i \n",rc);
+				log->log('s',1,"creando el thread  %i \n","");
+			//	printf("ERROR creando el thread  %i \n",rc);
 			}
 
 			respuesta = 0;
@@ -63,7 +69,7 @@ int Cliente::seleccConectar(){
 		}
 
 	}
-
+    delete log;
 	return respuesta;
 }
 
@@ -157,15 +163,18 @@ int Cliente::salir(){
 }
 
 int Cliente::enviar(){
+	Log *log = new Log();
 	int usuario = 0;
 	string mensaje = "";
 
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado, no puede enviar mensajes." << endl;
+		log->log('c',2,"El usuario no está conectado","");
 	}else{
 		ingresarUsuarioYMensaje(&usuario,&mensaje);
 		enviarMensajes(&this->datosConexion,usuario,mensaje);
 	}
+	delete log;
 	return 0;
 }
 
@@ -226,6 +235,7 @@ int Cliente::loremIpsum(){
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado. Opción inválida." << endl;
 	}else{
+
 
 		list<int> clientes = getIdUsuarios();
 		int numCli;
@@ -293,14 +303,6 @@ int Cliente::loremIpsum(){
 			   tamanio_aux = 0;
 		   }
 
-		   if ((pos == 0) && ((tamanio_aux+linea.length()) < tamanio)){
-				   linea_aux = linea_aux + linea;
-				   tamanio_aux = tamanio_aux + linea.length();
-		   }else{
-				 tamanio_aux = linea.length()- pos;
-				 linea_aux = linea.substr(pos,tamanio_aux);
-		   }
-		}
 		file2.seekg(0);
 		file2.close();
 
@@ -311,6 +313,7 @@ int Cliente::loremIpsum(){
 
 
 int Cliente::getIpAndPort(){
+	Log *log = new Log();
 	string inputIp;
 	int inputPuerto;
 	bool ok = false;
@@ -329,6 +332,9 @@ int Cliente::getIpAndPort(){
 		cin >> inputPuerto;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
+			log->log('s',3,"Debe ingresar un número","");
+			delete log;
+
 		}else{
 			this->datosConexion.puerto = inputPuerto;
 			ok = true;
@@ -362,6 +368,7 @@ void Cliente::imprimirConsigna(){
 }
 
 int Cliente::selectFromMenu(){
+	Log *log = new Log();
 	int input;
 	bool ok = false;
 	int status;
@@ -373,15 +380,17 @@ int Cliente::selectFromMenu(){
 		mainCin = false;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
+			log->log('c',3,"Debe ingresar un número","");
 		}else if(input<1 || input > 7){
 			cout << "Error: Ingrese una de las opciones dadas" << endl;
+			log->log('c',3,"Ingrese una de las opciones dadas","");
 		}else
 			ok = true;
 
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
-
+    delete log;
 	//--------------------------------------------
 
 	switch (input){

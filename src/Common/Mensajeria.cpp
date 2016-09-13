@@ -1,4 +1,5 @@
 #include <sstream>
+#include "Log.h"
 #include <string.h>
 #include "Mensajeria.h"
 #include <sys/socket.h>
@@ -36,13 +37,17 @@ using namespace std;
 
 
 int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
+
 	char output[BUFLEN];
 	encode(output,mensaje);
 
 	//cout << "\n Mensaje enviandose: " << output << endl;
 	int n = send(socketCli,output,strlen(output),0);
 	if (n < 0) {
-		perror("ERROR enviando mensaje \n");
+		//	perror("ERROR enviando mensaje");
+	    Log *log = new Log();
+		log->log('s',3,"Enviando mensaje","");
+	    delete log;
 		return 1;
 	}
 
@@ -89,7 +94,7 @@ int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 
 
 int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
-
+     Log *log = new Log();
 	 int n;
 	 char buffer[BUFLEN];
 	 int error = 0;
@@ -97,13 +102,15 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	bzero(buffer,BUFLEN);
 	n = recv(socketCli, buffer, BUFLEN-1, 0);
 	if (n < 0) {
-		perror("ERROR ejecutano recv \n");
+	//	perror("ERROR ejecutano recv \n");
+		log->log('s',3,"Ejecutano recv \n"," ");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Error leyendo del socket";
 		mensaje->otherCli = 0;
 		error = 1;
 	}else if (n == 0){
-		printf("Mensaje de salida recibido \n");
+		//printf("Mensaje de salida recibido \n");
+		log->log('s',3,"Mensaje de salida recibido \n"," ");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Usuario desconectado";
 		mensaje->otherCli = 0;
@@ -115,7 +122,7 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	}
 
 	mensaje->socketCli = socketCli;
-
+    delete log;
 	return error;
 }
 
@@ -136,11 +143,13 @@ bool Mensajeria::insertarMensajeCola(int msgqid, mensajeStruct *msg){
 }
 
 bool Mensajeria::crearCola(int &queue){
-
 	queue = msgget(IPC_PRIVATE, 0666|IPC_CREAT|IPC_EXCL);
 	if (queue < 0) {
 	  perror(strerror(errno));
-	  printf("ERROR: creando cola de mensajes.\n");
+	//  printf("ERROR: creando cola de mensajes.\n");
+	  Log *log = new Log();
+	  log->log('s',3,"Creando cola de mensajes.\n","");
+	  delete log;
 	  return false;
 	}
 	return true;
@@ -152,7 +161,10 @@ bool Mensajeria::extraerMensajeCola(int queue, mensajeStruct &msg){
 	rc = msgrcv(queue, &msg, sizeof(mensajeStruct), 0, 0);
 	if (rc < 0) {
 		perror( strerror(errno) );
-		printf("ERROR: sacando mensaje de la cola.\n");
+	//	printf("ERROR: sacando mensaje de la cola.\n");
+		Log *log = new Log();
+		log->log('s',3,"Sacando mensaje de la cola.\n","");
+		delete log;
 		return false;
 	}
 

@@ -16,6 +16,7 @@ private:
 public:
 
 	void log(char tipo_arch,int tipo_msg, string mensaje, string chat);
+
 	//tipo char -> 'c':indica archivo del cliente,'s': indica archivo del servidor
 	//tipo_msg -> 1:INFO,2:WARNNING,3:ERROR
 	//mensaje -> mensaje basico del log
