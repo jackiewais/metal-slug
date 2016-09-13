@@ -101,7 +101,12 @@ void *Cliente::recvMessage(void * arg){
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
-				context->imprimirConsigna();
+				if (context->mainCin){
+					context->printMenu();
+					context->imprimirConsigna();
+				}else{
+					cout << "Presione cualquier tecla y después ENTER para continuar" << endl;
+				}
 				break;
 		}
     }
@@ -154,7 +159,7 @@ int Cliente::enviar(){
 	string mensaje = "";
 
 	if (!this->datosConexion.conectado){
-		cout << "El usuario no está conectado" << endl;
+		cout << "El usuario no está conectado, no puede enviar mensajes." << endl;
 	}else{
 		ingresarUsuarioYMensaje(&usuario,&mensaje);
 		enviarMensajes(&this->datosConexion,usuario,mensaje);
@@ -178,7 +183,9 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 	cout << "Ingrese el id del destinatario:" << endl;
 	while (!ok){
 		cin >> usuario;
-		if (!cin){ //Validates if its a number
+		if (!datosConexion.conectado){
+			ok = true;
+		}else if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
 		}else if((usuario != 99) && (mapIdNombreUsuario.find(usuario) == mapIdNombreUsuario.end())){
 			cout << "Error: Ingrese un id válido" << endl;
@@ -188,20 +195,23 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
-	cout << endl;
-	cout << "Inserte el Mensaje a Enviar: "<< endl;
-	getline (cin,inputMsj);
+	if (datosConexion.conectado){
+		cout << endl;
+		cout << "Inserte el Mensaje a Enviar: "<< endl;
+		getline (cin,inputMsj);
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-	*idUsuario = usuario;
-	*mensaje = inputMsj;
-
+		*idUsuario = usuario;
+		*mensaje = inputMsj;
+	}
 	return 0;
 }
 
 int Cliente::recibir(){
 
 	if (!this->datosConexion.conectado){
-		cout << "El usuario no está conectado" << endl;
+		cout << "El usuario no está conectado, no puede recibir mensajes" << endl;
 	}else{
 		conexionCli.pedirMensajes(&datosConexion);
 		semaforoReceive = true;
@@ -212,7 +222,7 @@ int Cliente::recibir(){
 
 int Cliente::loremIpsum(){
 	if (!this->datosConexion.conectado){
-		cout << "El usuario no está conectado" << endl;
+		cout << "El usuario no está conectado. Opción inválida." << endl;
 	}else{
 
 		int tamanio;
@@ -320,8 +330,9 @@ int Cliente::getIpAndPort(){
 }
 
 
-int printMenu(){
+int Cliente::printMenu(){
 
+	cout << endl;
 	cout << "-----   MENÚ   -----------------------" << endl;
 	cout << "1 - Conectar" << endl;
 	cout << "2 - Desconectar" << endl;
@@ -336,8 +347,7 @@ int printMenu(){
 }
 void Cliente::imprimirConsigna(){
 	cout << endl;
-	cout << "---------------" << endl;
-	cout << "Seleccione una opción del menú:" << endl;
+	cout << "----- Seleccione una opción del menú: -------" << endl;
 }
 
 int Cliente::selectFromMenu(){
@@ -346,9 +356,10 @@ int Cliente::selectFromMenu(){
 	int status;
 
 	imprimirConsigna();
-
 	while (!ok){
+		mainCin = true;
 		cin >> input;
+		mainCin = false;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
 		}else if(input<1 || input > 7){

@@ -60,7 +60,7 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 	if (connect(datosConexion->sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
 		perror("ERROR ejecutando connect");
 		return mapIdNombre;
-	} else {cout << "conectado al servidor" << endl;}
+	} else {cout << "Conectado con el servidor" << endl;}
 
 	Mensajeria mensajeria;
 	mensajeStruct rtaServer;

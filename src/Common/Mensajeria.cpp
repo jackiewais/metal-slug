@@ -39,7 +39,7 @@ int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
 	char output[BUFLEN];
 	encode(output,mensaje);
 
-	cout << "\n Mensaje enviandose: " << output << endl;
+	//cout << "\n Mensaje enviandose: " << output << endl;
 	int n = send(socketCli,output,strlen(output),0);
 	if (n < 0) {
 		perror("ERROR enviando mensaje \n");
@@ -109,7 +109,7 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 		mensaje->otherCli = 0;
 		error = 1;
 	}else{
-		cout << "\n Mensaje recibido: " << buffer << endl;
+		//cout << "\n Mensaje recibido: " << buffer << endl;
 		decode(buffer,mensaje);
 		error = 0;
 	}
