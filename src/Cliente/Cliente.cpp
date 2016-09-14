@@ -33,14 +33,13 @@ Cliente::~Cliente() {
 
 
 int Cliente::seleccConectar(){
-	Log *log = new Log();
 	int respuesta = 1;
 	string usuario, contrasenia;
 
 
 	if (this->datosConexion.conectado){
 		cout << "El usuario ya está conectado" << endl;
-		log->log('s',1,"El usuario " + usuario + " ya está conectado","");
+		Log::log('c',1,"El usuario " + usuario + " ya está conectado","");
 		respuesta = 0;
 	}else{
 
@@ -52,13 +51,13 @@ int Cliente::seleccConectar(){
 		if (!this->mapIdNombreUsuario.empty()){
 		//	this->datosConexion.idUsuario = idUsuario;
 		//	printf("Logueado correctamente");
-			log->log('s',1,"Usuario " + usuario + " logueado correctamente","");
+			Log::log('c',1,"Usuario " + usuario + " logueado correctamente","");
 			this->datosConexion.conectado = true;
 			//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
 			pthread_t threadRecv;
 			int rc = pthread_create(&threadRecv, NULL,&recvMessage,(void*)this);
 			if (rc){
-				log->log('s',1,"creando el thread  %i \n","");
+				Log::log('c',1,"creando el thread","");
 			//	printf("ERROR creando el thread  %i \n",rc);
 			}
 
@@ -67,10 +66,10 @@ int Cliente::seleccConectar(){
 		}else{
 			cerrarSocket(this->datosConexion.sockfd);
 			respuesta = 1;
+			Log::log('c',1,"Usuario " + usuario + " no pudo iniciar sesion","");
 		}
 
 	}
-    delete log;
 	return respuesta;
 }
 
@@ -86,6 +85,7 @@ void *Cliente::recvMessage(void * arg){
 
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
+		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
 		switch (mensajeRta.tipo){
 			case RECIBIR_CHAT_SIGUE:
 			   //si ya existia concateno el mensaje
@@ -154,8 +154,10 @@ int Cliente::seleccDesconectar(){
 	}
 
 	respuesta = desconectar(&this->datosConexion);
-	if (respuesta == 0)
+	if (respuesta == 0){
 		this->datosConexion.conectado = false;
+		Log::log('c',1,"Usuario cerro sesion","");
+	}
 
 
 	return respuesta;
@@ -163,23 +165,24 @@ int Cliente::seleccDesconectar(){
 
 int Cliente::salir(){
 	seleccDesconectar();
+	Log::log('c',1,"El usuario salio del programa","");
 	return -1;
 }
 
 int Cliente::enviar(){
-	Log *log = new Log();
 	int usuario = 0;
 	string mensaje = "";
+	stringstream idUsuario;
 
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado, no puede enviar mensajes." << endl;
-		log->log('c',2,"El usuario no está conectado","");
+		Log::log('c',2,"El usuario no está conectado, no puede enviar mensajes","");
 	}else{
 		ingresarUsuarioYMensaje(&usuario,&mensaje);
+		idUsuario << usuario;
 		enviarMensajes(&this->datosConexion,usuario,mensaje);
+		Log::log('c',1,"Mensaje enviado a usuario: " + idUsuario.str() ,mensaje);
 	}
-
-	delete log;
 	return 0;
 }
 
@@ -227,6 +230,7 @@ int Cliente::recibir(){
 
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado, no puede recibir mensajes" << endl;
+		Log::log('c',2,"El usuario no está conectado, no puede recibir mensajes,","");
 		return 0;
 	}
 
@@ -385,7 +389,6 @@ int Cliente::loremIpsum(){
 
 
 int Cliente::getIpAndPort(){
-	Log *log = new Log();
 	string inputIp;
 	int inputPuerto;
 	bool ok = false;
@@ -404,9 +407,7 @@ int Cliente::getIpAndPort(){
 		cin >> inputPuerto;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
-			log->log('s',3,"Debe ingresar un número","");
-			delete log;
-
+			Log::log('s',3,"Puerto ingresado incorrecto","");
 		}else{
 			this->datosConexion.puerto = inputPuerto;
 			ok = true;
@@ -440,7 +441,6 @@ void Cliente::imprimirConsigna(){
 }
 
 int Cliente::selectFromMenu(){
-	Log *log = new Log();
 	int input;
 	bool ok = false;
 	int status;
@@ -452,17 +452,16 @@ int Cliente::selectFromMenu(){
 		mainCin = false;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
-			log->log('c',3,"Debe ingresar un número","");
+			Log::log('c',3,"Menu: Numero ingresado incorrecto","");
 		}else if(input<1 || input > 7){
 			cout << "Error: Ingrese una de las opciones dadas" << endl;
-			log->log('c',3,"Ingrese una de las opciones dadas","");
+			Log::log('c',3,"Menu: Opcion ingresada incorrecta","");
 		}else
 			ok = true;
 
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
-    delete log;
 	//--------------------------------------------
 
 	switch (input){
@@ -496,6 +495,7 @@ int Cliente::selectFromMenu(){
 
 
 int Cliente::runCliente(){
+	Log::log('c',1,"Starting client app","");
 	cout << "Starting client app" << endl;
 
 	int status = 0;

@@ -52,9 +52,6 @@ int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
 	int n = send(socketCli,output,strlen(output),0);
 	if (n < 0) {
 		//	perror("ERROR enviando mensaje");
-	    Log *log = new Log();
-		log->log('s',3,"Enviando mensaje","");
-	    delete log;
 		return 1;
 	}
 
@@ -101,7 +98,6 @@ int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 
 
 int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
-     Log *log = new Log();
 	 int n;
 	 char buffer[BUFLEN];
 	 int error = 0;
@@ -110,14 +106,12 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	n = recv(socketCli, buffer, BUFLEN-1, 0);
 	if (n < 0) {
 	//	perror("ERROR ejecutano recv \n");
-		log->log('s',3,"Ejecutano recv \n"," ");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Error leyendo del socket";
 		mensaje->otherCli = 0;
 		error = 1;
 	}else if (n == 0){
 		//printf("Mensaje de salida recibido \n");
-		log->log('s',3,"Mensaje de salida recibido \n"," ");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Usuario desconectado";
 		mensaje->otherCli = 0;
@@ -129,7 +123,6 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	}
 
 	mensaje->socketCli = socketCli;
-    delete log;
 	return error;
 }
 
@@ -154,9 +147,6 @@ bool Mensajeria::crearCola(int &queue){
 	if (queue < 0) {
 	  perror(strerror(errno));
 	//  printf("ERROR: creando cola de mensajes.\n");
-	  Log *log = new Log();
-	  log->log('s',3,"Creando cola de mensajes.\n","");
-	  delete log;
 	  return false;
 	}
 	return true;
@@ -169,9 +159,6 @@ bool Mensajeria::extraerMensajeCola(int queue, mensajeStruct &msg){
 	if (rc < 0) {
 		perror( strerror(errno) );
 	//	printf("ERROR: sacando mensaje de la cola.\n");
-		Log *log = new Log();
-		log->log('s',3,"Sacando mensaje de la cola.\n","");
-		delete log;
 		return false;
 	}
 

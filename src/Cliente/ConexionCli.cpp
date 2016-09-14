@@ -28,23 +28,19 @@ int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 }
 
 int ConexionCli::cerrarSocket(int socket){
-	Log *log = new Log();
 	close(socket);
 	printf("Usuario desconectado\n");
-	log->log('s',1,"Usuario desconectado\n","");
-	delete log;
+	Log::log('c',1,"Se cerro el socket","");
 	return 0;
 }
 
 map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
-	Log *log = new Log();
 	struct sockaddr_in their_addr;
 	map<int, string> mapIdNombre;
 
 	if ((datosConexion->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 	//	perror("ERROR abriendo el socket");
-		log->log('s',3,"Abriendo el socket","");
-		delete log;
+		Log::log('c',3,"Abriendo el socket","");
 		return mapIdNombre;
 	}
 
@@ -53,11 +49,11 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 	 timeout.tv_usec = 0;
 
 	 if (setsockopt (datosConexion->sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
-	     log->log('s',3,"Seteando el timeout para rcv","");
+		 Log::log('c',3,"Seteando el timeout para rcv","");
 		// perror("ERROR seteando el timeout para rcv");
 
 	 if (setsockopt (datosConexion->sockfd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
-	     log->log('s',3,"Seteando el timeout para snd","");
+		 Log::log('c',3,"Seteando el timeout para snd","");
 		// perror("ERROR seteando el timeout para snd");
 
 
@@ -68,11 +64,11 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 
 	if (connect(datosConexion->sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
 	//	perror("ERROR ejecutando connect");
-		log->log('s',3,"Ejecutando connect","");
-		delete log;
+		Log::log('c',3,"Ejecutando connect","");
 		return mapIdNombre;
-	} else {cout << "conectado al servidor" << endl;
-	    log->log('s',1,"Conectado al servidor","");
+	} else {
+		cout << "conectado al servidor" << endl;
+		Log::log('c',1,"Conectado al servidor","");
 	}
 
 	Mensajeria mensajeria;
@@ -80,11 +76,9 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 	mensajeria.receiveAndDecode(datosConexion->sockfd,&rtaServer);
 	if (rtaServer.tipo == CONECTAR_NOTOK){
 	//	printf("El servidor rechazó la conexión: Demasiados usuarios \n");
-		log->log('s',2,"El servidor rechazó la conexión: Demasiados usuarios \n","");
-		delete log;
+		Log::log('c',2,"El servidor rechazó la conexión: Demasiados usuarios","");
 		return mapIdNombre;
 	}
-    delete log;
 	return this->autenticar(datosConexion, usuario, contrasenia);
 };
 
@@ -93,8 +87,6 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 // Devuelve el ID de usuario si pudo autenticar con exito, o -1 en caso de error
 map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia) {
 	std::string usuarioYContrasenia = usuario + ";" + contrasenia;
-	//Mensajeria mensajeria;
-    Log *log = new Log();
 	mensajeStruct mensaje;
 	mensaje.message = usuarioYContrasenia;
 	mensaje.otherCli = 0;
@@ -107,14 +99,13 @@ map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std
 	map<int, string> mapIdNombre = this->getMapIdNombre(mensajeRespuesta.message);
 
 	if (mensajeRespuesta.tipo == LOG_NOTOK) {
-			//printf("ERROR al momento de autenticar usuario y password ");
-            log->log('c',3,"Al momento de autenticar usuario y password ","");
+		printf("ERROR al momento de autenticar usuario y password ");
+		Log::log('c',3,"Al momento de autenticar usuario y password ","");
 	}else if(mapIdNombre.empty() && mensajeRespuesta.tipo == LOG_OK) {
-			printf("No Hay Usuarios Disponibles \n");
-			log->log('s',2,"No Hay Usuarios Disponibles \n","");
+		printf("No Hay Usuarios Disponibles \n");
+		Log::log('c',2,"No Hay Usuarios Disponibles","");
 
 	}
-    delete log;
 	return mapIdNombre;
 }
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion,int usuarioTo, string input){

@@ -27,14 +27,14 @@ ImportarCSV::~ImportarCSV() {
 
 
 string** ImportarCSV::importar(string csv) {
-    Log *log = new Log();
+
 	ifstream archivo(csv.c_str());
 	string  nombre, pass;
-	stringstream lineaError;
+	stringstream lineaError, cantUsuarios;
 
 	if(archivo.fail()) {
 		cerr << "Error al abrir el archivo " + string(csv) << endl;
-        log->log('s',3,"Al abrir el archivo " + string(csv),"");
+        Log::log('s',3,"Al abrir el archivo " + string(csv),"");
 	}else{
 		int i = 0;
 
@@ -50,7 +50,7 @@ string** ImportarCSV::importar(string csv) {
 
 	    		printf("ERROR al leer archivo CSV, se cargaron %d usuarios\n", i);
 	    		lineaError << (i + 1);
-	    		log->log('s', 3, "Caracter invalido al leer archivo CSV. Linea: " + lineaError.str(), "");
+	    		Log::log('s', 3, "Caracter invalido al leer archivo CSV. Linea: " + lineaError.str(), "");
 	    		break;
 	    	}
 
@@ -63,9 +63,13 @@ string** ImportarCSV::importar(string csv) {
 	    	pass = "";
 	    }
 	    this->cantidadUsuarios = i;
+
+	    if(i == 0) printf("No se cargo ningun usuario\n");
+	    cantUsuarios << (i);
+	    Log::log('s', 1, "Se cargaron " + cantUsuarios.str() + " usuarios", "");
 	 }
 	 archivo.close();
-	 delete log;
+
 	 return this->tablaUsuarios;
 }
 
