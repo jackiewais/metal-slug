@@ -218,8 +218,8 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 		cout << endl;
 		cout << "Inserte el Mensaje a Enviar: "<< endl;
 		getline (cin,inputMsj);
-		cin.clear();
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		//cin.clear();
+		//cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		*idUsuario = usuario;
 		*mensaje = inputMsj;
 	}

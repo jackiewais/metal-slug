@@ -364,6 +364,19 @@ short getPuerto(){
 
 }
 
+string getCSVPath(){
+	string path;
+
+	cout << "Ingrese el nombre del archivo CSV ('d' para default):" << endl;
+	cin >> path;
+
+	if (path == "d"){
+		return "usuarios.csv";
+	}else{
+		return path;
+	}
+}
+
 
 void Servidor::runServer(){
 	cout << "Starting server app" << endl;
@@ -371,11 +384,12 @@ void Servidor::runServer(){
 	mutexQueue = SDL_CreateMutex();
 
 	short puerto = getPuerto();
+
+	string pathCSV = getCSVPath();
+	this->contenedor->inicializarContenedor(pathCSV);
+
 	createExitThread();
 	createMainProcessorThread();
-
-	this->contenedor->inicializarContenedor("usuarios.csv");
-
 
 	openSocket(puerto);
 	escuchar();

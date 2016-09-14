@@ -67,7 +67,7 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 		Log::log('c',3,"Ejecutando connect","");
 		return mapIdNombre;
 	} else {
-		cout << "conectado al servidor" << endl;
+		cout << "Conectado al servidor" << endl;
 		Log::log('c',1,"Conectado al servidor","");
 	}
 
@@ -77,6 +77,7 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 	if (rtaServer.tipo == CONECTAR_NOTOK){
 	//	printf("El servidor rechazó la conexión: Demasiados usuarios \n");
 		Log::log('c',2,"El servidor rechazó la conexión: Demasiados usuarios","");
+		printf("El servidor rechazó la conexión: Demasiados usuarios \n");
 		return mapIdNombre;
 	}
 	return this->autenticar(datosConexion, usuario, contrasenia);
