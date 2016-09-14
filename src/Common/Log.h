@@ -19,7 +19,7 @@ class Log {
 
 public:
 
-	static void write_file(char* file_name,string message) {
+	static void write_file(const char* file_name,string message) {
 
 	    time_t now = time(0);
 	    tm *ltm =localtime(&now);
