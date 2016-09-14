@@ -19,7 +19,7 @@
 
 //using namespace std;
 
-#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
+//#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
 #define LOREMIPSUM "Cliente/loremIpsum.txt"
 
 Cliente::Cliente() {
