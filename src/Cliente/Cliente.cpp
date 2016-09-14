@@ -198,7 +198,7 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 	cout << "Ingrese el id del destinatario:" << endl;
 	while (!ok){
 		cin >> usuario;
-		if (datosConexion.conectado){
+		if (!datosConexion.conectado){
 			return 0;
 		}else if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
