@@ -96,10 +96,11 @@ void *Cliente::recvMessage(void * arg){
 				   //primero concateno el mensaje y después lo asigno
 				   mensajeParcial += mensajeRta.message;
 				   mensajeRta.message = mensajeParcial;
+				   mensajeParcial = "";
 				}
 				nombre = context->getNombreUsuarioById(mensajeRta.otherCli);
 				mensajeAMostrar = nombre + " escribió: " + mensajeRta.message + "\n";
-				printf("%s",mensajeAMostrar.c_str());
+				printf("\n %s \n",mensajeAMostrar.c_str());
 				break;
 			case RECIBIR_CHATS_LISTO: //Terminé de recibir todos los mensajes
 				context->semaforoReceive = false;
@@ -210,8 +211,8 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 		cout << endl;
 		cout << "Inserte el Mensaje a Enviar: "<< endl;
 		getline (cin,inputMsj);
-		cin.clear();
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		//cin.clear();
+		//cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 		*idUsuario = usuario;
 		*mensaje = inputMsj;

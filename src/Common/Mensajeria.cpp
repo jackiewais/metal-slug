@@ -14,7 +14,7 @@ using namespace std;
    
     
 
-    int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
+int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
 
 	char tipo[3], otherCli[2], longit[4];
 	int tipoI = mensaje->tipo;
@@ -23,6 +23,7 @@ using namespace std;
 
 	int longitudI = strlen(mensaje->message.c_str()) + 2 + 2 + 3 + 4; //mensaje + tipo + otherCli + separadores + longit
 	snprintf(longit, 5, "%04d", longitudI);
+	int resto = (BUFLEN-1)-longitudI;
 
 	strcpy(output,longit);
 	strcat(output,"|");
@@ -31,7 +32,10 @@ using namespace std;
 	strcat(output,otherCli);
 	strcat(output,"|");
 	strcat(output,mensaje->message.c_str());
-
+	if (longitudI<BUFLEN-1){
+		strcat(output,"|");
+		strcat(output,string(resto-1, '1').c_str());
+	}
 	return 0;
 }
 
@@ -39,9 +43,12 @@ using namespace std;
 int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
 
 	char output[BUFLEN];
-	encode(output,mensaje);
+	bzero(output,BUFLEN);
+	int longit = encode(output,mensaje);
 
 	//cout << "\n Mensaje enviandose: " << output << endl;
+	//cout << "LEN: " << strlen(output) << endl;
+
 	int n = send(socketCli,output,strlen(output),0);
 	if (n < 0) {
 		//	perror("ERROR enviando mensaje");
@@ -116,7 +123,7 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 		mensaje->otherCli = 0;
 		error = 1;
 	}else{
-		//cout << "\n Mensaje recibido: " << buffer << endl;
+	//	cout << "\n Mensaje recibido: " << buffer << endl;
 		decode(buffer,mensaje);
 		error = 0;
 	}
