@@ -282,7 +282,6 @@ int Cliente::loremIpsum(){
 	int actual = (t*1000)/double(CLOCKS_PER_SEC);
 	int cada = actual + milisegundos;
 
-<<<<<<< HEAD
    while(cont <= cantMax){
 	fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
 	if (!file2.is_open()){
@@ -291,7 +290,6 @@ int Cliente::loremIpsum(){
 	while (!file2.eof() && (cont <= cantMax) ){
 		getline(file2, linea);
 		pos=0;
-=======
 		list<int> clientes = getIdUsuarios();
 		int numCli;
 		srand(unsigned(time(0)));
@@ -332,7 +330,6 @@ int Cliente::loremIpsum(){
 		while (!file2.eof() && (cont <= cantMax) ){
 			getline(file2, linea);
 			pos=0;
->>>>>>> Fix lorem ipsum
 
 		while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
 		   linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
@@ -341,7 +338,6 @@ int Cliente::loremIpsum(){
 		   linea_aux = "";
 		   linea_aux2 = "";
 
-<<<<<<< HEAD
 		   do{
 
 			if (actual == cada){
@@ -359,7 +355,7 @@ int Cliente::loremIpsum(){
 		   pos = (pos + tamanio)-tamanio_aux;
 		   tamanio_aux = 0;
 	   }
-=======
+
 			        usleep(milisegundos);
 					enviarMensajes(&this->datosConexion,idCliente,linea_final);
 					cont++;
@@ -376,15 +372,10 @@ int Cliente::loremIpsum(){
 		       }
 		       linea = " ";
 
->>>>>>> Fix lorem ipsum
 
         }
 		file2.seekg(0);
 		file2.close();
-<<<<<<< HEAD
-=======
-	  }
->>>>>>> Fix lorem ipsum
 	}
   }
 
