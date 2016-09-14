@@ -247,53 +247,6 @@ int Cliente::loremIpsum(){
 		return 0;
 	}
 
-	list<int> clientes = getIdUsuarios();
-	int numCli;
-	srand(unsigned(time(0)));
-	numCli = (rand()%clientes.size());
-
-	list<int>::iterator it=clientes.begin();
-	advance(it,numCli);
-	int idCliente=*it;
-	cout << "los mensajes se envian a : " << idCliente<< endl;
-	int tamanio;
-	srand(unsigned(time(0)));
-	tamanio = rand()%200+1;
-
-	int frecuencia;
-	int cantMax;
-	int milisegundos;
-	string linea;
-	string linea_aux;
-	string linea_aux2;
-	string linea_final;
-	int tamanio_aux=0;
-	int pos;
-	cout << "Frecuencia de envio:";
-	cin >> frecuencia;
-	if (datosConexion.conectado){
-		return 0;
-	}
-	cout << "Cantidad maxima de mensajes:";
-	cin >> cantMax;
-	if (datosConexion.conectado){
-		return 0;
-	}
-
-	milisegundos= 1000/frecuencia;
-	int cont = 1;
-	clock_t t = clock();
-	int actual = (t*1000)/double(CLOCKS_PER_SEC);
-	int cada = actual + milisegundos;
-
-   while(cont <= cantMax){
-	fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
-	if (!file2.is_open()){
-		  perror("Error apertura de archivo");
-	}
-	while (!file2.eof() && (cont <= cantMax) ){
-		getline(file2, linea);
-		pos=0;
 		list<int> clientes = getIdUsuarios();
 		int numCli;
 		srand(unsigned(time(0)));
@@ -322,9 +275,6 @@ int Cliente::loremIpsum(){
 		cin >> cantMax;
 		milisegundos= 1000000/frecuencia;
 		int cont = 1;
-		clock_t t = clock();
-		int actual = (t*1000)/double(CLOCKS_PER_SEC);
-		int cada = actual + milisegundos;
 
 	   while(cont <= cantMax){
 		fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
@@ -335,32 +285,16 @@ int Cliente::loremIpsum(){
 			getline(file2, linea);
 			pos=0;
 
-		while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
-		   linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
-		   linea_final = linea_aux + linea_aux2;
+			 while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
+			           linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
+			           linea_final = linea_aux + linea_aux2;
 
-		   linea_aux = "";
-		   linea_aux2 = "";
+			           linea_aux = "";
+			           linea_aux2 = "";
 
-		   do{
-
-			if (actual == cada){
-				enviarMensajes(&this->datosConexion,idCliente,linea_final);
-				cada = actual + milisegundos;
-				cont++;
-				break;
-			}
-
-			t = clock();
-			actual = (t*1000)/double(CLOCKS_PER_SEC);
-
-		   }while(cont <= cantMax);
-
-		   pos = (pos + tamanio)-tamanio_aux;
-		   tamanio_aux = 0;
-	   }
 
 			        usleep(milisegundos);
+			        cout << "enviando mensaje : " << linea_final << endl;
 					enviarMensajes(&this->datosConexion,idCliente,linea_final);
 					cont++;
 
@@ -375,17 +309,16 @@ int Cliente::loremIpsum(){
 		             linea_aux = linea.substr(pos,tamanio_aux);
 		       }
 		       linea = " ";
-
-
         }
 		file2.seekg(0);
 		file2.close();
-	}
+
   }
 
 
 	return 0;
 }
+
 
 
 int Cliente::getIpAndPort(){
