@@ -149,11 +149,13 @@ int Cliente::seleccDesconectar(){
 
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado" << endl;
-	}else{
-		respuesta = desconectar(&this->datosConexion);
-		if (respuesta == 0)
-			this->datosConexion.conectado = false;
+		return 0;
 	}
+
+	respuesta = desconectar(&this->datosConexion);
+	if (respuesta == 0)
+		this->datosConexion.conectado = false;
+
 
 	return respuesta;
 }
@@ -175,6 +177,7 @@ int Cliente::enviar(){
 		ingresarUsuarioYMensaje(&usuario,&mensaje);
 		enviarMensajes(&this->datosConexion,usuario,mensaje);
 	}
+
 	delete log;
 	return 0;
 }
@@ -195,8 +198,8 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 	cout << "Ingrese el id del destinatario:" << endl;
 	while (!ok){
 		cin >> usuario;
-		if (!datosConexion.conectado){
-			ok = true;
+		if (datosConexion.conectado){
+			return 0;
 		}else if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
 		}else if((usuario != 99) && (mapIdNombreUsuario.find(usuario) == mapIdNombreUsuario.end())){
@@ -207,16 +210,15 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
-	if (datosConexion.conectado){
-		cout << endl;
-		cout << "Inserte el Mensaje a Enviar: "<< endl;
-		getline (cin,inputMsj);
-		//cin.clear();
-		//cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	cout << endl;
+	cout << "Inserte el Mensaje a Enviar: "<< endl;
+	getline (cin,inputMsj);
+	//cin.clear();
+	//cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-		*idUsuario = usuario;
-		*mensaje = inputMsj;
-	}
+	*idUsuario = usuario;
+	*mensaje = inputMsj;
+
 	return 0;
 }
 
@@ -224,91 +226,101 @@ int Cliente::recibir(){
 
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado, no puede recibir mensajes" << endl;
-	}else{
-		conexionCli.pedirMensajes(&datosConexion);
-		semaforoReceive = true;
-		while (semaforoReceive){}
+		return 0;
 	}
+
+	conexionCli.pedirMensajes(&datosConexion);
+	semaforoReceive = true;
+	while (semaforoReceive){}
+
 	return 0;
 }
 
 int Cliente::loremIpsum(){
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado. Opción inválida." << endl;
-	}else{
+		return 0;
+	}
 
+	list<int> clientes = getIdUsuarios();
+	int numCli;
+	srand(unsigned(time(0)));
+	numCli = (rand()%clientes.size());
 
-		list<int> clientes = getIdUsuarios();
-		int numCli;
-		srand(unsigned(time(0)));
-		numCli = (rand()%clientes.size());
+	list<int>::iterator it=clientes.begin();
+	advance(it,numCli);
+	int idCliente=*it;
+	cout << "los mensajes se envian a : " << idCliente<< endl;
+	int tamanio;
+	srand(unsigned(time(0)));
+	tamanio = rand()%200+1;
 
-		list<int>::iterator it=clientes.begin();
-		advance(it,numCli);
-		int idCliente=*it;
-		cout << "los mensajes se envian a : " << idCliente<< endl;
-		int tamanio;
-		srand(unsigned(time(0)));
-		tamanio = rand()%200+1;
+	int frecuencia;
+	int cantMax;
+	int milisegundos;
+	string linea;
+	string linea_aux;
+	string linea_aux2;
+	string linea_final;
+	int tamanio_aux=0;
+	int pos;
+	cout << "Frecuencia de envio:";
+	cin >> frecuencia;
+	if (datosConexion.conectado){
+		return 0;
+	}
+	cout << "Cantidad maxima de mensajes:";
+	cin >> cantMax;
+	if (datosConexion.conectado){
+		return 0;
+	}
 
-		int frecuencia;
-		int cantMax;
-		int milisegundos;
-		string linea;
-		string linea_aux;
-		string linea_aux2;
-		string linea_final;
-		int tamanio_aux=0;
-		int pos;
-		cout << "Frecuencia de envio:";
-		cin >> frecuencia;
-		cout << "Cantidad maxima de mensajes:";
-		cin >> cantMax;
-		milisegundos= 1000/frecuencia;
-		int cont = 1;
-		clock_t t = clock();
-		int actual = (t*1000)/double(CLOCKS_PER_SEC);
-		int cada = actual + milisegundos;
+	milisegundos= 1000/frecuencia;
+	int cont = 1;
+	clock_t t = clock();
+	int actual = (t*1000)/double(CLOCKS_PER_SEC);
+	int cada = actual + milisegundos;
 
-	   while(cont <= cantMax){
-		fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
-		if (!file2.is_open()){
-			  perror("Error apertura de archivo");
-		}
-		while (!file2.eof() && (cont <= cantMax) ){
-			getline(file2, linea);
-			pos=0;
+   while(cont <= cantMax){
+	fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
+	if (!file2.is_open()){
+		  perror("Error apertura de archivo");
+	}
+	while (!file2.eof() && (cont <= cantMax) ){
+		getline(file2, linea);
+		pos=0;
 
-			while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
-			   linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
-			   linea_final = linea_aux + linea_aux2;
+		while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
+		   linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
+		   linea_final = linea_aux + linea_aux2;
 
-			   linea_aux = "";
-			   linea_aux2 = "";
+		   linea_aux = "";
+		   linea_aux2 = "";
 
-			   do{
+		   do{
 
-				if (actual == cada){
-					enviarMensajes(&this->datosConexion,idCliente,linea_final);
-					cada = actual + milisegundos;
-					cont++;
-					break;
-				}
+			if (actual == cada){
+				enviarMensajes(&this->datosConexion,idCliente,linea_final);
+				cada = actual + milisegundos;
+				cont++;
+				break;
+			}
 
-				t = clock();
-				actual = (t*1000)/double(CLOCKS_PER_SEC);
+			t = clock();
+			actual = (t*1000)/double(CLOCKS_PER_SEC);
 
-			   }while(cont <= cantMax);
+		   }while(cont <= cantMax);
 
-			   pos = (pos + tamanio)-tamanio_aux;
-			   tamanio_aux = 0;
-		   }
+		   pos = (pos + tamanio)-tamanio_aux;
+		   tamanio_aux = 0;
+	   }
 
 		file2.seekg(0);
 		file2.close();
-}
-	  }
 	}
+  }
+
+
 	return 0;
 }
 

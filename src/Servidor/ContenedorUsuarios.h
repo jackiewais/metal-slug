@@ -15,11 +15,12 @@ class ContenedorUsuarios {
 private:
 	ImportarCSV *importar;
 	map<string, Usuario*> mapUsuarios;
-	map<int, Usuario*> socket_usuario;
 
 	Usuario* autentificar(string message);
 
 public:
+	map<int, Usuario*> socket_usuario;
+
 	ContenedorUsuarios();
 	virtual ~ContenedorUsuarios();
 	void inicializarContenedor(string csv);

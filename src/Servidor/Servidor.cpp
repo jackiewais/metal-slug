@@ -216,7 +216,11 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 
 	   finish = args->context->mensajeria.receiveAndDecode(socketCli,&mensaje);
 
-	   if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
+	   if (mensaje.tipo == DISCONNECTED){
+		   cout << "Usuario Desconectado" << endl;
+		   args->context->contenedor->cerrarSesion(socketCli);
+		   args->context->cantCon--;
+	   }else if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
 		   //si ya existia concateno el mensaje
 		   mensajeParcial += mensaje.message;
 		   hayMsjParcial = true;
@@ -390,6 +394,11 @@ void Servidor::runServer(){
 void* Servidor::exitManager(void* context) {
 	  string input;
 	  bool quit = false;
+	  Servidor* contexto = (Servidor*)context;
+	  mensajeStruct mensajeExit;
+	  mensajeExit.tipo = DISCONNECTED;
+	  mensajeExit.otherCli = 0;
+	  mensajeExit.message = "El servidor se cerro";
 
 	  cout << "Escribe 'quit' en cualquier momento para salir" << endl;
 	  while (!quit){
@@ -400,7 +409,15 @@ void* Servidor::exitManager(void* context) {
 	  printf("Saliendo de la aplicación...\n");
 	  printf("Cerrando el socket...\n");
 
-	  close(((Servidor*)context)->sockfd);
+	  close(contexto->sockfd);
+
+	  for(auto const &user :  contexto->contenedor->socket_usuario) {
+		  if(user.second->isConectado()){
+			  mensajeExit.socketCli = user.second->getIdSocket();
+			  contexto->mensajeria.encodeAndSend(user.second->getIdSocket(),&mensajeExit);
+		  }
+	  	}
+
 	  //todos los sockets: enviar mensaje de desconexion
 
 

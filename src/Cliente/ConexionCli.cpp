@@ -49,7 +49,7 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 	}
 
 	struct timeval timeout;
-	 timeout.tv_sec = 180;
+	 timeout.tv_sec = 60;
 	 timeout.tv_usec = 0;
 
 	 if (setsockopt (datosConexion->sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
