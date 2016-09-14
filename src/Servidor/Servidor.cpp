@@ -272,7 +272,7 @@ void *Servidor::sendMessage(void *arguments){
 
 void Servidor::nuevaConexion(int new_fd) {
 	struct timeval timeout;
-	timeout.tv_sec = 60;
+	timeout.tv_sec = 10;
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;

@@ -285,7 +285,7 @@ int Cliente::loremIpsum(){
 			getline(file2, linea);
 			pos=0;
 
-			 while(((pos+tamanio)<= linea.length()) && (cont <= cantMax)){
+			 while(((pos+tamanio)<= linea.length()) && (cont <= cantMax) && (!this->datosConexion.conectado)){
 			           linea_aux2 = linea.substr(pos,tamanio - tamanio_aux);
 			           linea_final = linea_aux + linea_aux2;
 
