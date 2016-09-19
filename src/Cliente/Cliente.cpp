@@ -276,12 +276,12 @@ int Cliente::loremIpsum(){
 		milisegundos= 1000000/frecuencia;
 		int cont = 1;
 
-	   while(cont <= cantMax){
+	   while((cont <= cantMax) && (this->datosConexion.conectado)){
 		fstream file2(LOREMIPSUM,ios::in | ios::out | ios::app);
 		if (!file2.is_open()){
 			  perror("Error apertura de archivo");
 		}
-		while (!file2.eof() && (cont <= cantMax) ){
+		while (!file2.eof() && (cont <= cantMax ) && (this->datosConexion.conectado)){
 			getline(file2, linea);
 			pos=0;
 

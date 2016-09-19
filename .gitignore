@@ -39,3 +39,7 @@ metal
 .cproject
 /Debug/
 
+
+Cliente/log.txt
+Servidor/log.txt
+

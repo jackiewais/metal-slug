@@ -77,7 +77,7 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 			recibirTodosLosChats(msg);
 			break;
 		case DISCONNECTED:
-			//por ahora no hacemos nada
+			procesarDesconexion(msg);
 			break;
 		
 	}
@@ -105,7 +105,12 @@ int Servidor::enviarChat(mensajeStruct msg){
 		
 	return 0;
 }
+int Servidor::procesarDesconexion(mensajeStruct mensaje){
+	queue<mensajeStruct>* colaCliente = socketIdQueue[mensaje.socketCli];
+	colaCliente->push(mensaje);
 
+	return 0;
+}
 int Servidor::recibirTodosLosChats(mensajeStruct msgPedido){
 	int socketCli = msgPedido.socketCli;
 	int idCliente = contenedor->getUsuarioBySocket(socketCli)->getIdUsuario();
@@ -211,6 +216,7 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 	   if (mensaje.tipo == DISCONNECTED){
 		   cout << "Usuario Desconectado" << endl;
 		   args->context->contenedor->cerrarSesion(socketCli);
+		   args->context->colaPrincipalMensajes.push(mensaje);
 		   args->context->cantCon--;
 	   }else if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
 		   //si ya existia concateno el mensaje
@@ -253,26 +259,34 @@ void *Servidor::sendMessage(void *arguments){
 	int result=0;
 	stringstream idSocket;
 	queue<mensajeStruct>* queueCli=args->context->socketIdQueue[socketCli];
-   	mensajeStruct msg;
+
     
     	while(!finish){
 		    if(!queueCli->empty()){
-			msg=queueCli->front();
-			queueCli->pop();
-			result=args->context->encodeAndSend(socketCli,&msg);
-			idSocket <<  msg.socketCli;
-			Log::log('s',1,"Respondiendo mensaje al cliente: " +idSocket.str(), msg.message);
-			finish = (result != 0);
-		}
+		    	mensajeStruct* msg = new mensajeStruct();
+		    	*msg=queueCli->front();
+		    	queueCli->pop();
+		    	if(msg->tipo == DISCONNECTED){
+		    		finish = true;
+		    	}else{
+					result=args->context->encodeAndSend(socketCli,msg);
+					idSocket <<  msg->socketCli;
+					Log::log('s',1,"Respondiendo mensaje al cliente: " +idSocket.str(), msg->message);
+					finish = (result != 0);
+				}
+		    	delete(msg);
+			//free(&msg);
+		    }
 		
-	}
+    	}
 
 	return 0;
 }
 
+
 void Servidor::nuevaConexion(int new_fd) {
 	struct timeval timeout;
-	timeout.tv_sec = 10;
+	timeout.tv_sec = 180;
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;
@@ -284,7 +298,7 @@ void Servidor::nuevaConexion(int new_fd) {
 		Log::log('s',3,"Seteando el snd timeout","");
 	//	printf("ERROR seteando el snd timeout \n");
 	//CREO LA COLA DE CLIENTE Y GUARDO EN UN MAP
-  	queue<mensajeStruct> * queueClient =new queue<mensajeStruct>;
+ 	queue<mensajeStruct> * queueClient =new queue<mensajeStruct>;
 	socketIdQueue[new_fd]= queueClient;
 
 	arguments->context = this;

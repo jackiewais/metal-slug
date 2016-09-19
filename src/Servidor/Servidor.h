@@ -50,6 +50,7 @@ private:
 	int enviarMensajeSegmentado(int socketCli, chatStruct* elemento, queue<mensajeStruct>* colaCliente );
 	Mensajeria mensajeria;
 	ContenedorUsuarios* contenedor;
+	int procesarDesconexion(mensajeStruct mensaje);
 
 public:
 	Servidor();
