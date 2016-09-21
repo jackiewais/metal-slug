@@ -468,11 +468,10 @@ void Servidor::createMainProcessorThread(){
 
 Servidor::Servidor() {
 	this->contenedor = new ContenedorUsuarios();
-	contenedor  = new ContenedorUsuarios();
-	arguments = new argsForThread();
+	this->arguments = new argsForThread();
 }
 Servidor::~Servidor() {
 	delete this->contenedor;
-	delete arguments;
+	delete this->arguments;
 
 }
