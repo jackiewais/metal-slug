@@ -20,9 +20,9 @@ ImportarCSV::ImportarCSV() {
 
 ImportarCSV::~ImportarCSV() {
 	for(int i=0; i < this->cantidadUsuarios ;i++)
-	   delete[]this->tablaUsuarios[i];
+	   delete[] this->tablaUsuarios[i];
 
-    delete[]this->tablaUsuarios;
+    delete[] this->tablaUsuarios;
 }
 
 
@@ -35,6 +35,7 @@ string** ImportarCSV::importar(string csv) {
 	if(archivo.fail()) {
 		cerr << "Error al abrir el archivo " + string(csv) << endl;
         Log::log('s',3,"Al abrir el archivo " + string(csv),"");
+        return NULL;
 	}else{
 		int i = 0;
 

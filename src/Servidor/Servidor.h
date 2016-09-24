@@ -52,6 +52,10 @@ private:
 	ContenedorUsuarios* contenedor;
 	int procesarDesconexion(mensajeStruct mensaje);
 
+	bool cerrarPrograma;
+	pthread_t threadExit, threadMain;
+	int terminarThreads();
+
 public:
 	Servidor();
 	virtual ~Servidor();

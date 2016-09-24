@@ -28,7 +28,7 @@ void* Servidor::procesarMensajesMain (void *data) {
 	bool finish = false;
 	int result;
 
-	while(!finish){
+	while(!finish && !context->cerrarPrograma){
 		if (!context->colaPrincipalMensajes.empty()){
 			msg=context->colaPrincipalMensajes.front();
 			context->colaPrincipalMensajes.pop();
@@ -38,6 +38,7 @@ void* Servidor::procesarMensajesMain (void *data) {
 			finish = (result != 0);
 		}
 	}
+	cout << "salio de procesar" <<endl;
 	return 0;
 
 }
@@ -246,11 +247,6 @@ void* Servidor::recibirMensajesCliente(void* arguments){
    return 0;
 }
 
-
-void sigchld_handler(int s) {
-	while(wait(NULL) > 0);
-}
-
 void *Servidor::sendMessage(void *arguments){
 
  	argsForThread* args = (argsForThread*) arguments;
@@ -326,7 +322,7 @@ int Servidor::escuchar() {
 
 	mensajeStruct messageAccept;
 
-	while(1) { // main accept() loop
+	while(!this->cerrarPrograma) { // main accept() loop
 		sin_size = sizeof(struct sockaddr_in);
 		new_fd = accept(this->sockfd, (struct sockaddr *)&their_addr, &sin_size);
 		if (new_fd == -1) {
@@ -354,6 +350,7 @@ int Servidor::escuchar() {
 			nuevaConexion(new_fd);
 		}
 	}
+	cout << "salio de escuchar" <<endl;
 	return 0;
 }
 
@@ -396,6 +393,9 @@ void Servidor::runServer(){
 	cout << "Starting server app" << endl;
 	Log::log('s',1,"Starting server app","");
 	mutexQueue = SDL_CreateMutex();
+	this->cerrarPrograma = false;
+	this->threadExit = 0;
+	this->threadMain= 0;
 
 	short puerto = getPuerto();
 
@@ -408,7 +408,15 @@ void Servidor::runServer(){
 	openSocket(puerto);
 	escuchar();
 
+	terminarThreads();
 };
+
+int Servidor::terminarThreads(){
+	pthread_join(this->threadExit, NULL);
+	pthread_join(this->threadMain, NULL);
+
+	return 0;
+}
 
 
 void* Servidor::exitManager(void* context) {
@@ -429,7 +437,9 @@ void* Servidor::exitManager(void* context) {
 	  printf("Saliendo de la aplicación...\n");
 	  printf("Cerrando el socket...\n");
 
+	  shutdown(contexto->sockfd, SHUT_RDWR);
 	  close(contexto->sockfd);
+	  contexto->cerrarPrograma = true;
 
 	  for(auto const &user :  contexto->contenedor->socket_usuario) {
 		  if(user.second->isConectado()){
@@ -443,14 +453,13 @@ void* Servidor::exitManager(void* context) {
 
 	  printf("Aplicación finalizada\n");
 	  Log::log('s',1,"Aplicación finalizada","");
-	  exit(0);
+	  //exit(0);
+	  return 0;
 
 }
 
 void Servidor::createExitThread(){
-	pthread_t threadExit;
-
-	int rc = pthread_create(&threadExit, NULL,&Servidor::exitManager, this);
+	int rc = pthread_create(&this->threadExit, NULL,&Servidor::exitManager, this);
 	if (rc){
 		printf("ERROR creando el thread de salida %i \n",rc);
 		Log::log('s',3,"creando el thread de salida","");
@@ -458,8 +467,7 @@ void Servidor::createExitThread(){
 }
 
 void Servidor::createMainProcessorThread(){
-	pthread_t threadMain;
-	int rc = pthread_create(&threadMain, NULL,&Servidor::procesarMensajesMain, this);
+	int rc = pthread_create(&this->threadMain, NULL,&Servidor::procesarMensajesMain, this);
 	if (rc){
 		printf("ERROR creando el thread de procesamiento principal %i \n",rc);
 		Log::log('s',3,"Creando el thread de procesamiento principal","");

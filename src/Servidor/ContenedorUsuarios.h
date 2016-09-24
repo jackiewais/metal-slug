@@ -13,7 +13,6 @@ using namespace std;
 class ContenedorUsuarios {
 
 private:
-	ImportarCSV *importar;
 	map<string, Usuario*> mapUsuarios;
 
 	Usuario* autentificar(string message);
@@ -26,7 +25,6 @@ public:
 	void inicializarContenedor(string csv);
 	bool iniciarSesion(string message, int idSocket);
 	bool cerrarSesion(int idSocket);
-	int getCantidadUsuarios();
 	Usuario* getUsuarioBySocket(int idSocket);
 	string getIdNombresUsuarios(string message);
 	list<int> getIdOtrosUsuarios(int idUsuarioActual);

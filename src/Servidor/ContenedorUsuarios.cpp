@@ -9,29 +9,36 @@ using namespace std;
 
 
 ContenedorUsuarios::ContenedorUsuarios() {
-	this->importar = new ImportarCSV();
 }
 
 ContenedorUsuarios::~ContenedorUsuarios() {
-	delete importar;
-	//delete[] this->importar;
+	map<string, Usuario*>::iterator it;
+	Usuario *usuario;
+
+	for(it = this->mapUsuarios.begin(); it != this->mapUsuarios.end(); it++) {
+		usuario = it->second;
+		delete usuario;
+	}
 }
 
 
 void ContenedorUsuarios::inicializarContenedor(string csv) {
+	ImportarCSV *importar = new ImportarCSV();
+	string **tablaUsuarios = importar->importar(csv);
 
-	string **tablaUsuarios = this->importar->importar(csv);
-
-	for(int i=0; i < this->importar->getCantidadUsuarios(); i++) {
-		string nombre = tablaUsuarios[i][0];
-		string pass = tablaUsuarios[i][1];
-		string clave = nombre + ";" + pass;
-		Usuario *usuario;
-		usuario = new Usuario(i+1,nombre,pass);
-		this->mapUsuarios[clave] = usuario;
+	if (tablaUsuarios != NULL) {
+		for(int i=0; i < importar->getCantidadUsuarios(); i++) {
+			string nombre = tablaUsuarios[i][0];
+			string pass = tablaUsuarios[i][1];
+			string clave = nombre + ";" + pass;
+			Usuario *usuario;
+			usuario = new Usuario(i+1,nombre,pass);
+			this->mapUsuarios[clave] = usuario;
+		}
 	}
 
-	delete[] tablaUsuarios;
+	//delete[] tablaUsuarios;
+	delete importar;
 }
 
 
@@ -74,13 +81,6 @@ bool ContenedorUsuarios::cerrarSesion(int idSocket) {
 	}
 	return sesionCerrada;
 }
-
-
-int ContenedorUsuarios::getCantidadUsuarios() {
-
-	return this->importar->getCantidadUsuarios();
-}
-
 
 Usuario* ContenedorUsuarios::getUsuarioBySocket(int idSocket) {
 
