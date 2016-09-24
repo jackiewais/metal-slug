@@ -301,12 +301,14 @@ void Servidor::nuevaConexion(int new_fd) {
 	arguments->socketCli = &new_fd;
 
 	int rc = pthread_create(&precvMessage, NULL, recibirMensajesCliente, (void*)arguments);
+	pthread_detach(precvMessage);
 	if (rc){
 	//	printf("ERROR creando el thread de recv %i \n",rc);
 		Log::log('s',3,"Creando el thread de recv","");
 	}
 
 	rc = pthread_create(&psendMessage, NULL, sendMessage, (void*)arguments);
+	pthread_detach(psendMessage);
 	if (rc){
 		//printf("ERROR creando el thread de send %i \n",rc);
 		Log::log('s',3,"Creando el thread de send","");
@@ -481,5 +483,10 @@ Servidor::Servidor() {
 Servidor::~Servidor() {
 	delete this->contenedor;
 	delete this->arguments;
+	map<int,queue<mensajeStruct>*>::iterator it;
+
+	for(it = this->socketIdQueue.begin(); it != this->socketIdQueue.end(); it++) {
+		delete it->second;
+	}
 
 }

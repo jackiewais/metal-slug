@@ -144,21 +144,27 @@ int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){
 	return 0;
 }
 
-int Cliente::seleccDesconectar(){
-	int respuesta = 0;
-
-	if (!this->datosConexion.conectado){
-		cout << "El usuario no está conectado" << endl;
-		return 0;
-	}
-
-	cout << "Desconectando..." << endl;
-	respuesta = desconectar(&this->datosConexion);
+void Cliente::terminarThreadRecv(){
 	if (this->threadRecv != 0) {
 		// Espero a que termine el threadRecv
 		pthread_join(this->threadRecv, NULL);
 		this->threadRecv = 0;
 	}
+}
+
+int Cliente::seleccDesconectar(){
+	int respuesta = 0;
+
+	if (!this->datosConexion.conectado){
+		cout << "El usuario no está conectado" << endl;
+		// Por que capaz la desconexion la hizo el server
+		terminarThreadRecv();
+		return 0;
+	}
+
+	cout << "Desconectando..." << endl;
+	respuesta = desconectar(&this->datosConexion);
+	terminarThreadRecv();
 	if (respuesta == 0){
 		this->datosConexion.conectado = false;
 		Log::log('c',1,"Usuario cerro sesion","");
