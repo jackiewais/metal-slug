@@ -54,8 +54,7 @@ int Cliente::seleccConectar(){
 			Log::log('c',1,"Usuario " + usuario + " logueado correctamente","");
 			this->datosConexion.conectado = true;
 			//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
-			pthread_t threadRecv;
-			int rc = pthread_create(&threadRecv, NULL,&recvMessage,(void*)this);
+			int rc = pthread_create(&this->threadRecv, NULL,&recvMessage,(void*)this);
 			if (rc){
 				Log::log('c',1,"creando el thread","");
 			//	printf("ERROR creando el thread  %i \n",rc);
@@ -153,7 +152,13 @@ int Cliente::seleccDesconectar(){
 		return 0;
 	}
 
+	cout << "Desconectando..." << endl;
 	respuesta = desconectar(&this->datosConexion);
+	if (this->threadRecv != 0) {
+		// Espero a que termine el threadRecv
+		pthread_join(this->threadRecv, NULL);
+		this->threadRecv = 0;
+	}
 	if (respuesta == 0){
 		this->datosConexion.conectado = false;
 		Log::log('c',1,"Usuario cerro sesion","");
@@ -432,6 +437,7 @@ int Cliente::runCliente(){
 	cout << "Starting client app" << endl;
 
 	int status = 0;
+	this->threadRecv = 0;
 
 	getIpAndPort();
 	printMenu();

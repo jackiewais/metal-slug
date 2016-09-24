@@ -28,6 +28,7 @@ int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 }
 
 int ConexionCli::cerrarSocket(int socket){
+	shutdown(socket, SHUT_RDWR);
 	close(socket);
 	printf("Usuario desconectado\n");
 	Log::log('c',1,"Se cerro el socket","");

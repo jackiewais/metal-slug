@@ -30,6 +30,7 @@ private:
 	int printMenu();
 	void imprimirConsigna();
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
+	pthread_t threadRecv;
 
 
 public:
