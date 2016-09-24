@@ -38,7 +38,6 @@ void* Servidor::procesarMensajesMain (void *data) {
 			finish = (result != 0);
 		}
 	}
-	cout << "salio de procesar" <<endl;
 	return 0;
 
 }
@@ -352,7 +351,6 @@ int Servidor::escuchar() {
 			nuevaConexion(new_fd);
 		}
 	}
-	cout << "salio de escuchar" <<endl;
 	return 0;
 }
 
