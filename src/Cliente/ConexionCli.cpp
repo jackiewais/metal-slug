@@ -156,6 +156,16 @@ int ConexionCli::pedirMensajes(datosConexionStruct* datosConexion){
 	return 0;
 }
 
+void ConexionCli::handshake(datosConexionStruct* datosConexion){
+	cout << "pidiendo handshake" << endl;
+	mensajeStruct mensaje;
+	mensaje.tipo = RECIBIR_HANDSHAKE;
+	mensaje.otherCli = 0;
+	mensaje.message = "RECIBIR CONFIGURACION DEL MAPA";
+	encodeAndSend(datosConexion->sockfd, &mensaje);
+
+};
+
 void split2(const string &s, char delim, vector<string> &elems) {
     stringstream ss;
     ss.str(s);

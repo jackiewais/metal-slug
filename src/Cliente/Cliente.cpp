@@ -59,9 +59,10 @@ int Cliente::seleccConectar(){
 				Log::log('c',1,"creando el thread","");
 			//	printf("ERROR creando el thread  %i \n",rc);
 			}
-
+			handshake(&datosConexion);
 			respuesta = 0;
 			//Crear hilo rcv
+
 		}else{
 			cerrarSocket(this->datosConexion.sockfd);
 			respuesta = 1;
@@ -104,6 +105,9 @@ void *Cliente::recvMessage(void * arg){
 				break;
 			case RECIBIR_CHATS_LISTO: //Terminé de recibir todos los mensajes
 				context->semaforoReceive = false;
+				break;
+			case RECIBIR_HANDSHAKE:
+				cout << mensajeRta.message << endl;
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;

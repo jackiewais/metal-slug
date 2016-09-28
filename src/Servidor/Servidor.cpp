@@ -79,10 +79,21 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 		case DISCONNECTED:
 			procesarDesconexion(msg);
 			break;
+		case RECIBIR_HANDSHAKE:
+			handshake(msg);
+			break;
 		
 	}
 
 	return 0;
+}
+void Servidor::handshake(mensajeStruct msg){
+
+	msg.message="te estoy mandando los datos";
+	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+	colaCliente->push(msg);
+
+
 }
 
 int Servidor::enviarChat(mensajeStruct msg){

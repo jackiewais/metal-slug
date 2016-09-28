@@ -25,6 +25,7 @@ class ConexionCli:Mensajeria{
 		int pedirMensajes(datosConexionStruct* datosConexion);
 		static void* recvMessage(void * arg);
 		int cerrarSocket(int socket);
+		void handshake(datosConexionStruct* datosConexion);
 	private:
 		map<int, string> autenticar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 		map<int, string> getMapIdNombre(string idNombresUsuarios);
