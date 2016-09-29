@@ -88,10 +88,19 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 	return 0;
 }
 void Servidor::handshake(mensajeStruct msg){
-
-	msg.message="te estoy mandando los datos";
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+	cout << "HAGO TODO LO QUE TENGA QUE HACER EL HANDSHAKE" << endl;
+	msg.message="server : te mande dimensiones etc. ";
 	colaCliente->push(msg);
+    msg.message="server : te mande un fondo etc. ";
+    colaCliente->push(msg);
+    msg.message="server : te mande un jugador etc. ";
+    colaCliente->push(msg);
+	cout << "TERMINO DE HACER EL HANDSHAKE Y MANDO MENSAJE DE FIN DE HANDSHAKE"<< endl;
+	msg.tipo=FIN_HANDSHAKE;
+	msg.message="termino el handshake";
+	colaCliente->push(msg);
+
 
 
 }

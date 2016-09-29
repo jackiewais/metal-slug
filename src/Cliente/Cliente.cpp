@@ -109,6 +109,9 @@ void *Cliente::recvMessage(void * arg){
 			case RECIBIR_HANDSHAKE:
 				cout << mensajeRta.message << endl;
 				break;
+			case FIN_HANDSHAKE:
+			cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
+			break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
