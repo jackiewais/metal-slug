@@ -27,6 +27,7 @@ private:
 	int loremIpsum();
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 	static void *recvMessage(void * arg);
+	static void *handleKeyEvents(void * arg);
 	int printMenu();
 	void imprimirConsigna();
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);

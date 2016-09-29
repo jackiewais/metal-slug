@@ -17,6 +17,7 @@
 #include <sys/socket.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <SDL2/SDL.h>
 
 //using namespace std;
 
@@ -36,11 +37,12 @@ int Cliente::seleccConectar(){
 	int respuesta = 1;
 	string usuario, contrasenia;
 
-
 	if (this->datosConexion.conectado){
+
 		cout << "El usuario ya está conectado" << endl;
 		Log::log('c',1,"El usuario " + usuario + " ya está conectado","");
 		respuesta = 0;
+
 	}else{
 
 		getUsuarioYContrasenia(usuario, contrasenia);
@@ -49,28 +51,77 @@ int Cliente::seleccConectar(){
 		this->mapIdNombreUsuario = conectar(&this->datosConexion, usuario, contrasenia);
 
 		if (!this->mapIdNombreUsuario.empty()){
-		//	this->datosConexion.idUsuario = idUsuario;
-		//	printf("Logueado correctamente");
 			Log::log('c',1,"Usuario " + usuario + " logueado correctamente","");
 			this->datosConexion.conectado = true;
+
 			//EVENTUALMENTE EL HILO SE CREA CON EL METODO RECV&DECODE
 			int rc = pthread_create(&this->threadRecv, NULL,&recvMessage,(void*)this);
 			if (rc){
-				Log::log('c',1,"creando el thread","");
-			//	printf("ERROR creando el thread  %i \n",rc);
+				Log::log('c',1,"creando el thread de recibir mensajes","");
 			}
-			handshake(&datosConexion);
-			respuesta = 0;
-			//Crear hilo rcv
 
+			//Envio mensaje para comenzar el handshake
+			handshake(&datosConexion);
+
+			//Creo hilo para escuchar los eventos del teclado
+			int rg=pthread_create(&this->threadRecv,NULL,&handleKeyEvents,(void*)this);
+			if (rg){
+							Log::log('c',1,"creando el thread de handleEvents","");
+				}
+			respuesta = 0;
 		}else{
 			cerrarSocket(this->datosConexion.sockfd);
 			respuesta = 1;
 			Log::log('c',1,"Usuario " + usuario + " no pudo iniciar sesion","");
 		}
-
 	}
 	return respuesta;
+}
+void *Cliente::handleKeyEvents(void * arg){
+	cout << "se crea hilo de handleKeyEvents"<<endl;
+    //Event handler
+    SDL_Event e;
+    bool exit=true;
+while(exit){
+
+	while( SDL_PollEvent( &e ) == 0 )
+			   {
+	                    //User requests quit
+	                    if( e.type == SDL_QUIT )
+	                    {
+	                    	cout << "quit event"<< endl;
+	                    }
+	                    //User presses a key
+	                    else{
+
+	                    	if ( e.type == SDL_KEYUP && e.key.repeat == 0){
+
+	                        //Select surfaces based on key press
+	                        switch( e.key.keysym.sym )
+	                        {
+	                            case SDLK_w:
+	                            cout << "FLECHITA ARRIBA" <<endl;
+	                            break;
+
+	                            case SDLK_s:
+	                            cout << "FLECHITA ABAJO" <<endl;
+	                            break;
+
+	                            case SDLK_a:
+	                            cout << "FLECHITA IZQUIERDA" <<endl;
+	                            break;
+
+	                            case SDLK_d:
+	                            cout << "FLECHITA DERECHA" <<endl;
+	                            break;
+
+	                            default:
+	                            break;
+	                        }
+	                    }
+	                }
+
+}}
 }
 
 void *Cliente::recvMessage(void * arg){
