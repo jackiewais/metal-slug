@@ -28,6 +28,7 @@ private:
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 	static void *recvMessage(void * arg);
 	static void *handleKeyEvents(void * arg);
+	void crearEscenario();
 	int printMenu();
 	void imprimirConsigna();
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
