@@ -24,7 +24,7 @@ enum tipoMensaje {
 
 struct mensajeStruct {
 	tipoMensaje tipo;
-	int otherCli;
+	std::string objectId;
 	std::string message;
 	int socketCli;
 };

@@ -19,7 +19,7 @@ int ConexionCli::desconectar(datosConexionStruct* datosConexion){
 	mensajeStruct mensaje;
 	mensaje.tipo = DISCONNECTED;
 	mensaje.message = "Usuario desconectado";
-	mensaje.otherCli = 0;
+	mensaje.objectId = "X0";
 
 	encodeAndSend(datosConexion->sockfd, &mensaje);
 	cerrarSocket(datosConexion->sockfd);
@@ -91,7 +91,7 @@ map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std
 	std::string usuarioYContrasenia = usuario + ";" + contrasenia;
 	mensajeStruct mensaje;
 	mensaje.message = usuarioYContrasenia;
-	mensaje.otherCli = 0;
+	mensaje.objectId = "X0";
 	mensaje.tipo = LOGIN;
 	Mensajeria::encodeAndSend(datosConexion->sockfd, &mensaje);
 
@@ -118,7 +118,7 @@ void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion,int usuarioT
 
 	mensajeStruct mensaje;
 	
-	mensaje.otherCli = usuarioTo;
+	//mensaje.objectId = string(usuarioTo);
 	mensaje.socketCli = datosConexion->sockfd;
 
 	if (datosConexion->conectado){
@@ -150,7 +150,7 @@ int ConexionCli::recibirMensaje(datosConexionStruct* datosConexion, mensajeStruc
 int ConexionCli::pedirMensajes(datosConexionStruct* datosConexion){
 	mensajeStruct mensaje;
 	mensaje.tipo = RECIBIR_CHATS;
-	mensaje.otherCli = 0;
+	mensaje.objectId = "X0";
 	mensaje.message = "Quiero los chats";
 	encodeAndSend(datosConexion->sockfd, &mensaje);
 	return 0;

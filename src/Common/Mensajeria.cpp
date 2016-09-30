@@ -16,12 +16,11 @@ using namespace std;
 
 int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
 
-	char tipo[3], otherCli[2], longit[4];
+	char tipo[3], longit[4];
 	int tipoI = mensaje->tipo;
 	snprintf(tipo, 3, "%02d", tipoI);
-	snprintf(otherCli, 3, "%02d", mensaje->otherCli);
 
-	int longitudI = strlen(mensaje->message.c_str()) + 2 + 2 + 3 + 4; //mensaje + tipo + otherCli + separadores + longit
+	int longitudI = strlen(mensaje->message.c_str()) + strlen(mensaje->objectId.c_str()) + 2 + 3 + 4; //mensaje + objectId + tipo + separadores + longit
 	snprintf(longit, 5, "%04d", longitudI);
 	int resto = (BUFLEN-1)-longitudI;
 
@@ -29,7 +28,7 @@ int Mensajeria::encode(char output[BUFLEN], mensajeStruct* mensaje ){
 	strcat(output,"|");
 	strcat(output,tipo);
 	strcat(output,"|");
-	strcat(output,otherCli);
+	strcat(output,mensaje->objectId.c_str());
 	strcat(output,"|");
 	strcat(output,mensaje->message.c_str());
 	if (longitudI<BUFLEN-1){
@@ -82,11 +81,11 @@ int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 	string longitud = result[0];
 	string tipoS = result[1];
 	int tipo = atoi(tipoS.c_str());
-	string otherCliS = result[2];
-	int otherCli = atoi(otherCliS.c_str());
+	string objectIdS = result[2];
+	int objectId = atoi(objectIdS.c_str());
 
 	mensaje->tipo = static_cast<tipoMensaje>(tipo);
-	mensaje->otherCli = otherCli;
+	mensaje->objectId = objectId;
 	if (result.size() < 4){
 		mensaje->message = "Sin contenido";
 	}else{
@@ -108,13 +107,13 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	//	perror("ERROR ejecutano recv \n");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Error leyendo del socket";
-		mensaje->otherCli = 0;
+		mensaje->objectId = "0";
 		error = 1;
 	}else if (n == 0){
 		//printf("Mensaje de salida recibido \n");
 		mensaje->tipo = DISCONNECTED;
 		mensaje->message = "Usuario desconectado";
-		mensaje->otherCli = 0;
+		mensaje->objectId = "0";
 		error = 1;
 	}else{
 	//	cout << "\n Mensaje recibido: " << buffer << endl;

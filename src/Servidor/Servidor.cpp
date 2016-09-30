@@ -46,7 +46,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
 	mensajeStruct mensaje;
 
-	mensaje.otherCli = 0;
+	mensaje.objectId = "00";
 
 	if (this->contenedor->iniciarSesion(msg.message, msg.socketCli)) {
 		std::cout << "OK"  <<endl;
@@ -116,7 +116,7 @@ int Servidor::enviarChat(mensajeStruct msg){
 	chatStruct chat;
 	chat.message = msg.message;
 	chat.from = idCliente; //CAMBIAR POR EL ID DE USUARIO!
-	chat.to = msg.otherCli;
+	//chat.to = msg.otherCli;
 
 	list<int>::iterator it=otroUsuarios.begin();
 	if (chat.to == 99){ // si quiere enviar a todos los usuarios
@@ -150,7 +150,7 @@ int Servidor::recibirTodosLosChats(mensajeStruct msgPedido){
 	}
 
 	msj.socketCli = socketCli;//socket del que recibe los msjs
-	msj.otherCli = 0;
+	msj.objectId = "00";
 	msj.message = "Fin de chats";
 	msj.tipo = RECIBIR_CHATS_LISTO;
 	colaCliente->push(msj);
@@ -167,7 +167,7 @@ int Servidor::enviarMensajeSegmentado(int socketCli, chatStruct* chat, queue<men
 	int lengthInput = strlen(input.c_str());
 
 	mensajeStruct mensaje;
-	mensaje.otherCli = chat->from;
+	//mensaje.otherCli = chat->from;
 	mensaje.socketCli = socketCli;
 
 	while(lengthInput>MAXDATASIZE){
@@ -360,7 +360,7 @@ int Servidor::escuchar() {
 		Log::log('s',1,"server: got connection from " + string(inet_ntoa(their_addr.sin_addr)),"");
 		
 		messageAccept.socketCli = new_fd;
-		messageAccept.otherCli = 0;
+		messageAccept.objectId = "00";
 		if (cantCon == MAX_CON){
 			messageAccept.tipo = CONECTAR_NOTOK;
 			messageAccept.message = "ERROR: Supera cantidad maxima de conexiones";
@@ -449,7 +449,7 @@ void* Servidor::exitManager(void* context) {
 	  Servidor* contexto = (Servidor*)context;
 	  mensajeStruct mensajeExit;
 	  mensajeExit.tipo = DISCONNECTED;
-	  mensajeExit.otherCli = 0;
+	  mensajeExit.objectId = "00";
 	  mensajeExit.message = "El servidor se cerro";
 
 	  cout << "Escribe 'quit' en cualquier momento para salir" << endl;

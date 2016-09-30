@@ -150,7 +150,7 @@ void *Cliente::recvMessage(void * arg){
 				   mensajeRta.message = mensajeParcial;
 				   mensajeParcial = "";
 				}
-				nombre = context->getNombreUsuarioById(mensajeRta.otherCli);
+				//nombre = context->getNombreUsuarioById(mensajeRta.otherCli);
 				mensajeAMostrar = nombre + " escribió: " + mensajeRta.message + "\n";
 				printf("\n %s \n",mensajeAMostrar.c_str());
 				break;
