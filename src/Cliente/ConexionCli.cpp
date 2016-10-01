@@ -160,7 +160,7 @@ void ConexionCli::handshake(datosConexionStruct* datosConexion){
 	cout << "pidiendo handshake" << endl;
 	mensajeStruct mensaje;
 	mensaje.tipo = RECIBIR_HANDSHAKE;
-	mensaje.otherCli = 0;
+	mensaje.objectId = "X0";
 	mensaje.message = "RECIBIR CONFIGURACION DEL MAPA";
 	encodeAndSend(datosConexion->sockfd, &mensaje);
 

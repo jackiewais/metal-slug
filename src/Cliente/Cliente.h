@@ -8,6 +8,7 @@
 #include <string.h>
 #include <map>
 #include <list>
+#include "Escenario.h"
 
 class Cliente:ConexionCli {
 private:
@@ -34,6 +35,8 @@ private:
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
 	pthread_t threadRecv;
 	void terminarThreadRecv();
+
+	Escenario escenario;
 
 
 public:

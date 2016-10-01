@@ -18,6 +18,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <SDL2/SDL.h>
+#include "Escenario.h"
 
 //using namespace std;
 
@@ -29,7 +30,7 @@ Cliente::Cliente() {
 }
 
 Cliente::~Cliente() {
-	// TODO Auto-generated destructor stub
+	this->escenario.close();
 }
 
 
@@ -161,9 +162,20 @@ void *Cliente::recvMessage(void * arg){
 				cout << mensajeRta.message << endl;
 				break;
 			case FIN_HANDSHAKE:
-				crearEscenario();
-			cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
-			break;
+				cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
+				context->escenario.crearEscenario(800, 600);
+				cout << "creo escenario" << endl;
+				context->escenario.crearObjeto("fondo", "primerFondo", 0, 0);
+				context->escenario.crearObjeto("jugador1", "foo", 200, 200);
+				context->escenario.renderizarObjetos();
+				SDL_Delay( 2000 );
+				context->escenario.actualizarPosicionObjeto("jugador1", 250, 200);
+				context->escenario.renderizarObjetos();
+				SDL_Delay( 2000 );
+				context->escenario.actualizarPosicionObjeto("jugador1", 300, 200);
+				context->escenario.renderizarObjetos();
+				SDL_Delay( 2000 );
+				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
