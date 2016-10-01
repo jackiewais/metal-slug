@@ -96,7 +96,7 @@ while(exit){
 	                    else{
 
 	                    	if ( e.type == SDL_KEYUP && e.key.repeat == 0){
-	                    		cout << "entra antes de leer las letras0" << endl;
+
 	                        //Select surfaces based on key press
 	                        switch( e.key.keysym.sym )
 	                        {
