@@ -5,7 +5,7 @@ using namespace std;
 
 DesconectadoJugador* DesconectadoJugador::unica_instancia = NULL;
 
-DesconectadoJugador::DesconectadoJugador() {
+DesconectadoJugador::DesconectadoJugador() : EstadoJugador() {
 	// TODO Auto-generated constructor stub
 }
 
