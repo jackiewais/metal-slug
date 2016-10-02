@@ -23,6 +23,7 @@ public:
 	void crearObjeto(std::string idObj, std::string idSprite, int x, int y);
 	void renderizarObjetos();
 	void actualizarPosicionObjeto(std::string idObj, int x, int y);
+	void eliminarObjeto(std::string idObj);
 
 private:
 	SDL_Window* gWindow;

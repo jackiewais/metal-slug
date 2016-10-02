@@ -163,11 +163,10 @@ void *Cliente::recvMessage(void * arg){
 			case RECIBIR_HANDSHAKE:
 				cout << mensajeRta.message << endl;
 				break;
+
 			case FIN_HANDSHAKE:\
 			cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
 			context->crearEscenario();
-
-
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
