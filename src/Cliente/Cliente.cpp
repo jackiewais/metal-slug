@@ -79,13 +79,13 @@ int Cliente::seleccConectar(){
 	return respuesta;
 }
 bool Cliente::handleKeyEvents(){
-	cout << "se crea hilo de handleKeyEvents"<<endl;
+
     //Event handler
     SDL_Event e;
     bool exit=true;
-while(exit){
 
-	while( SDL_PollEvent( &e ) == 0 )
+
+	while( SDL_PollEvent( &e ) != 0 )
 			   {
 	                    //User requests quit
 	                    if( e.type == SDL_QUIT )
@@ -123,7 +123,7 @@ while(exit){
 	                    }
 	                }
 
-}}
+}
 return exit;
 }
 
@@ -163,13 +163,9 @@ void *Cliente::recvMessage(void * arg){
 			case RECIBIR_HANDSHAKE:
 				cout << mensajeRta.message << endl;
 				break;
-
-
 			case FIN_HANDSHAKE:\
 			cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
 			context->crearEscenario();
-
-
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
