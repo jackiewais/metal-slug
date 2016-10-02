@@ -63,12 +63,12 @@ int Cliente::seleccConectar(){
 
 			//Envio mensaje para comenzar el handshake
 			handshake(&datosConexion);
-
+			/*
 			//Creo hilo para escuchar los eventos del teclado
 			int rg=pthread_create(&this->threadRecv,NULL,&handleKeyEvents,(void*)this);
 			if (rg){
 							Log::log('c',1,"creando el thread de handleEvents","");
-				}
+				}*/
 			respuesta = 0;
 		}else{
 			cerrarSocket(this->datosConexion.sockfd);
@@ -78,7 +78,7 @@ int Cliente::seleccConectar(){
 	}
 	return respuesta;
 }
-void *Cliente::handleKeyEvents(void * arg){
+bool Cliente::handleKeyEvents(){
 	cout << "se crea hilo de handleKeyEvents"<<endl;
     //Event handler
     SDL_Event e;
@@ -91,6 +91,7 @@ while(exit){
 	                    if( e.type == SDL_QUIT )
 	                    {
 	                    	cout << "quit event"<< endl;
+	                    	exit=false;
 	                    }
 	                    //User presses a key
 	                    else{
@@ -123,6 +124,7 @@ while(exit){
 	                }
 
 }}
+return exit;
 }
 
 void *Cliente::recvMessage(void * arg){
@@ -161,20 +163,11 @@ void *Cliente::recvMessage(void * arg){
 			case RECIBIR_HANDSHAKE:
 				cout << mensajeRta.message << endl;
 				break;
-			case FIN_HANDSHAKE:
-				cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
-				context->escenario.crearEscenario(800, 600);
-				cout << "creo escenario" << endl;
-				context->escenario.crearObjeto("fondo", "primerFondo", 0, 0);
-				context->escenario.crearObjeto("jugador1", "foo", 200, 200);
-				context->escenario.renderizarObjetos();
-				SDL_Delay( 2000 );
-				context->escenario.actualizarPosicionObjeto("jugador1", 250, 200);
-				context->escenario.renderizarObjetos();
-				SDL_Delay( 2000 );
-				context->escenario.actualizarPosicionObjeto("jugador1", 300, 200);
-				context->escenario.renderizarObjetos();
-				SDL_Delay( 2000 );
+			case FIN_HANDSHAKE:\
+			cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
+			context->crearEscenario();
+
+
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
@@ -194,6 +187,29 @@ void *Cliente::recvMessage(void * arg){
 };
 
 void Cliente::crearEscenario(){
+			bool quit=true;
+			escenario.crearEscenario(800, 600);
+			escenario.crearObjeto("fondo", "primerFondo", 0, 0);
+			escenario.crearObjeto("jugador1", "foo", 200, 200);
+
+			/*
+			SDL_Delay( 2000 );
+			escenario.actualizarPosicionObjeto("jugador1", 250, 200);
+			escenario.renderizarObjetos();
+			SDL_Delay( 2000 );
+			escenario.actualizarPosicionObjeto("jugador1", 300, 200);
+			escenario.renderizarObjetos();
+			SDL_Delay( 2000 );*/
+
+			while(quit){
+
+
+
+			escenario.renderizarObjetos();
+			quit = this->handleKeyEvents();
+
+			}
+			escenario.close();
 
 };
 

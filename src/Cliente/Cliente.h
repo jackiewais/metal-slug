@@ -28,7 +28,8 @@ private:
 	int loremIpsum();
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 	static void *recvMessage(void * arg);
-	static void *handleKeyEvents(void * arg);
+	bool handleKeyEvents();
+	void crearEscenario(Escenario escenario);
 	void crearEscenario();
 	int printMenu();
 	void imprimirConsigna();
