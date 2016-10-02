@@ -1,8 +1,8 @@
 #include "Servidor.h"
 
 #include <arpa/inet.h>
-#include <asm-generic/socket.h>
-#include <bits/socket_type.h>
+//#include <asm-generic/socket.h>
+//#include <bits/socket_type.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <sys/time.h>

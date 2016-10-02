@@ -186,7 +186,10 @@ void *Cliente::recvMessage(void * arg){
 				cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
 				context->crearEscenario();
 				break;
+			case JUGADOR_UPD:
+				context->updateJugador(mensajeRta);
 
+				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
@@ -203,6 +206,15 @@ void *Cliente::recvMessage(void * arg){
     }
 	return 0;
 };
+
+void Cliente::updateJugador(mensajeStruct msg){
+
+
+	escenario.actualizarPosicionObjeto(msg.objectId,atoi(msg.message.c_str()),400);
+
+
+}
+
 
 void Cliente::addSprite(mensajeStruct msg){
 	this->escenario.loadMedia(msg.objectId);

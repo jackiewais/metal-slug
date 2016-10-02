@@ -38,7 +38,7 @@ private:
 	void terminarThreadRecv();
 	void setDimensionesVentana(mensajeStruct msg);
 	void addSprite(mensajeStruct msg);
-
+	void updateJugador(mensajeStruct msg);
 	Escenario escenario;
 
 
