@@ -20,6 +20,7 @@
 #include <SDL2/SDL.h>
 #include "Escenario.h"
 
+
 //using namespace std;
 
 //#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
@@ -83,6 +84,10 @@ bool Cliente::handleKeyEvents(){
     //Event handler
     SDL_Event e;
     bool exit=true;
+    mensajeStruct evento;
+    evento.tipo=PULSA_TECLA;
+    evento.objectId="X0";
+    evento.socketCli= this->datosConexion.sockfd;
 
 
 	while( SDL_PollEvent( &e ) != 0 )
@@ -102,18 +107,27 @@ bool Cliente::handleKeyEvents(){
 	                        switch( e.key.keysym.sym )
 	                        {
 	                            case SDLK_w:
+	                            evento.message="ARRIBA";
+	                            enviarEvento(&evento);
+
 	                            cout << "FLECHITA ARRIBA" <<endl;
 	                            break;
 
 	                            case SDLK_s:
+	                            evento.message="ABAJO";
+	                            enviarEvento(&evento);
 	                            cout << "FLECHITA ABAJO" <<endl;
 	                            break;
 
 	                            case SDLK_a:
+	                            evento.message="IZQUIERDA";
+	                            enviarEvento(&evento);
 	                            cout << "FLECHITA IZQUIERDA" <<endl;
 	                            break;
 
 	                            case SDLK_d:
+	                           	evento.message="DERECHA";
+	                            enviarEvento(&evento);
 	                            cout << "FLECHITA DERECHA" <<endl;
 	                            break;
 
@@ -204,11 +218,12 @@ void Cliente::crearEscenario(){
 
 
 			escenario.renderizarObjetos();
+
 			quit = this->handleKeyEvents();
 
 			}
 			escenario.close();
-
+			seleccDesconectar();
 };
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){

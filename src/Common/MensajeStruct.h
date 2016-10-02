@@ -19,6 +19,7 @@ enum tipoMensaje {
 	DISCONNECTED = 99,
 	RECIBIR_HANDSHAKE = 98,
 	FIN_HANDSHAKE=97,
+	PULSA_TECLA=17,
 
 };
 

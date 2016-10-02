@@ -65,7 +65,8 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
 int Servidor::procesarMensajeCola(mensajeStruct msg){
 	//EN FUNCIÓN AL TIPO DE MSJ VER QUE SE HACE
-
+	cout << "ENTRADO AL PROCERSAR MENSAJES " << endl;
+	cout << msg.message << endl;
 	switch (msg.tipo){
 		case LOGIN:
 			loginInterpretarMensaje(msg);
@@ -81,6 +82,9 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 			break;
 		case RECIBIR_HANDSHAKE:
 			handshake(msg);
+			break;
+		case PULSA_TECLA:
+			cout << " APRETO TECLA " << msg.message << endl;
 			break;
 		
 	}

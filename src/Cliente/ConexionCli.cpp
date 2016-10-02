@@ -110,6 +110,13 @@ map<int, string> ConexionCli::autenticar(datosConexionStruct* datosConexion, std
 	}
 	return mapIdNombre;
 }
+void ConexionCli::enviarEvento(mensajeStruct *evento){
+
+
+	encodeAndSend(evento->socketCli,evento);
+
+}
+
 void ConexionCli::enviarMensajes(datosConexionStruct* datosConexion,int usuarioTo, string input){
 	string buf;
 	int pini=0;
