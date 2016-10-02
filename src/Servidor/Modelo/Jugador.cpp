@@ -43,7 +43,7 @@ void Jugador::moverIzquierda(){
 }
 
 string Jugador::getPosConcat(){
-	return to_string(this->posX);// + ";" + to_string(this->posY);
+	return to_string(this->posX) + ";" + to_string(this->posY);
 }
 
 //void Jugador::interceptarA(Capa* capa) {

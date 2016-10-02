@@ -1,8 +1,8 @@
 #include "Servidor.h"
 
 #include <arpa/inet.h>
-#include <asm-generic/socket.h>
-#include <bits/socket_type.h>
+//#include <asm-generic/socket.h>
+//#include <bits/socket_type.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -98,7 +98,11 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 
 void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
-	this->escenario->moverJugador(usuario->getIdUsuario(),"DERECHA");
+	list<mensajeStruct> mensajesRta = this->escenario->moverJugador(usuario->getIdUsuario(),"DERECHA");
+	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+	//Recorrer y mandar mensajes
+	//colaCliente->push(mensajeRta);
+
 }
 
 void Servidor::handshake(mensajeStruct msg){

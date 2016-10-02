@@ -8,3 +8,7 @@ EstadoJugador::EstadoJugador() {
 EstadoJugador::~EstadoJugador() {
 	// TODO Auto-generated destructor stub
 }
+
+EstadoJugador* EstadoJugador::getNuevoEstado(){
+	return 0;
+};
