@@ -175,6 +175,8 @@ void *Cliente::recvMessage(void * arg){
 				context->escenario.actualizarPosicionObjeto("jugador1", 300, 200);
 				context->escenario.renderizarObjetos();
 				SDL_Delay( 2000 );
+				context->escenario.eliminarObjeto("jugador1");
+				context->escenario.renderizarObjetos();
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
