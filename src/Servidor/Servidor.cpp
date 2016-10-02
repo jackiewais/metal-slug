@@ -100,6 +100,13 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
 	list<mensajeStruct> mensajesRta = this->escenario->moverJugador(usuario->getIdUsuario(),"DERECHA");
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+
+	for (mensajeStruct msgRta : mensajesRta) {
+		msgRta.socketCli = msg.socketCli;
+		msgRta.objectId = "J" + to_string(usuario->getIdUsuario());
+		colaCliente->push(msgRta);
+	 }
+
 	//Recorrer y mandar mensajes
 	//colaCliente->push(mensajeRta);
 
