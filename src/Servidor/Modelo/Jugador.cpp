@@ -29,6 +29,22 @@ void Jugador::cambiarEstado() {
 	this->estado = this->estado->getNuevoEstado();
 }
 
+void Jugador::moverDerecha(){
+	posX += velocidad;
+	if (posX + ancho > anchoEscenario){
+		posX = anchoEscenario - ancho;
+	}
+}
+void Jugador::moverIzquierda(){
+	posX -= velocidad;
+	if(posX < 0){
+		posX = 0;
+	}
+}
+
+string Jugador::getPosConcat(){
+	return to_string(this->posX);// + ";" + to_string(this->posY);
+}
 
 //void Jugador::interceptarA(Capa* capa) {
 

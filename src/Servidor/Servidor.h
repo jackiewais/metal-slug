@@ -10,6 +10,7 @@
 #include "../Common/Mensajeria.h"
 #include <queue>
 #include "ContenedorUsuarios.h"
+#include "./Modelo/EscenarioS.h"
 
 //using namespace std;
 
@@ -52,10 +53,12 @@ private:
 	Mensajeria mensajeria;
 	ContenedorUsuarios* contenedor;
 	int procesarDesconexion(mensajeStruct mensaje);
+	EscenarioS* escenario;
 
 	bool cerrarPrograma;
 	pthread_t threadExit, threadMain;
 	int terminarThreads();
+	void procesarTeclaPulsada(mensajeStruct msg);
 
 public:
 	Servidor();
