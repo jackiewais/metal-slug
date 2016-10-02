@@ -17,7 +17,8 @@ class Escenario {
 public:
 	Escenario();
 	virtual ~Escenario();
-	bool crearEscenario();
+	bool init();
+	bool loadMedia(std::string idSprite);
 	void setDimensiones(int screenWidth, int screenHeight);
 	void close();
 	SDL_Renderer* getGRenderer();
@@ -31,8 +32,6 @@ private:
 	SDL_Renderer* gRenderer;
 	std::map<std::string, LTexture*> mapTexturas;
 	std::map<std::string, ObjetoGraficable*> mapObjetosGraficables;
-	bool init();
-	bool loadMedia();
 	int screenWidth, screenHeight;
 };
 

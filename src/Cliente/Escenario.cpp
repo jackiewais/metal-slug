@@ -70,25 +70,19 @@ bool Escenario::init()
 	return success;
 }
 
-bool Escenario::loadMedia()
+bool Escenario::loadMedia(std::string idSprite)
 {
-	// Esto esta harcodeado, me tendrian que pasar algun tipo de lista o array
-	std::string idsSprints[] = {"foo", "primerFondo"};
 	LTexture *textura;
-	//this->mapTexturas["background"] = new LTexture(this);
-
 	bool success = true;
 
-	for (unsigned int i=0; i < (sizeof((idsSprints))/sizeof((idsSprints[0]))); i++) {
-		textura = new LTexture(this);
-		if( !textura->loadFromFile( "images/" + idsSprints[i] + ".png" ) )
-		{
-			printf( "Failed to load texture image!\n" );
-			success = false;
-			textura->free();
-		} else {
-			this->mapTexturas[idsSprints[i]] = textura;
-		}
+	textura = new LTexture(this);
+	if( !textura->loadFromFile( "images/" + idSprite + ".png" ) )
+	{
+		printf( "Failed to load texture image!\n" );
+		success = false;
+		textura->free();
+	} else {
+		this->mapTexturas[idSprite] = textura;
 	}
 
 	return success;
@@ -124,15 +118,6 @@ SDL_Renderer* Escenario::getGRenderer()
 void Escenario::setDimensiones(int screenWidth, int screenHeight){
 	this->screenWidth = screenWidth;
 	this->screenHeight = screenHeight;
-}
-bool Escenario::crearEscenario()
-{
-
-	if (this->init()) {
-		if (this->loadMedia())
-			return true;
-	}
-	return false;
 }
 
 void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int y) {

@@ -178,6 +178,7 @@ void *Cliente::recvMessage(void * arg){
 				 context->setDimensionesVentana(mensajeRta);
 				break;
 			case HANDSHAKE_SPRITES:
+				context->addSprite(mensajeRta);
 				break;
 			case HANDSHAKE_OBJETO_NUEVO:
 				break;
@@ -203,35 +204,30 @@ void *Cliente::recvMessage(void * arg){
 	return 0;
 };
 
+void Cliente::addSprite(mensajeStruct msg){
+	this->escenario.loadMedia(msg.objectId);
+}
+
+
 void Cliente::setDimensionesVentana(mensajeStruct msg){
 
 	int x,y;
 	string separador = "x";
 	string dimension;
-
 	int pos = msg.message.find(separador);
+
 	dimension = msg.message.substr(0,pos);
 	x=atoi(dimension.c_str());
 	dimension = msg.message.substr(pos+1,msg.message.length());
-	cout << "DIMENSION Y "<< dimension << endl;
-
 	y=atoi(dimension.c_str());
 
-
-	cout << "DIMENSIONES X : " << x << "DIMENSIONES Y: " << y << endl;
-
 	this->escenario.setDimensiones(x,y);
-
-
-
-
-
+	this->escenario.init();
 }
 
 void Cliente::crearEscenario(){
 			bool quit=true;
 			//escenario.setDimensiones(800,600);
-			escenario.crearEscenario();
 			escenario.crearObjeto("fondo", "primerFondo", 0, 0);
 			escenario.crearObjeto("jugador1", "foo", 200, 200);
 

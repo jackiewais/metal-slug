@@ -82,10 +82,10 @@ int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 	string tipoS = result[1];
 	int tipo = atoi(tipoS.c_str());
 	string objectIdS = result[2];
-	int objectId = atoi(objectIdS.c_str());
+	//int objectId = atoi(objectIdS.c_str());
 
 	mensaje->tipo = static_cast<tipoMensaje>(tipo);
-	mensaje->objectId = objectId;
+	mensaje->objectId = objectIdS;
 	if (result.size() < 4){
 		mensaje->message = "Sin contenido";
 	}else{

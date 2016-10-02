@@ -37,6 +37,7 @@ private:
 	pthread_t threadRecv;
 	void terminarThreadRecv();
 	void setDimensionesVentana(mensajeStruct msg);
+	void addSprite(mensajeStruct msg);
 
 	Escenario escenario;
 

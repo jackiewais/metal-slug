@@ -104,15 +104,19 @@ void Servidor::handshake(mensajeStruct msg){
 	colaCliente->push(msg);
 	//---------------------------------------------
 
-/*	//MANDAR SPRITES
+	//MANDAR SPRITES
 	//DEBE DE ITERAR ENTRE TODOS LOS SPRITES
 	msg.tipo=HANDSHAKE_SPRITES;
-	msg.objectId="X0";
-	msg.message="c:jugador1";
+	msg.objectId="primerFondo";
+	msg.message="";
+	colaCliente->push(msg);
+
+	msg.objectId="foo";
+	msg.message="";
 	colaCliente->push(msg);
 	// -------------------------------
 
-	//MANDAR OBJETOS NUEVOS
+	/*//MANDAR OBJETOS NUEVOS
 	//INVENTAR ID
 	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
 	msg.objectId="COMPLETAR CON ID";
