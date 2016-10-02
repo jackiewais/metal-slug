@@ -163,10 +163,29 @@ void *Cliente::recvMessage(void * arg){
 			case RECIBIR_HANDSHAKE:
 				cout << mensajeRta.message << endl;
 				break;
+<<<<<<< HEAD
 
 			case FIN_HANDSHAKE:\
 			cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
 			context->crearEscenario();
+=======
+			case FIN_HANDSHAKE:
+				cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
+				context->escenario.crearEscenario(800, 600);
+				cout << "creo escenario" << endl;
+				context->escenario.crearObjeto("fondo", "primerFondo", 0, 0);
+				context->escenario.crearObjeto("jugador1", "foo", 200, 200);
+				context->escenario.renderizarObjetos();
+				SDL_Delay( 2000 );
+				context->escenario.actualizarPosicionObjeto("jugador1", 250, 200);
+				context->escenario.renderizarObjetos();
+				SDL_Delay( 2000 );
+				context->escenario.actualizarPosicionObjeto("jugador1", 300, 200);
+				context->escenario.renderizarObjetos();
+				SDL_Delay( 2000 );
+				context->escenario.eliminarObjeto("jugador1");
+				context->escenario.renderizarObjetos();
+>>>>>>> df9f1ef60821b3f5359b0b4992bfa6e9c4d9f6d0
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;

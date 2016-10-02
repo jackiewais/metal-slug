@@ -1,17 +1,17 @@
-#include "Escenario.h"
+#include "EscenarioS.h"
 
-Escenario::Escenario(map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores) {
+EscenarioS::EscenarioS(map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores) {
 
 	this->mapCapas = mapCapas;
 	this->mapJugadores = mapJugadores;
 }
 
-Escenario::~Escenario() {
+EscenarioS::~EscenarioS() {
 	// TODO Auto-generated destructor stub
 }
 
 
-Capa* Escenario::getCapaById(int id) {
+Capa* EscenarioS::getCapaById(int id) {
 
 	Capa* capa = NULL;
 
@@ -24,7 +24,7 @@ Capa* Escenario::getCapaById(int id) {
 }
 
 
-Jugador* Escenario::getJugadorById(int id) {
+Jugador* EscenarioS::getJugadorById(int id) {
 
 	Jugador* jugador = NULL;
 
@@ -37,7 +37,7 @@ Jugador* Escenario::getJugadorById(int id) {
 }
 
 
-void Escenario::addJugador(Jugador* jugador) {
+void EscenarioS::addJugador(Jugador* jugador) {
 
 	this->mapJugadores[jugador->getId()] = jugador;
 }
