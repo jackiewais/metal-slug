@@ -94,17 +94,32 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 void Servidor::handshake(mensajeStruct msg){
 	//apunto a la cola de mensajes de clientes que voy a mandar mensajes.
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+
 	//comienzo a mandar info
 	cout << "HAGO TODO LO QUE TENGA QUE HACER EL HANDSHAKE" << endl;
-	msg.message="server : te mande dimensiones etc. ";
+	//MANDO DIMENSIONES DE VENTANA.
+	msg.tipo=HANDSHAKE_DIMENSIONES_VENTANA;
+	msg.objectId="X0";
+	msg.message="800x600";
 	colaCliente->push(msg);
-    msg.message="server : te mande un fondo etc. ";
-    colaCliente->push(msg);
-    msg.message="server : te mande un jugador etc. ";
-    colaCliente->push(msg);
+	//---------------------------------------------
 
-    //termina el handshake y manda mensaje de fin.
-	cout << "TERMINO DE HACER EL HANDSHAKE Y MANDO MENSAJE DE FIN DE HANDSHAKE"<< endl;
+/*	//MANDAR SPRITES
+	//DEBE DE ITERAR ENTRE TODOS LOS SPRITES
+	msg.tipo=HANDSHAKE_SPRITES;
+	msg.objectId="X0";
+	msg.message="c:jugador1";
+	colaCliente->push(msg);
+	// -------------------------------
+
+	//MANDAR OBJETOS NUEVOS
+	//INVENTAR ID
+	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+	msg.objectId="COMPLETAR CON ID";
+	msg.message="SPRITEID X,Y";
+	//----------------------------------
+	*/
+    //FIN DE HANDSHAKE.
 	msg.tipo=FIN_HANDSHAKE;
 	msg.message="termino el handshake";
 	colaCliente->push(msg);

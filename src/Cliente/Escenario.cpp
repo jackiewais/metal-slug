@@ -121,11 +121,13 @@ SDL_Renderer* Escenario::getGRenderer()
 {
 	return this->gRenderer;
 }
-
-bool Escenario::crearEscenario(int screenWidth, int screenHeight)
-{
+void Escenario::setDimensiones(int screenWidth, int screenHeight){
 	this->screenWidth = screenWidth;
 	this->screenHeight = screenHeight;
+}
+bool Escenario::crearEscenario()
+{
+
 	if (this->init()) {
 		if (this->loadMedia())
 			return true;

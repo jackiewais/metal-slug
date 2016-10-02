@@ -36,6 +36,7 @@ private:
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
 	pthread_t threadRecv;
 	void terminarThreadRecv();
+	void setDimensionesVentana(mensajeStruct msg);
 
 	Escenario escenario;
 

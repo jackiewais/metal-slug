@@ -17,7 +17,8 @@ class Escenario {
 public:
 	Escenario();
 	virtual ~Escenario();
-	bool crearEscenario(int screenWidth, int screenHeight);
+	bool crearEscenario();
+	void setDimensiones(int screenWidth, int screenHeight);
 	void close();
 	SDL_Renderer* getGRenderer();
 	void crearObjeto(std::string idObj, std::string idSprite, int x, int y);

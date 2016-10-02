@@ -174,13 +174,18 @@ void *Cliente::recvMessage(void * arg){
 			case RECIBIR_CHATS_LISTO: //Terminé de recibir todos los mensajes
 				context->semaforoReceive = false;
 				break;
-			case RECIBIR_HANDSHAKE:
-				cout << mensajeRta.message << endl;
+			case HANDSHAKE_DIMENSIONES_VENTANA:
+				 context->setDimensionesVentana(mensajeRta);
+				break;
+			case HANDSHAKE_SPRITES:
+				break;
+			case HANDSHAKE_OBJETO_NUEVO:
 				break;
 			case FIN_HANDSHAKE:\
-			cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
-			context->crearEscenario();
+				cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
+				context->crearEscenario();
 				break;
+
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
@@ -198,9 +203,35 @@ void *Cliente::recvMessage(void * arg){
 	return 0;
 };
 
+void Cliente::setDimensionesVentana(mensajeStruct msg){
+
+	int x,y;
+	string separador = "x";
+	string dimension;
+
+	int pos = msg.message.find(separador);
+	dimension = msg.message.substr(0,pos);
+	x=atoi(dimension.c_str());
+	dimension = msg.message.substr(pos+1,msg.message.length());
+	cout << "DIMENSION Y "<< dimension << endl;
+
+	y=atoi(dimension.c_str());
+
+
+	cout << "DIMENSIONES X : " << x << "DIMENSIONES Y: " << y << endl;
+
+	this->escenario.setDimensiones(x,y);
+
+
+
+
+
+}
+
 void Cliente::crearEscenario(){
 			bool quit=true;
-			escenario.crearEscenario(800, 600);
+			//escenario.setDimensiones(800,600);
+			escenario.crearEscenario();
 			escenario.crearObjeto("fondo", "primerFondo", 0, 0);
 			escenario.crearObjeto("jugador1", "foo", 200, 200);
 
