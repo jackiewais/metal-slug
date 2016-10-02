@@ -1,10 +1,13 @@
 #include "EscenarioS.h"
 
+
 EscenarioS::EscenarioS(map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores) {
 
 	this->mapCapas = mapCapas;
 	this->mapJugadores = mapJugadores;
 }
+
+EscenarioS::EscenarioS() {}
 
 EscenarioS::~EscenarioS() {
 	// TODO Auto-generated destructor stub
@@ -40,4 +43,26 @@ Jugador* EscenarioS::getJugadorById(int id) {
 void EscenarioS::addJugador(Jugador* jugador) {
 
 	this->mapJugadores[jugador->getId()] = jugador;
+}
+
+
+list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string direccion){
+	Jugador* jugador = this->mapJugadores[jugadorId];
+
+	list<mensajeStruct> returnList;
+	mensajeStruct msjJug;
+
+	if (direccion == "DERECHA"){
+		jugador->moverDerecha();
+	}else if (direccion == "IZQUIERDA"){
+		jugador->moverIzquierda();
+	}
+
+	msjJug.tipo = JUGADOR_UPD;
+	msjJug.message = jugador->getPosConcat();
+
+	returnList.push_back(msjJug);
+	return returnList;
+
+
 }

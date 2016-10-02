@@ -18,7 +18,6 @@ public:
 	void moverDerecha();
 	void moverIzquierda();
 
-
 };
 
 #endif

@@ -1,19 +1,24 @@
 #include "Servidor.h"
-#include "../Common/Mensajeria.h"
-#include "../Common/Log.h"
+
+#include <arpa/inet.h>
+#include <asm-generic/socket.h>
+#include <bits/socket_type.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <sys/time.h>
+#include <SDL2/SDL_mutex.h>
+#include <unistd.h>
 #include <iostream>
 #include <limits>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <arpa/inet.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <pthread.h>
+#include <list>
 #include <sstream>
 #include <string>
-#include "SDL2/SDL_thread.h"
+#include <utility>
+
+#include "../Common/Log.h"
+#include "../Common/MensajeStruct.h"
+#include "Modelo/EscenarioS.h"
+#include "Usuario.h"
 
 using namespace std;
 
@@ -84,13 +89,18 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 			handshake(msg);
 			break;
 		case PULSA_TECLA:
-			cout << " APRETO TECLA " << msg.message << endl;
+			procesarTeclaPulsada(msg);
 			break;
-		
 	}
 
 	return 0;
 }
+
+void Servidor::procesarTeclaPulsada(mensajeStruct msg){
+	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
+	this->escenario->moverJugador(usuario->getIdUsuario(),"DERECHA");
+}
+
 void Servidor::handshake(mensajeStruct msg){
 	//apunto a la cola de mensajes de clientes que voy a mandar mensajes.
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
@@ -524,10 +534,12 @@ void Servidor::createMainProcessorThread(){
 Servidor::Servidor() {
 	this->contenedor = new ContenedorUsuarios();
 	this->arguments = new argsForThread();
+	this->escenario = new EscenarioS();
 }
 Servidor::~Servidor() {
 	delete this->contenedor;
 	delete this->arguments;
+	delete this->escenario;
 	map<int,queue<mensajeStruct>*>::iterator it;
 
 	for(it = this->socketIdQueue.begin(); it != this->socketIdQueue.end(); it++) {
