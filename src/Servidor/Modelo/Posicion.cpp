@@ -1,4 +1,8 @@
 #include "Posicion.h"
+#include <sstream>
+
+using namespace std;
+
 
 
 Posicion::Posicion(int x, int y) {
@@ -49,6 +53,9 @@ Posicion* Posicion::sumarPosicion(Posicion* otraPosicion) {
 
 string Posicion::getPosConcat() {
 
-	return (to_string(this->x) + ";" + to_string(this->y));
+    stringstream x,y;
+    x << (this->x);
+    y << (this->y);
+	return (x.str() + ";" + y.str());
 }
 
