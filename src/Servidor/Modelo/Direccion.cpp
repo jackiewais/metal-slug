@@ -6,10 +6,7 @@ Direccion::Direccion(Posicion* direccion) {
 }
 
 Direccion::~Direccion() {
-	// TODO Auto-generated destructor stub
+	this->direccion;
 }
 
-Posicion* Direccion::getDireccion() {
 
-	return this->direccion;
-}

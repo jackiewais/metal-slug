@@ -12,7 +12,7 @@ private:
 	int id;
 
 public:
-	Capa(int id, Posicion* posicion);
+	Capa(int id, Posicion* posicion, int ancho, int alto, int velocidad);
 	virtual ~Capa();
 	int getId();
 //	void interceptarA(ConectadoJugador* conectado, Jugador* jugador);

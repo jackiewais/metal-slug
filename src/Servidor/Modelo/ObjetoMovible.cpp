@@ -7,32 +7,23 @@
 
 #include "ObjetoMovible.h"
 
-ObjetoMovible::ObjetoMovible(Posicion* posicion) {
+ObjetoMovible::ObjetoMovible(Posicion* posicion, int ancho, int alto, int velocidad) {
 
 	this->posicion = posicion;
-	this->movimiento = new Movimiento();
+	this->movimiento = new Movimiento(ancho,alto,velocidad);
 }
 
 ObjetoMovible::~ObjetoMovible() {
 
 	delete this->movimiento;
+	delete this->posicion;
 }
 
 
-void ObjetoMovible::setDireccion(Direccion* nuevaDireccion) {
+void ObjetoMovible::mover(Direccion* direccion, int anchoEscenario) {
 
-	this->movimiento->setDireccion(nuevaDireccion);
-}
+	this->posicion = this->movimiento->mover(this->posicion,direccion, anchoEscenario);
 
-
-Posicion* ObjetoMovible::getPosicion() {
-
-	return this->posicion;
-}
-
-
-void ObjetoMovible::avanzar() {
-
-	this->posicion = this->movimiento->avanzar(this->posicion);
+	delete direccion;
 }
 

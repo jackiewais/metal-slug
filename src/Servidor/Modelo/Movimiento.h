@@ -6,13 +6,14 @@
 class Movimiento {
 
 private:
-	Direccion* direccion;
+	int ancho;
+	int alto;
+	int velocidad;
 
 public:
-	Movimiento();
+	Movimiento(int ancho, int alto, int velocidad);
 	virtual ~Movimiento();
-	void setDireccion(Direccion* direccion);
-	Posicion* avanzar(Posicion* posicionActual);
+	Posicion* mover(Posicion* posicionActual, Direccion* direccion, int anchoEscenario);
 };
 
 #endif /* SRC_SERVIDOR_MOVIMIENTO_H_ */

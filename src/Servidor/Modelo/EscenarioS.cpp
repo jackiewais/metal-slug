@@ -1,13 +1,19 @@
 #include "EscenarioS.h"
+#include "Direccion.h"
+#include "DirDerecha.h"
+#include "DirIzquierda.h"
 
 
-EscenarioS::EscenarioS(map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores) {
+EscenarioS::EscenarioS(int ancho, int alto, map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores) {
 
 	this->mapCapas = mapCapas;
 	this->mapJugadores = mapJugadores;
+	this->ancho = ancho;
+	this->alto = alto;
 }
 
-EscenarioS::EscenarioS() {}
+EscenarioS::EscenarioS(){}
+
 
 EscenarioS::~EscenarioS() {
 	// TODO Auto-generated destructor stub
@@ -53,9 +59,10 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string direccion){
 	mensajeStruct msjJug;
 
 	if (direccion == "DERECHA"){
-		jugador->moverDerecha();
+		jugador->mover(new DirDerecha(), this->ancho);
+
 	}else if (direccion == "IZQUIERDA"){
-		jugador->moverIzquierda();
+		jugador->mover(new DirIzquierda(), this->ancho);
 	}
 
 	msjJug.tipo = JUGADOR_UPD;
@@ -63,6 +70,4 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string direccion){
 
 	returnList.push_back(msjJug);
 	return returnList;
-
-
 }

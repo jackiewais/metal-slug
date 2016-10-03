@@ -1,11 +1,5 @@
-/*
- * Posicion.cpp
- *
- *  Created on: 29/9/2016
- *      Author: pablo
- */
-
 #include "Posicion.h"
+
 
 Posicion::Posicion(int x, int y) {
 
@@ -23,13 +17,38 @@ int Posicion::getCoordenadaX() {
 }
 
 
+void Posicion::setCoordenadaX(int x) {
+
+	this->x = x;
+}
+
+
 int Posicion::getCoordenadaY() {
 
 	return this->y;
 }
 
 
-bool Posicion::igualdadDePosicion(Posicion otraPosicion) {
+void Posicion::setCoordenadaY(int y) {
 
-	return (( this->x == otraPosicion.getCoordenadaX() ) && ( this->y == otraPosicion.getCoordenadaY() ));
+	this->y = y;
 }
+
+
+bool Posicion::igualdadDePosicion(Posicion* otraPosicion) {
+
+	return (( this->x == otraPosicion->getCoordenadaX() ) && ( this->y == otraPosicion->getCoordenadaY() ));
+}
+
+
+Posicion* Posicion::sumarPosicion(Posicion* otraPosicion) {
+
+	return new Posicion(this->x + otraPosicion->getCoordenadaX(), this->y + otraPosicion->getCoordenadaY() );
+}
+
+
+string Posicion::getPosConcat() {
+
+	return (to_string(this->x) + ";" + to_string(this->y));
+}
+

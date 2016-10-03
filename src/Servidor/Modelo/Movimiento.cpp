@@ -7,26 +7,26 @@
 
 #include "Movimiento.h"
 
-Movimiento::Movimiento() {
-	// TODO Auto-generated constructor stub
+
+Movimiento::Movimiento(int ancho, int alto, int velocidad) {
+
+	this->ancho = ancho;
+	this->alto = alto;
+	this->velocidad = velocidad;
 }
 
 Movimiento::~Movimiento() {
-	// TODO Auto-generated destructor stub
+
 }
 
 
-void Movimiento::setDireccion(Direccion* direccion) {
+Posicion* Movimiento::mover(Posicion* posicionActual, Direccion* direccion, int anchoEscenario) {
 
-	this->direccion = direccion;
-}
+	Posicion* nuevaPos = direccion->getSiguientePosicion(posicionActual, this->velocidad,this->ancho,anchoEscenario);
 
-
-Posicion* Movimiento::avanzar(Posicion* posicionActual) {
-
-	//logica para avanzar segun direccion
 	delete posicionActual;
-	return new Posicion(0,0);
+
+	return nuevaPos;
 }
 
 

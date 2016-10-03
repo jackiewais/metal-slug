@@ -6,11 +6,12 @@ class Direccion {
 
 protected:
 	Posicion* direccion;
+	Direccion(Posicion* direccion);
 
 public:
-	Direccion(Posicion* direccion);
 	virtual ~Direccion();
-	Posicion* getDireccion();
+	virtual Posicion* getSiguientePosicion(Posicion* posicion, int velocidad, int anchoJugador, int anchoEscenario);
+
 };
 
 #endif /* SRC_SERVIDOR_DIRECCION_H_ */

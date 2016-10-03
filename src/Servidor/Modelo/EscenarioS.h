@@ -13,9 +13,11 @@ class EscenarioS {
 private:
 	map<int, Capa*> mapCapas;
 	map<int, Jugador*> mapJugadores;
+	int ancho;
+	int alto;
 
 public:
-	EscenarioS(map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores);
+	EscenarioS(int ancho, int alto, map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores);
 	EscenarioS();
 	virtual ~EscenarioS();
 	Capa* getCapaById(int id);
