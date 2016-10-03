@@ -70,7 +70,7 @@ bool Escenario::init()
 	return success;
 }
 
-bool Escenario::loadMedia(std::string idSprite)
+bool Escenario::loadMedia(std::string idSprite, int ancho, int alto)
 {
 	LTexture *textura;
 	bool success = true;
@@ -84,8 +84,12 @@ bool Escenario::loadMedia(std::string idSprite)
 	} else {
 		this->mapTexturas[idSprite] = textura;
 	}
-	//textura->setWidth(100);
-	//textura->setHeight(100);
+
+	if (ancho != 0)
+		textura->setWidth(ancho);
+	if (alto != 0)
+		textura->setHeight(alto);
+
 	return success;
 }
 

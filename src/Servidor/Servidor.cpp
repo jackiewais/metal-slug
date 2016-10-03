@@ -129,11 +129,14 @@ void Servidor::handshake(mensajeStruct msg){
 	//DEBE DE ITERAR ENTRE TODOS LOS SPRITES
 	msg.tipo=HANDSHAKE_SPRITES;
 	msg.objectId="primerFondo";
-	msg.message="";
+	// RESOLUCION DEL OBJETO, PARA ESCALAR LA IMAGEN SI ES NECASARIO
+	// VER SI ES NECESARIO PASARLE LA CANT DE FOTOGRAMAS TMB
+	// ANCHO;ALTO
+	msg.message="800;600";
 	colaCliente->push(msg);
 
 	msg.objectId="foo";
-	msg.message="";
+	msg.message="64;128";
 	colaCliente->push(msg);
 	// -------------------------------
 
@@ -146,6 +149,7 @@ void Servidor::handshake(mensajeStruct msg){
 	*/
     //FIN DE HANDSHAKE.
 	msg.tipo=FIN_HANDSHAKE;
+	msg.objectId="X0";
 	msg.message="termino el handshake";
 	colaCliente->push(msg);
 

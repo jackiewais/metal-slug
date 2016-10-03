@@ -217,7 +217,17 @@ void Cliente::updateJugador(mensajeStruct msg){
 
 
 void Cliente::addSprite(mensajeStruct msg){
-	this->escenario.loadMedia(msg.objectId);
+	int ancho, alto;
+	string separador = ";";
+	string strAux;
+	int pos = msg.message.find(separador);
+
+	strAux = msg.message.substr(0,pos);
+	ancho = atoi(strAux.c_str());
+	strAux = msg.message.substr(pos+1,msg.message.length());
+	alto = atoi(strAux.c_str());
+
+	this->escenario.loadMedia(msg.objectId, ancho, alto);
 }
 
 

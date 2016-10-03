@@ -18,7 +18,7 @@ public:
 	Escenario();
 	virtual ~Escenario();
 	bool init();
-	bool loadMedia(std::string idSprite);
+	bool loadMedia(std::string idSprite, int ancho = 0, int alto = 0);
 	void setDimensiones(int screenWidth, int screenHeight);
 	void close();
 	SDL_Renderer* getGRenderer();
