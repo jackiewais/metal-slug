@@ -89,3 +89,13 @@ int LTexture::getHeight()
 {
 	return mHeight;
 }
+
+void LTexture::setWidth(int mWidth)
+{
+	this->mWidth = mWidth;
+}
+
+void LTexture::setHeight(int mHeight)
+{
+	this->mHeight = mHeight;
+}

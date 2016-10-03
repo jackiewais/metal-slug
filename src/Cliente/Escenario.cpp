@@ -84,7 +84,8 @@ bool Escenario::loadMedia(std::string idSprite)
 	} else {
 		this->mapTexturas[idSprite] = textura;
 	}
-
+	//textura->setWidth(100);
+	//textura->setHeight(100);
 	return success;
 }
 

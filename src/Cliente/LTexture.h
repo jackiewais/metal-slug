@@ -18,6 +18,8 @@ class LTexture
 		void render( int x, int y );
 		int getWidth();
 		int getHeight();
+		void setWidth(int mWidth);
+		void setHeight(int mHeight);
 
 	private:
 		SDL_Texture* mTexture;
