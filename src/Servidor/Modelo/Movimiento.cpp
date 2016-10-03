@@ -6,6 +6,8 @@
  */
 
 #include "Movimiento.h"
+#include "DirDerecha.h"
+#include "DirIzquierda.h"
 
 
 Movimiento::Movimiento(int ancho, int alto, int velocidad) {
@@ -20,9 +22,21 @@ Movimiento::~Movimiento() {
 }
 
 
-Posicion* Movimiento::mover(Posicion* posicionActual, Direccion* direccion, int anchoEscenario) {
+void Movimiento::setDirDerecha() {
 
-	Posicion* nuevaPos = direccion->getSiguientePosicion(posicionActual, this->velocidad,this->ancho,anchoEscenario);
+	this->direccion = DirDerecha::getDireccion();
+}
+
+
+void Movimiento::setDirIzquierda() {
+
+	this->direccion = DirDerecha::getDireccion();
+}
+
+
+Posicion* Movimiento::mover(Posicion* posicionActual, int anchoEscenario) {
+
+	Posicion* nuevaPos = this->direccion->getSiguientePosicion(posicionActual, this->velocidad,this->ancho,anchoEscenario);
 
 	delete posicionActual;
 

@@ -1,12 +1,15 @@
 #include "DirDerecha.h"
 #include "Posicion.h"
 
+DirDerecha* DirDerecha::unica_instancia = NULL;
+
 DirDerecha::DirDerecha() : Direccion(new Posicion(1,0)) {
 
 }
 
 DirDerecha::~DirDerecha() {
-	// TODO Auto-generated destructor stub
+
+	delete this->unica_instancia;
 }
 
 

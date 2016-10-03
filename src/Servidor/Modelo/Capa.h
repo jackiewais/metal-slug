@@ -2,8 +2,6 @@
 #define SRC_SERVIDOR_MODELO_CAPA_H_
 #include "ObjetoMovible.h"
 #include "Posicion.h"
-#include "ConectadoJugador.h"
-#include "DesconectadoJugador.h"
 #include "Jugador.h"
 
 class Capa : public ObjetoMovible {
@@ -15,8 +13,6 @@ public:
 	Capa(int id, Posicion* posicion, int ancho, int alto, int velocidad);
 	virtual ~Capa();
 	int getId();
-//	void interceptarA(ConectadoJugador* conectado, Jugador* jugador);
-//	void interceptarA(DesconectadoJugador* desconectado, Jugador* jugador);
 };
 
 #endif /* SRC_SERVIDOR_MODELO_CAPA_H_ */

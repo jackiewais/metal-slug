@@ -10,7 +10,7 @@ protected:
 
 public:
 	virtual ~Direccion();
-	virtual Posicion* getSiguientePosicion(Posicion* posicion, int velocidad, int anchoJugador, int anchoEscenario);
+	virtual Posicion* getSiguientePosicion(Posicion* posicion, int velocidad, int anchoJugador, int anchoEscenario){};
 
 };
 

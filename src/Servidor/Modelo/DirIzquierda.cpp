@@ -1,12 +1,15 @@
 #include "DirIzquierda.h"
 
+
+DirIzquierda* DirIzquierda::unica_instancia = NULL;
+
 DirIzquierda::DirIzquierda() : Direccion(new Posicion(-1,0)) {
-	// TODO Auto-generated constructor stub
 
 }
 
 DirIzquierda::~DirIzquierda() {
-	// TODO Auto-generated destructor stub
+
+	delete this->unica_instancia;
 }
 
 

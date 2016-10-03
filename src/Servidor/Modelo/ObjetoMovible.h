@@ -6,14 +6,16 @@
 
 class ObjetoMovible {
 
-protected:
+private:
 	Posicion* posicion;
 	Movimiento* movimiento;
 
 public:
 	ObjetoMovible(Posicion* posicion, int ancho, int alto, int velocidad);
 	virtual ~ObjetoMovible();
-	void mover(Direccion* direccion, int anchoEscenario);
+	Posicion* getPosicion();
+	Movimiento* getMovimiento();
+	void mover(int anchoEscenario);
 };
 
 #endif /* SRC_SERVIDOR_OBJETOMOVIBLE_H_ */

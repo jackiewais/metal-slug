@@ -2,6 +2,7 @@
 #include "Direccion.h"
 #include "DirDerecha.h"
 #include "DirIzquierda.h"
+#include "Movimiento.h"
 
 
 EscenarioS::EscenarioS(int ancho, int alto, map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores) {
@@ -59,10 +60,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string direccion){
 	mensajeStruct msjJug;
 
 	if (direccion == "DERECHA"){
-		jugador->mover(new DirDerecha(), this->ancho);
+		jugador->getMovimiento()->setDirDerecha();
+		jugador->mover(this->ancho);
 
 	}else if (direccion == "IZQUIERDA"){
-		jugador->mover(new DirIzquierda(), this->ancho);
+		jugador->getMovimiento()->setDirIzquierda();
+		jugador->mover(this->ancho);
 	}
 
 	msjJug.tipo = JUGADOR_UPD;

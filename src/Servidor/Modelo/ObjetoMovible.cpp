@@ -20,10 +20,20 @@ ObjetoMovible::~ObjetoMovible() {
 }
 
 
-void ObjetoMovible::mover(Direccion* direccion, int anchoEscenario) {
+Posicion* ObjetoMovible::getPosicion() {
 
-	this->posicion = this->movimiento->mover(this->posicion,direccion, anchoEscenario);
+	return this->posicion;
+}
 
-	delete direccion;
+
+Movimiento* ObjetoMovible::getMovimiento() {
+
+	return this->movimiento;
+}
+
+
+void ObjetoMovible::mover(int anchoEscenario) {
+
+	this->posicion = this->movimiento->mover(this->posicion,anchoEscenario);
 }
 
