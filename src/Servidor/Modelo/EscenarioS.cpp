@@ -69,7 +69,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string direccion){
 	}
 
 	msjJug.tipo = JUGADOR_UPD;
-	msjJug.message = jugador->getPosConcat();
+	msjJug.message = jugador->getPosicion()->getPosConcat();
 
 	returnList.push_back(msjJug);
 	return returnList;
