@@ -17,7 +17,7 @@
 
 #include "../Common/Log.h"
 #include "../Common/MensajeStruct.h"
-#include "Modelo/EscenarioS.h"
+#include "./Modelo/EscenarioS.h"
 #include "Usuario.h"
 
 using namespace std;
@@ -98,29 +98,21 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 
 void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 
-	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
-	list<mensajeStruct> mensajesRta = this->escenario->moverJugador(1,"DERECHA");
+	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
 
-	colaCliente->push(msg);
+   list<mensajeStruct> mensajesRta;
+   if (msg.message == "DERECHA" ){
+		   mensajesRta = this->escenario->moverJugador(usuario->getIdUsuario(),"DERECHA");
+   }else if (msg.message == "IZQUIERDA" ){
+		   mensajesRta = this->escenario->moverJugador(usuario->getIdUsuario(),"IZQUIERDA");
+   }
 
-/*	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
+   queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
 
-	list<mensajeStruct> mensajesRta = this->escenario->moverJugador(1,"DERECHA");
-
-	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
-	stringstream idUsuario;
-*/
-//	for (mensajeStruct msgRta : mensajesRta) {
-
-		//msgRta.socketCli = msg.socketCli;
-		//idUsuario << (usuario->getIdUsuario());
-	//	msgRta.objectId = "J" + idUsuario.str();
-		//colaCliente->push(msg);
-//	 }
-
-	//Recorrer y mandar mensajes
-	//colaCliente->push(mensajeRta);
-
+	for (mensajeStruct msgRta : mensajesRta) {
+		msgRta.socketCli = msg.socketCli;
+		colaCliente->push(msgRta);
+	 }
 }
 
 void Servidor::handshake(mensajeStruct msg){

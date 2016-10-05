@@ -17,6 +17,8 @@ private:
 	int alto;
 
 public:
+	int avance = 0;
+
 	EscenarioS(int ancho, int alto, map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores);
 	EscenarioS();
 	virtual ~EscenarioS();
@@ -24,7 +26,9 @@ public:
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	list<mensajeStruct>  moverJugador(int idJugador, string direccion);
-
+	int moverEscenario(list<mensajeStruct>* mainList);
+	mensajeStruct getMensajeJugador(Jugador* jugador);
+	mensajeStruct getMensajeEscenario();
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ESCENARIOS_H_ */

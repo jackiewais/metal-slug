@@ -15,11 +15,15 @@ private:
 	string nombre;
 	int puntaje;
 
+
 public:
+	bool conectado;
+
 	Jugador(int id, Posicion* posicon, int ancho, int alto, int velocidad);
 	virtual ~Jugador();
 	int getId();
 	string getPosConcat();
+	string getCodJugador();
 };
 
 #endif /* SRC_SERVIDOR_JUGADOR_H_ */
