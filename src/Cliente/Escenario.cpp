@@ -73,17 +73,25 @@ bool Escenario::init()
 bool Escenario::loadMedia(std::string idSprite, int ancho, int alto)
 {
 	LTexture *textura;
-	bool success = true;
+	bool success = true, pudoCargarAlMenosUnaTextura;
 
 	textura = new LTexture(this);
-	if( !textura->loadFromFile( "images/" + idSprite + ".png" ) )
+	pudoCargarAlMenosUnaTextura = textura->loadFromFile( "images/" + idSprite + ".png" );
+	if( !pudoCargarAlMenosUnaTextura )
 	{
 		printf( "Failed to load texture image!\n" );
 		success = false;
 		textura->free();
-	} else {
-		this->mapTexturas[idSprite] = textura;
+		// Como no se pudo cargar la imagen se carga una por defecto
+		pudoCargarAlMenosUnaTextura = textura->loadFromFile( "images/default.png" );
 	}
+
+	if( pudoCargarAlMenosUnaTextura ) {
+		this->mapTexturas[idSprite] = textura;
+	} else {
+		textura->free();
+	}
+
 
 	if (ancho != 0)
 		textura->setWidth(ancho);
@@ -126,8 +134,11 @@ void Escenario::setDimensiones(int screenWidth, int screenHeight){
 }
 
 void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int y) {
-	LTexture *textura = this->mapTexturas[idSprite];
-	this->mapObjetosGraficables[idObj] = new ObjetoGraficable(idObj, textura, x, y);
+	// Se comprueba que el sprite haya sido cargado antes
+	if ( this->mapTexturas.find(idSprite) != this->mapTexturas.end() ) {
+		LTexture *textura = this->mapTexturas[idSprite];
+		this->mapObjetosGraficables[idObj] = new ObjetoGraficable(idObj, textura, x, y);
+	}
 }
 
 void Escenario::renderizarObjetos() {
