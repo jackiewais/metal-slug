@@ -154,10 +154,16 @@ void Escenario::renderizarObjetos() {
 }
 
 void Escenario::actualizarPosicionObjeto(std::string idObj, int x, int y) {
-	this->mapObjetosGraficables[idObj]->actualizarPosicion(x, y);
+	// Si el objeto esta en el map
+	if ( this->mapObjetosGraficables.find(idObj) != this->mapObjetosGraficables.end() ) {
+		this->mapObjetosGraficables[idObj]->actualizarPosicion(x, y);
+	}
 }
 
 void Escenario::eliminarObjeto(std::string idObj) {
-	delete this->mapObjetosGraficables[idObj];
-	this->mapObjetosGraficables.erase(idObj);
+	// Si el objeto esta en el map
+	if ( this->mapObjetosGraficables.find(idObj) != this->mapObjetosGraficables.end() ) {
+		delete this->mapObjetosGraficables[idObj];
+		this->mapObjetosGraficables.erase(idObj);
+	}
 }
