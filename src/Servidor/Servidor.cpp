@@ -102,9 +102,9 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 
    list<mensajeStruct> mensajesRta;
    if (msg.message == "DERECHA" ){
-		   mensajesRta = this->escenario->moverJugador(usuario->getIdUsuario(),"DERECHA");
+		   mensajesRta = this->escenario->moverJugador(1,"DERECHA");
    }else if (msg.message == "IZQUIERDA" ){
-		   mensajesRta = this->escenario->moverJugador(usuario->getIdUsuario(),"IZQUIERDA");
+		   mensajesRta = this->escenario->moverJugador(1,"IZQUIERDA");
    }
 
    queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];

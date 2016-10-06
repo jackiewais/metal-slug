@@ -223,8 +223,20 @@ void *Cliente::recvMessage(void * arg){
 
 void Cliente::updateJugador(mensajeStruct msg){
 
-	cout << "POS X : " << msg.message.c_str() << endl;
-	escenario.actualizarPosicionObjeto(msg.objectId,atoi(msg.message.c_str()),400);
+
+	int x,y;
+		string separador = ";";
+		string dimension;
+		int pos = msg.message.find(separador);
+
+		dimension = msg.message.substr(0,pos);
+		x=atoi(dimension.c_str());
+		dimension = msg.message.substr(pos+1,msg.message.length());
+		y=atoi(dimension.c_str());
+		cout << "COORDENADAS : " << msg.message.c_str() << endl;
+		cout << "POS X : " << x << endl;
+
+	escenario.actualizarPosicionObjeto(msg.objectId,x,400);
 
 
 }
