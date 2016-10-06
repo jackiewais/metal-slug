@@ -18,9 +18,7 @@ private:
 
 public:
 	int avance = 0;
-
-	EscenarioS(int ancho, int alto, map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores);
-	EscenarioS();
+	EscenarioS(int alto, int ancho);
 	virtual ~EscenarioS();
 	Capa* getCapaById(int id);
 	Jugador* getJugadorById(int id);

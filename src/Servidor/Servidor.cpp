@@ -555,7 +555,7 @@ void Servidor::createMainProcessorThread(){
 Servidor::Servidor() {
 	this->contenedor = new ContenedorUsuarios();
 	this->arguments = new argsForThread();
-	this->escenario = new EscenarioS();
+	this->escenario = new EscenarioS(800,600);
 }
 Servidor::~Servidor() {
 	delete this->contenedor;

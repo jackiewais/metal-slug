@@ -5,16 +5,11 @@
 #include "Movimiento.h"
 
 
-EscenarioS::EscenarioS(int ancho, int alto, map<int, Capa*> mapCapas, map<int, Jugador*> mapJugadores) {
+EscenarioS::EscenarioS(int alto, int ancho) {
 
-	this->mapCapas = mapCapas;
-	this->mapJugadores = mapJugadores;
 	this->ancho = ancho;
 	this->alto = alto;
 }
-
-EscenarioS::EscenarioS(){}
-
 
 EscenarioS::~EscenarioS() {
 	// TODO Auto-generated destructor stub
