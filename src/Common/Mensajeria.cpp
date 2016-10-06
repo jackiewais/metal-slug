@@ -100,7 +100,6 @@ int Mensajeria::receiveAndDecode(int socketCli, mensajeStruct* mensaje){
 	 int n;
 	 char buffer[BUFLEN];
 	 int error = 0;
-
 	bzero(buffer,BUFLEN);
 	n = recv(socketCli, buffer, BUFLEN-1, 0);
 	if (n < 0) {

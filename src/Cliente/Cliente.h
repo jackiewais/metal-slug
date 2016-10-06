@@ -29,8 +29,8 @@ private:
 	int getUsuarioYContrasenia(std::string &usuario, std::string &contrasenia);
 	static void *recvMessage(void * arg);
 	bool handleKeyEvents();
-	void crearEscenario(Escenario escenario);
-	void crearEscenario();
+	//void crearEscenario(Escenario escenario);
+	static void *crearEscenario(void *arg);
 	int printMenu();
 	void imprimirConsigna();
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
@@ -43,6 +43,7 @@ private:
 
 
 public:
+	bool escenarioOK =false;
 	Cliente();
 	virtual ~Cliente();
 	int runCliente();

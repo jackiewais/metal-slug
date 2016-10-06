@@ -36,6 +36,7 @@ void* Servidor::procesarMensajesMain (void *data) {
 	while(!finish && !context->cerrarPrograma){
 		if (!context->colaPrincipalMensajes.empty()){
 			msg=context->colaPrincipalMensajes.front();
+			cout << "  APENAS ENTRA EN PROCESAR SOCKET :  "<< msg.socketCli << endl;
 			context->colaPrincipalMensajes.pop();
 			printf("Procesando Mensaje %s",msg.message.c_str());
 			Log::log('s',1,"Procesando Mensaje: ",msg.message.c_str());
@@ -70,8 +71,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
 int Servidor::procesarMensajeCola(mensajeStruct msg){
 	//EN FUNCIÓN AL TIPO DE MSJ VER QUE SE HACE
-	cout << "ENTRADO AL PROCERSAR MENSAJES " << endl;
-	cout << msg.message << endl;
+
 	switch (msg.tipo){
 		case LOGIN:
 			loginInterpretarMensaje(msg);
@@ -97,17 +97,26 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 }
 
 void Servidor::procesarTeclaPulsada(mensajeStruct msg){
-	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
-	list<mensajeStruct> mensajesRta = this->escenario->moverJugador(usuario->getIdUsuario(),"DERECHA");
+
+	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+	list<mensajeStruct> mensajesRta = this->escenario->moverJugador(1,"DERECHA");
+
+	colaCliente->push(msg);
+
+/*	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
+
+	list<mensajeStruct> mensajesRta = this->escenario->moverJugador(1,"DERECHA");
+
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
 	stringstream idUsuario;
+*/
+//	for (mensajeStruct msgRta : mensajesRta) {
 
-	for (mensajeStruct msgRta : mensajesRta) {
-		msgRta.socketCli = msg.socketCli;
-		idUsuario << (usuario->getIdUsuario());
-		msgRta.objectId = "J" + idUsuario.str();
-		colaCliente->push(msgRta);
-	 }
+		//msgRta.socketCli = msg.socketCli;
+		//idUsuario << (usuario->getIdUsuario());
+	//	msgRta.objectId = "J" + idUsuario.str();
+		//colaCliente->push(msg);
+//	 }
 
 	//Recorrer y mandar mensajes
 	//colaCliente->push(mensajeRta);
@@ -338,6 +347,7 @@ void *Servidor::sendMessage(void *arguments){
 		    	if(msg->tipo == DISCONNECTED){
 		    		finish = true;
 		    	}else{
+
 					result=args->context->encodeAndSend(socketCli,msg);
 					idSocket <<  msg->socketCli;
 					Log::log('s',1,"Respondiendo mensaje al cliente: " +idSocket.str(), msg->message);
@@ -359,7 +369,9 @@ void Servidor::nuevaConexion(int new_fd) {
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;
-	
+	Posicion *pos = new Posicion(0,0);
+	Jugador *jugador = new Jugador(1,pos,1,1,1);
+	this->escenario->addJugador(jugador);
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
 		Log::log('s',3,"Seteando el rcv timeout","");
 	//	printf("ERROR seteando el rcv timeout \n");

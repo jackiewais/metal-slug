@@ -26,6 +26,7 @@
 //#define MAXDATASIZE 100 // máximo número de bytes que se pueden leer de una vez
 #define LOREMIPSUM "Cliente/loremIpsum.txt"
 
+
 Cliente::Cliente() {
 
 }
@@ -64,6 +65,11 @@ int Cliente::seleccConectar(){
 
 			//Envio mensaje para comenzar el handshake
 			handshake(&datosConexion);
+
+			int rv = pthread_create(&this->threadRecv, NULL,&crearEscenario,(void*)this);
+												if (rc){
+													Log::log('c',1,"creando el thread escenario","");
+												}
 			/*
 			//Creo hilo para escuchar los eventos del teclado
 			int rg=pthread_create(&this->threadRecv,NULL,&handleKeyEvents,(void*)this);
@@ -77,6 +83,8 @@ int Cliente::seleccConectar(){
 			Log::log('c',1,"Usuario " + usuario + " no pudo iniciar sesion","");
 		}
 	}
+
+
 	return respuesta;
 }
 bool Cliente::handleKeyEvents(){
@@ -108,6 +116,7 @@ bool Cliente::handleKeyEvents(){
 	                        {
 	                            case SDLK_w:
 	                            evento.message="ARRIBA";
+	                            cout << " SOCKET :  "<< evento.socketCli << endl;
 	                            enviarEvento(&evento);
 
 	                            cout << "FLECHITA ARRIBA" <<endl;
@@ -154,6 +163,9 @@ void *Cliente::recvMessage(void * arg){
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
+
+		cout << "FINSIJ " << finish << endl ;
+
 		switch (mensajeRta.tipo){
 			case RECIBIR_CHAT_SIGUE:
 			   //si ya existia concateno el mensaje
@@ -175,20 +187,21 @@ void *Cliente::recvMessage(void * arg){
 				context->semaforoReceive = false;
 				break;
 			case HANDSHAKE_DIMENSIONES_VENTANA:
-				 context->setDimensionesVentana(mensajeRta);
+				// context->setDimensionesVentana(mensajeRta);
 				break;
 			case HANDSHAKE_SPRITES:
-				context->addSprite(mensajeRta);
+				//context->addSprite(mensajeRta);
 				break;
 			case HANDSHAKE_OBJETO_NUEVO:
 				break;
-			case FIN_HANDSHAKE:\
+			case FIN_HANDSHAKE:
 				cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
-				context->crearEscenario();
+
+				context->escenarioOK=true;
 				break;
 			case JUGADOR_UPD:
+				cout << "ENTRA A ACTUALIZAR JUGADOR" << endl;
 				context->updateJugador(mensajeRta);
-
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
@@ -204,12 +217,13 @@ void *Cliente::recvMessage(void * arg){
 				break;
 		}
     }
+	cout << "SALIO DEL WHILE " << endl;
 	return 0;
 };
 
 void Cliente::updateJugador(mensajeStruct msg){
 
-
+	cout << "POS X : " << msg.message.c_str() << endl;
 	escenario.actualizarPosicionObjeto(msg.objectId,atoi(msg.message.c_str()),400);
 
 
@@ -247,11 +261,16 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 	this->escenario.init();
 }
 
-void Cliente::crearEscenario(){
+ void* Cliente::crearEscenario(void *arg){
 			bool quit=true;
 			//escenario.setDimensiones(800,600);
-			escenario.crearObjeto("fondo", "primerFondo", 0, 0);
-			escenario.crearObjeto("jugador1", "foo", 200, 200);
+	 	 	 Cliente* context = (Cliente*)arg;
+	 	 	context->escenario.setDimensiones(800,600);
+	 	 	context->escenario.init();
+	 	 	context->escenario.loadMedia("primerFondo", 0, 0);
+	 	 	context->escenario.loadMedia("foo", 0, 0);
+			context->escenario.crearObjeto("fondo", "primerFondo", 0, 0);
+			context->escenario.crearObjeto("jugador1", "foo", 200, 200);
 
 			/*
 			SDL_Delay( 2000 );
@@ -262,17 +281,18 @@ void Cliente::crearEscenario(){
 			escenario.renderizarObjetos();
 			SDL_Delay( 2000 );*/
 
+			while(!context->escenarioOK){
+
+			}
 			while(quit){
 
 
-
-			escenario.renderizarObjetos();
-
-			quit = this->handleKeyEvents();
+			quit=context->handleKeyEvents();
+			context->escenario.renderizarObjetos();
 
 			}
-			escenario.close();
-			seleccDesconectar();
+			context->escenario.close();
+			context->seleccDesconectar();
 };
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){
