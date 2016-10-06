@@ -30,7 +30,7 @@ void Movimiento::setDirDerecha() {
 
 void Movimiento::setDirIzquierda() {
 
-	this->direccion = DirDerecha::getDireccion();
+	this->direccion = DirIzquierda::getDireccion();
 }
 
 
