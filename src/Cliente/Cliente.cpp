@@ -236,7 +236,7 @@ void Cliente::updateJugador(mensajeStruct msg){
 		cout << "COORDENADAS : " << msg.message.c_str() << endl;
 		cout << "POS X : " << x << endl;
 
-	escenario.actualizarPosicionObjeto(msg.objectId,x,400);
+	escenario.actualizarPosicionObjeto("jugador1",x,400);
 
 
 }
