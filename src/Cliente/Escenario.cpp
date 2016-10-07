@@ -2,7 +2,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-
+using namespace std;
 
 Escenario::Escenario() {
 	this->gWindow = NULL;
@@ -70,13 +70,35 @@ bool Escenario::init()
 	return success;
 }
 
-bool Escenario::loadMedia(std::string idSprite, int ancho, int alto)
+void Escenario::addSprite(std::string idSprite, int ancho, int alto) {
+	LTexture *textura;
+
+	textura = new LTexture(this, "images/" + idSprite + ".png");
+	this->mapTexturas[idSprite] = textura;
+
+
+	if (ancho != 0)
+		textura->setWidth(ancho);
+	if (alto != 0)
+		textura->setHeight(alto);
+}
+
+bool Escenario::loadMedia()
 {
 	LTexture *textura;
 	bool success = true, pudoCargarAlMenosUnaTextura;
 
-	textura = new LTexture(this);
-	pudoCargarAlMenosUnaTextura = textura->loadFromFile( "images/" + idSprite + ".png" );
+
+	std::map<std::string, LTexture*>::iterator it;
+	for (it = this->mapTexturas.begin(); it != this->mapTexturas.end(); it++) {
+		textura = it->second;
+		pudoCargarAlMenosUnaTextura = textura->loadFromFile();
+	}
+
+
+
+/*
+	pudoCargarAlMenosUnaTextura = textura->loadFromFile();
 	if( !pudoCargarAlMenosUnaTextura )
 	{
 		printf( "Failed to load texture image!\n" );
@@ -90,13 +112,7 @@ bool Escenario::loadMedia(std::string idSprite, int ancho, int alto)
 		this->mapTexturas[idSprite] = textura;
 	} else {
 		textura->free();
-	}
-
-
-	if (ancho != 0)
-		textura->setWidth(ancho);
-	if (alto != 0)
-		textura->setHeight(alto);
+	}*/
 
 	return success;
 }

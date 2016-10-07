@@ -4,13 +4,14 @@
 #include <string>
 #include "Escenario.h"
 
-LTexture::LTexture(Escenario *escenario)
+LTexture::LTexture(Escenario *escenario, std::string path)
 {
 	//Initialize
 	this->mTexture = NULL;
 	this->mWidth = 0;
 	this->mHeight = 0;
 	this->escenario = escenario;
+	this->path = path;
 
 }
 
@@ -20,7 +21,7 @@ LTexture::~LTexture()
 	free();
 }
 
-bool LTexture::loadFromFile( std::string path )
+bool LTexture::loadFromFile()
 {
 	//Get rid of preexisting texture
 	free();
@@ -29,10 +30,10 @@ bool LTexture::loadFromFile( std::string path )
 	SDL_Texture* newTexture = NULL;
 
 	//Load image at specified path
-	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+	SDL_Surface* loadedSurface = IMG_Load( this->path.c_str() );
 	if( loadedSurface == NULL )
 	{
-		printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
+		printf( "Unable to load image %s! SDL_image Error: %s\n", this->path.c_str(), IMG_GetError() );
 	}
 	else
 	{
@@ -43,7 +44,7 @@ bool LTexture::loadFromFile( std::string path )
         newTexture = SDL_CreateTextureFromSurface( this->escenario->getGRenderer(), loadedSurface );
 		if( newTexture == NULL )
 		{
-			printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+			printf( "Unable to create texture from %s! SDL Error: %s\n", this->path.c_str(), SDL_GetError() );
 		}
 		else
 		{

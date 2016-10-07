@@ -135,21 +135,27 @@ void Servidor::handshake(mensajeStruct msg){
 	// RESOLUCION DEL OBJETO, PARA ESCALAR LA IMAGEN SI ES NECASARIO
 	// VER SI ES NECESARIO PASARLE LA CANT DE FOTOGRAMAS TMB
 	// ANCHO;ALTO
-	msg.message="800;600";
+	msg.message="0;0";
 	colaCliente->push(msg);
 
 	msg.objectId="foo";
-	msg.message="64;128";
+	msg.message="0;0";
 	colaCliente->push(msg);
 	// -------------------------------
 
-	/*//MANDAR OBJETOS NUEVOS
+	//MANDAR OBJETOS NUEVOS
 	//INVENTAR ID
-	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
-	msg.objectId="COMPLETAR CON ID";
-	msg.message="SPRITEID X,Y";
-	//----------------------------------
-	*/
+		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+		msg.objectId="F01";
+		msg.message="primerFondo;0;0";
+		colaCliente->push(msg);
+
+		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+		msg.objectId="J01";
+		msg.message="foo;200;200";
+		colaCliente->push(msg);
+	//---------------------------------
+
     //FIN DE HANDSHAKE.
 	msg.tipo=FIN_HANDSHAKE;
 	msg.objectId="X0";
@@ -362,7 +368,7 @@ void Servidor::nuevaConexion(int new_fd) {
 	pthread_t precvMessage;
 	pthread_t psendMessage;
 	Posicion *pos = new Posicion(0,0);
-	Jugador *jugador = new Jugador(1,pos,1,1,1);
+	Jugador *jugador = new Jugador(1,pos,1,1,2);
 	this->escenario->addJugador(jugador);
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
 		Log::log('s',3,"Seteando el rcv timeout","");

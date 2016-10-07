@@ -32,6 +32,7 @@ private:
 	//void crearEscenario(Escenario escenario);
 	static void *crearEscenario(void *arg);
 	int printMenu();
+	void objetoNuevo(mensajeStruct msg);
 	void imprimirConsigna();
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
 	pthread_t threadRecv;

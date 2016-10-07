@@ -11,9 +11,9 @@ class Escenario;
 class LTexture
 {
 	public:
-		LTexture(Escenario *escenario);
+		LTexture(Escenario *escenario, std::string path);
 		~LTexture();
-		bool loadFromFile( std::string path );
+		bool loadFromFile();
 		void free();
 		void render( int x, int y );
 		int getWidth();
@@ -27,6 +27,7 @@ class LTexture
 		int mWidth;
 		int mHeight;
 		Escenario *escenario;
+		std::string path;
 };
 
 #endif /* SRC_CLIENTE_LTEXTURE_H_ */

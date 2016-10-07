@@ -187,20 +187,19 @@ void *Cliente::recvMessage(void * arg){
 				context->semaforoReceive = false;
 				break;
 			case HANDSHAKE_DIMENSIONES_VENTANA:
-				// context->setDimensionesVentana(mensajeRta);
+				context->setDimensionesVentana(mensajeRta);
 				break;
 			case HANDSHAKE_SPRITES:
-				//context->addSprite(mensajeRta);
+				context->addSprite(mensajeRta);
 				break;
 			case HANDSHAKE_OBJETO_NUEVO:
+
+				context->objetoNuevo(mensajeRta);
 				break;
 			case FIN_HANDSHAKE:
-				cout << "RECIBI FIN HANDSHAKE ->ACA DEBERIA ARRACNAR EL ESCENARIO" << endl;
-
 				context->escenarioOK=true;
 				break;
 			case JUGADOR_UPD:
-				cout << "ENTRA A ACTUALIZAR JUGADOR" << endl;
 				context->updateJugador(mensajeRta);
 				break;
 			case DISCONNECTED:
@@ -221,10 +220,34 @@ void *Cliente::recvMessage(void * arg){
 	return 0;
 };
 
+void Cliente::objetoNuevo(mensajeStruct msg){
+
+			int x,y;
+			string separador = ";";
+			string spriteId;
+			string coordenadas;
+			string posxy;
+			int pos = msg.message.find(separador);
+
+			spriteId = msg.message.substr(0,pos);
+			int posX = msg.message.find(separador,pos+1);
+
+			posxy = msg.message.substr(pos+1,posX);
+			x=atoi(posxy.c_str());
+			posxy = msg.message.substr(posX+1,posxy.length());
+			y=atoi(posxy.c_str());
+			cout << "CREA OBJ " << "ObjectId : " << msg.objectId << " " << x << y << endl;
+			cout << "SPRITE " << spriteId << endl;
+			escenario.crearObjeto(msg.objectId,spriteId,x,y);
+
+
+}
+
+
 void Cliente::updateJugador(mensajeStruct msg){
 
 
-	int x,y;
+	    int x,y;
 		string separador = ";";
 		string dimension;
 		int pos = msg.message.find(separador);
@@ -236,7 +259,7 @@ void Cliente::updateJugador(mensajeStruct msg){
 		cout << "COORDENADAS : " << msg.message.c_str() << endl;
 		cout << "POS X : " << x << endl;
 
-	escenario.actualizarPosicionObjeto("jugador1",x,400);
+	escenario.actualizarPosicionObjeto("J01",x,400);
 
 
 }
@@ -252,8 +275,9 @@ void Cliente::addSprite(mensajeStruct msg){
 	ancho = atoi(strAux.c_str());
 	strAux = msg.message.substr(pos+1,msg.message.length());
 	alto = atoi(strAux.c_str());
-
-	this->escenario.loadMedia(msg.objectId, ancho, alto);
+	cout << "LOAD MEDIA " << "ObjectId : " << msg.objectId << "ANCHOxALTO " << ancho << alto << endl;
+	//this->escenario.loadMedia(msg.objectId, ancho, alto);
+	this->escenario.addSprite(msg.objectId, ancho, alto);
 }
 
 
@@ -270,37 +294,25 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 	y=atoi(dimension.c_str());
 
 	this->escenario.setDimensiones(x,y);
-	this->escenario.init();
+	//this->escenario.init();
 }
 
  void* Cliente::crearEscenario(void *arg){
 			bool quit=true;
-			//escenario.setDimensiones(800,600);
-	 	 	 Cliente* context = (Cliente*)arg;
-	 	 	context->escenario.setDimensiones(800,600);
-	 	 	context->escenario.init();
-	 	 	context->escenario.loadMedia("primerFondo", 0, 0);
-	 	 	context->escenario.loadMedia("foo", 0, 0);
-			context->escenario.crearObjeto("fondo", "primerFondo", 0, 0);
-			context->escenario.crearObjeto("jugador1", "foo", 200, 200);
 
-			/*
-			SDL_Delay( 2000 );
-			escenario.actualizarPosicionObjeto("jugador1", 250, 200);
-			escenario.renderizarObjetos();
-			SDL_Delay( 2000 );
-			escenario.actualizarPosicionObjeto("jugador1", 300, 200);
-			escenario.renderizarObjetos();
-			SDL_Delay( 2000 );*/
+	 	 	 Cliente* context = (Cliente*)arg;
 
 			while(!context->escenarioOK){
-
 			}
+
+			context->escenario.init();
+			context->escenario.loadMedia();
 			while(quit){
 
 
 			quit=context->handleKeyEvents();
 			context->escenario.renderizarObjetos();
+
 
 			}
 			context->escenario.close();
