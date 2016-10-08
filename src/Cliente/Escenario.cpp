@@ -86,35 +86,23 @@ void Escenario::addSprite(std::string idSprite, int ancho, int alto) {
 bool Escenario::loadMedia()
 {
 	LTexture *textura;
-	bool success = true, pudoCargarAlMenosUnaTextura;
-
-
 	std::map<std::string, LTexture*>::iterator it;
+
 	for (it = this->mapTexturas.begin(); it != this->mapTexturas.end(); it++) {
 		textura = it->second;
-		pudoCargarAlMenosUnaTextura = textura->loadFromFile();
+
+		if( !textura->loadFromFile() ) {
+			printf( "Failed to load texture image!\n" );
+			textura->free();
+			// Como no se pudo cargar la imagen se carga una por defecto
+			textura->setPath("images/default.png");
+			if ( !textura->loadFromFile() ) {
+				textura->free();
+				return false;
+			}
+		}
 	}
-
-
-
-/*
-	pudoCargarAlMenosUnaTextura = textura->loadFromFile();
-	if( !pudoCargarAlMenosUnaTextura )
-	{
-		printf( "Failed to load texture image!\n" );
-		success = false;
-		textura->free();
-		// Como no se pudo cargar la imagen se carga una por defecto
-		pudoCargarAlMenosUnaTextura = textura->loadFromFile( "images/default.png" );
-	}
-
-	if( pudoCargarAlMenosUnaTextura ) {
-		this->mapTexturas[idSprite] = textura;
-	} else {
-		textura->free();
-	}*/
-
-	return success;
+	return true;
 }
 
 void Escenario::close()

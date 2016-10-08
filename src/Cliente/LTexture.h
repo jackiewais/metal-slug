@@ -20,6 +20,7 @@ class LTexture
 		int getHeight();
 		void setWidth(int mWidth);
 		void setHeight(int mHeight);
+		void setPath(std::string path);
 
 	private:
 		SDL_Texture* mTexture;

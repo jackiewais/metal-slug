@@ -49,8 +49,12 @@ bool LTexture::loadFromFile()
 		else
 		{
 			//Get image dimensions
-			mWidth = loadedSurface->w;
-			mHeight = loadedSurface->h;
+			if (mWidth == 0) {
+				mWidth = loadedSurface->w;
+			}
+			if (mHeight == 0) {
+				mHeight = loadedSurface->h;
+			}
 		}
 
 		//Get rid of old loaded surface
@@ -69,8 +73,6 @@ void LTexture::free()
 	{
 		SDL_DestroyTexture( mTexture );
 		mTexture = NULL;
-		mWidth = 0;
-		mHeight = 0;
 	}
 }
 
@@ -99,4 +101,9 @@ void LTexture::setWidth(int mWidth)
 void LTexture::setHeight(int mHeight)
 {
 	this->mHeight = mHeight;
+}
+
+void LTexture::setPath(std::string path)
+{
+	this->path = path;
 }

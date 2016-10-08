@@ -281,7 +281,11 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 	 }
 
 	 context->escenario.init();
-	 context->escenario.loadMedia();
+	 if ( !context->escenario.loadMedia() ) {
+		 // Aca deberia salir del programa, xq no se pudo
+		 // cargar alguna imagen (ni siquiera la img por defecto)
+		 return NULL;
+	 }
 
 	 while(quit){
 		 quit=context->handleKeyEvents();
