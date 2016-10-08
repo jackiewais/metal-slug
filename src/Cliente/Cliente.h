@@ -36,6 +36,7 @@ private:
 	void imprimirConsigna();
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
 	pthread_t threadRecv;
+	pthread_t threadEscenario;
 	void terminarThreadRecv();
 	void setDimensionesVentana(mensajeStruct msg);
 	void addSprite(mensajeStruct msg);

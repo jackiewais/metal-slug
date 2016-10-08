@@ -66,10 +66,10 @@ int Cliente::seleccConectar(){
 			//Envio mensaje para comenzar el handshake
 			handshake(&datosConexion);
 
-			int rv = pthread_create(&this->threadRecv, NULL,&crearEscenario,(void*)this);
-												if (rc){
-													Log::log('c',1,"creando el thread escenario","");
-												}
+			int rv = pthread_create(&this->threadEscenario, NULL,&crearEscenario,(void*)this);
+			if (rv){
+				Log::log('c',1,"creando el thread escenario","");
+			}
 			/*
 			//Creo hilo para escuchar los eventos del teclado
 			int rg=pthread_create(&this->threadRecv,NULL,&handleKeyEvents,(void*)this);
@@ -88,7 +88,6 @@ int Cliente::seleccConectar(){
 	return respuesta;
 }
 bool Cliente::handleKeyEvents(){
-
     //Event handler
     SDL_Event e;
     bool exit=true;
@@ -98,56 +97,52 @@ bool Cliente::handleKeyEvents(){
     evento.socketCli= this->datosConexion.sockfd;
 
 
-	while( SDL_PollEvent( &e ) != 0 )
-			   {
-	                    //User requests quit
-	                    if( e.type == SDL_QUIT )
-	                    {
-	                    	cout << "quit event"<< endl;
-	                    	exit=false;
-	                    }
-	                    //User presses a key
-	                    else{
+	while( SDL_PollEvent( &e ) != 0 ) {
+		//User requests quit
+		if( e.type == SDL_QUIT )
+		{
+			cout << "quit event"<< endl;
+			exit=false;
+		}
+		//User presses a key
+		else{
 
-	                    	if ( e.type == SDL_KEYUP && e.key.repeat == 0){
+			if ( e.type == SDL_KEYUP && e.key.repeat == 0){
+				//Select surfaces based on key press
+				switch( e.key.keysym.sym )
+				{
+					case SDLK_w:
+					evento.message="ARRIBA";
+					enviarEvento(&evento);
 
-	                        //Select surfaces based on key press
-	                        switch( e.key.keysym.sym )
-	                        {
-	                            case SDLK_w:
-	                            evento.message="ARRIBA";
-	                            cout << " SOCKET :  "<< evento.socketCli << endl;
-	                            enviarEvento(&evento);
+					cout << "FLECHITA ARRIBA" <<endl;
+					break;
 
-	                            cout << "FLECHITA ARRIBA" <<endl;
-	                            break;
+					case SDLK_s:
+					evento.message="ABAJO";
+					enviarEvento(&evento);
+					cout << "FLECHITA ABAJO" <<endl;
+					break;
 
-	                            case SDLK_s:
-	                            evento.message="ABAJO";
-	                            enviarEvento(&evento);
-	                            cout << "FLECHITA ABAJO" <<endl;
-	                            break;
+					case SDLK_a:
+					evento.message="IZQUIERDA";
+					enviarEvento(&evento);
+					cout << "FLECHITA IZQUIERDA" <<endl;
+					break;
 
-	                            case SDLK_a:
-	                            evento.message="IZQUIERDA";
-	                            enviarEvento(&evento);
-	                            cout << "FLECHITA IZQUIERDA" <<endl;
-	                            break;
+					case SDLK_d:
+					evento.message="DERECHA";
+					enviarEvento(&evento);
+					cout << "FLECHITA DERECHA" <<endl;
+					break;
 
-	                            case SDLK_d:
-	                           	evento.message="DERECHA";
-	                            enviarEvento(&evento);
-	                            cout << "FLECHITA DERECHA" <<endl;
-	                            break;
-
-	                            default:
-	                            break;
-	                        }
-	                    }
-	                }
-
-}
-return exit;
+					default:
+					break;
+				}
+			}
+		}
+	}
+	return exit;
 }
 
 void *Cliente::recvMessage(void * arg){
@@ -163,8 +158,6 @@ void *Cliente::recvMessage(void * arg){
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
-
-		cout << "FINSIJ " << finish << endl ;
 
 		switch (mensajeRta.tipo){
 			case RECIBIR_CHAT_SIGUE:
@@ -193,7 +186,6 @@ void *Cliente::recvMessage(void * arg){
 				context->addSprite(mensajeRta);
 				break;
 			case HANDSHAKE_OBJETO_NUEVO:
-
 				context->objetoNuevo(mensajeRta);
 				break;
 			case FIN_HANDSHAKE:
@@ -216,52 +208,40 @@ void *Cliente::recvMessage(void * arg){
 				break;
 		}
     }
-	cout << "SALIO DEL WHILE " << endl;
 	return 0;
 };
 
 void Cliente::objetoNuevo(mensajeStruct msg){
+	int x,y;
+	string separador = ";";
+	string spriteId;
+	string coordenadas;
+	string posxy;
+	int pos = msg.message.find(separador);
 
-			int x,y;
-			string separador = ";";
-			string spriteId;
-			string coordenadas;
-			string posxy;
-			int pos = msg.message.find(separador);
+	spriteId = msg.message.substr(0,pos);
+	int posX = msg.message.find(separador,pos+1);
 
-			spriteId = msg.message.substr(0,pos);
-			int posX = msg.message.find(separador,pos+1);
-
-			posxy = msg.message.substr(pos+1,posX);
-			x=atoi(posxy.c_str());
-			posxy = msg.message.substr(posX+1,posxy.length());
-			y=atoi(posxy.c_str());
-			cout << "CREA OBJ " << "ObjectId : " << msg.objectId << " " << x << y << endl;
-			cout << "SPRITE " << spriteId << endl;
-			escenario.crearObjeto(msg.objectId,spriteId,x,y);
-
-
+	posxy = msg.message.substr(pos+1,posX);
+	x=atoi(posxy.c_str());
+	posxy = msg.message.substr(posX+1,posxy.length());
+	y=atoi(posxy.c_str());
+	escenario.crearObjeto(msg.objectId,spriteId,x,y);
 }
 
 
 void Cliente::updateJugador(mensajeStruct msg){
+	int x,y;
+	string separador = ";";
+	string dimension;
+	int pos = msg.message.find(separador);
 
+	dimension = msg.message.substr(0,pos);
+	x=atoi(dimension.c_str());
+	dimension = msg.message.substr(pos+1,msg.message.length());
+	y=atoi(dimension.c_str());
 
-	    int x,y;
-		string separador = ";";
-		string dimension;
-		int pos = msg.message.find(separador);
-
-		dimension = msg.message.substr(0,pos);
-		x=atoi(dimension.c_str());
-		dimension = msg.message.substr(pos+1,msg.message.length());
-		y=atoi(dimension.c_str());
-		cout << "COORDENADAS : " << msg.message.c_str() << endl;
-		cout << "POS X : " << x << endl;
-
-	escenario.actualizarPosicionObjeto("J01",x,400);
-
-
+	escenario.actualizarPosicionObjeto(msg.objectId,x,y);
 }
 
 
@@ -275,14 +255,11 @@ void Cliente::addSprite(mensajeStruct msg){
 	ancho = atoi(strAux.c_str());
 	strAux = msg.message.substr(pos+1,msg.message.length());
 	alto = atoi(strAux.c_str());
-	cout << "LOAD MEDIA " << "ObjectId : " << msg.objectId << "ANCHOxALTO " << ancho << alto << endl;
-	//this->escenario.loadMedia(msg.objectId, ancho, alto);
 	this->escenario.addSprite(msg.objectId, ancho, alto);
 }
 
 
 void Cliente::setDimensionesVentana(mensajeStruct msg){
-
 	int x,y;
 	string separador = "x";
 	string dimension;
@@ -294,29 +271,25 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 	y=atoi(dimension.c_str());
 
 	this->escenario.setDimensiones(x,y);
-	//this->escenario.init();
 }
 
  void* Cliente::crearEscenario(void *arg){
-			bool quit=true;
+	 bool quit=true;
+	 Cliente* context = (Cliente*)arg;
 
-	 	 	 Cliente* context = (Cliente*)arg;
+	 while(!context->escenarioOK){
+	 }
 
-			while(!context->escenarioOK){
-			}
+	 context->escenario.init();
+	 context->escenario.loadMedia();
 
-			context->escenario.init();
-			context->escenario.loadMedia();
-			while(quit){
+	 while(quit){
+		 quit=context->handleKeyEvents();
+		 context->escenario.renderizarObjetos();
+	 }
 
-
-			quit=context->handleKeyEvents();
-			context->escenario.renderizarObjetos();
-
-
-			}
-			context->escenario.close();
-			context->seleccDesconectar();
+	 context->escenario.close();
+	 context->seleccDesconectar();
 };
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){
@@ -641,6 +614,7 @@ int Cliente::runCliente(){
 
 	int status = 0;
 	this->threadRecv = 0;
+	this->threadEscenario = 0;
 
 	getIpAndPort();
 	printMenu();
