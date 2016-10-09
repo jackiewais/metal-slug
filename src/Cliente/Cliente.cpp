@@ -155,6 +155,8 @@ void *Cliente::recvMessage(void * arg){
 	string nombre;
 	string mensajeAMostrar;
 
+
+
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
@@ -190,6 +192,10 @@ void *Cliente::recvMessage(void * arg){
 				break;
 			case FIN_HANDSHAKE:
 				context->escenarioOK=true;
+				break;
+			case ESCENARIO_UPD:
+				cout << "ACTUALIZANDO FONDO : " << mensajeRta.message << endl;
+				context->escenario.moverFondo(mensajeRta);
 				break;
 			case JUGADOR_UPD:
 				context->updateJugador(mensajeRta);
@@ -289,7 +295,9 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 
 	 while(quit){
 		 quit=context->handleKeyEvents();
+
 		 context->escenario.renderizarObjetos();
+
 	 }
 
 	 context->escenario.close();

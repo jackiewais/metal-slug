@@ -104,7 +104,51 @@ bool Escenario::loadMedia()
 	}
 	return true;
 }
+void Escenario::moverFondo(mensajeStruct msg){
 
+		int desplB = 0;
+		int anchoA = 1000;
+		int desplA = 0;
+		int anchoB = 1200;
+		int anchoC = 2000;
+		int desplC=0;
+		int offsetB=0;
+		int offsetC=0;
+		int posA = atoi(msg.message.c_str());
+		desplA = posA;
+					//DESPLC = ANCHOC - ANCHO ESCENARIO
+
+					//DESPLD = ANCHOD - ANCHO ESCENARIO
+					// EL 2 Y 3 SON LOS FACTORES DE DESPLAZMIENTO.
+					// 2 = DESPC/DESPA ; 3 = DESPD/DESPLC
+					// 2000 ES EL OFFSET PARA EMEPZAR EN CERO
+					// 3000 ES EL OFFSET PARA EMPEZAR EN CERO
+
+					//FACTOR AB = (anchoA+desplA-800)
+					//FACTOR BC = (anchoC+desplC-800)
+					//OFFSETB
+					//OFFSETC
+					//desplC = (FACTORAB - ANCHOC)*PARALLAX ) + OFFSETB
+					offsetB = ( (anchoA- anchoB)*2)*-1;
+					desplB = ( (anchoA+desplA-anchoB)*2)+offsetB;
+				    offsetC = ((anchoB-anchoC)*3)*-1;
+					desplC = ( (anchoB+desplB-  anchoC)*3)+offsetC;
+
+
+					//Background layers
+					actualizarPosicionObjeto("F02",desplA,0);
+					actualizarPosicionObjeto("F03",desplB,0);
+					actualizarPosicionObjeto("F04",desplC,0);
+
+}
+
+void calculoParallax(){
+
+
+
+
+
+}
 void Escenario::close()
 {
 	std::map<std::string, LTexture*>::iterator it;

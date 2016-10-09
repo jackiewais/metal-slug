@@ -1,6 +1,7 @@
 #ifndef SRC_CLIENTE_ESCENARIO_H_
 #define SRC_CLIENTE_ESCENARIO_H_
 
+#include "../Common/MensajeStruct.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "LTexture.h"
@@ -27,7 +28,7 @@ public:
 	void renderizarObjetos();
 	void actualizarPosicionObjeto(std::string idObj, int x, int y);
 	void eliminarObjeto(std::string idObj);
-
+	void moverFondo(mensajeStruct msg);
 private:
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;

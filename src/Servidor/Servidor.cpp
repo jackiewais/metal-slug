@@ -14,7 +14,7 @@
 #include <sstream>
 #include <string>
 #include <utility>
-
+#include <SDL2/SDL.h>
 #include "../Common/Log.h"
 #include "../Common/MensajeStruct.h"
 #include "./Modelo/EscenarioS.h"
@@ -120,12 +120,14 @@ void Servidor::handshake(mensajeStruct msg){
 	//apunto a la cola de mensajes de clientes que voy a mandar mensajes.
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
 
+
+
 	//comienzo a mandar info
 	cout << "HAGO TODO LO QUE TENGA QUE HACER EL HANDSHAKE" << endl;
 	//MANDO DIMENSIONES DE VENTANA.
 	msg.tipo=HANDSHAKE_DIMENSIONES_VENTANA;
 	msg.objectId="X0";
-	msg.message="800x600";
+	msg.message="900x600";
 	colaCliente->push(msg);
 	//---------------------------------------------
 
@@ -139,22 +141,50 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.message="0;0";
 	colaCliente->push(msg);
 
-	msg.objectId="foo";
+	msg.objectId="fondoUno";
 	msg.message="0;0";
 	colaCliente->push(msg);
+
+	msg.objectId="fondoDos";
+	msg.message="0;0";
+	colaCliente->push(msg);
+
+	msg.objectId="barra8";
+		msg.message="0;0";
+		colaCliente->push(msg);
+
+		msg.objectId="fondoTres";
+			msg.message="0;0";
+			colaCliente->push(msg);
+
 	// -------------------------------
 
 	//MANDAR OBJETOS NUEVOS
 	//INVENTAR ID
-		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+		/*msg.tipo=HANDSHAKE_OBJETO_NUEVO;
 		msg.objectId="F01";
 		msg.message="primerFondo;0;0";
+		colaCliente->push(msg);*/
+
+		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+		msg.objectId="F02";
+		msg.message="fondoUno;0;0";
 		colaCliente->push(msg);
 
 		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
-		msg.objectId="J01";
-		msg.message="foo;200;200";
+		msg.objectId="F03";
+		msg.message="fondoDos;0;0";
 		colaCliente->push(msg);
+
+
+		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+				msg.objectId="F01";
+				msg.message="barra8;0;0";
+				colaCliente->push(msg);
+				msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+							msg.objectId="F04";
+							msg.message="fondoTres;0;0";
+							colaCliente->push(msg);
 	//---------------------------------
 
     //FIN DE HANDSHAKE.
@@ -164,8 +194,24 @@ void Servidor::handshake(mensajeStruct msg){
 	colaCliente->push(msg);
 
 
+	msg.tipo=ESCENARIO_UPD;
+	msg.objectId="X0";
+	stringstream posX;
+	int x=0;
+
+	while(true){
+	posX << x;
+	SDL_Delay(100);
+	msg.message= posX.str();
+	colaCliente->push(msg);
+	posX.str("");
+
+	--x;
+
+	}
 
 }
+
 
 int Servidor::enviarChat(mensajeStruct msg){
 	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
