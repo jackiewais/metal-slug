@@ -110,7 +110,7 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
    queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
 
 	for (mensajeStruct msgRta : mensajesRta) {
-		msgRta.objectId = "J01";
+		//msgRta.objectId = "J1";
 		msgRta.socketCli = msg.socketCli;
 		colaCliente->push(msgRta);
 	 }
@@ -168,6 +168,10 @@ void Servidor::handshake(mensajeStruct msg){
 			msg.message="0;0";
 			colaCliente->push(msg);
 
+			msg.objectId="foo";
+			msg.message="0;0";
+			colaCliente->push(msg);
+
 	// -------------------------------
 
 	//MANDAR OBJETOS NUEVOS
@@ -196,6 +200,11 @@ void Servidor::handshake(mensajeStruct msg){
 							msg.objectId="F04";
 							msg.message="fondoTres;0;0";
 							colaCliente->push(msg);
+
+	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+	msg.objectId="J1";
+	msg.message="foo;0;0";
+	colaCliente->push(msg);
 	//---------------------------------
 
     //FIN DE HANDSHAKE.
@@ -203,25 +212,6 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.objectId="X0";
 	msg.message="termino el handshake";
 	colaCliente->push(msg);
-
-
-	/*msg.tipo=ESCENARIO_UPD;
-	msg.objectId="X0";
-	stringstream posX;
-	int x=0;
-
-	SDL_Delay(1000);
-	while(true){
-	posX << x;
-	//SDL_Delay(100);
-	msg.message= posX.str();
-	colaCliente->push(msg);
-	posX.str("");
-
-	--x;
-
-	}*/
-
 }
 
 
@@ -426,8 +416,7 @@ void Servidor::nuevaConexion(int new_fd) {
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;
-	Posicion *pos = new Posicion(200,200);
-	Jugador *jugador = new Jugador(1,pos,1,1,1);
+	Jugador *jugador = new Jugador(1,5,200,200,1,1);
 	this->escenario->addJugador(jugador);
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
 		Log::log('s',3,"Seteando el rcv timeout","");
