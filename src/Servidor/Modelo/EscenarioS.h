@@ -20,7 +20,7 @@ public:
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
-	list<mensajeStruct>  moverJugador(int idJugador, string direccion);
+	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
 	int moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();

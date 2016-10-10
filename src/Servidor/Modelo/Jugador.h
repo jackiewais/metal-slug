@@ -2,6 +2,7 @@
 #define SRC_SERVIDOR_JUGADOR_H_
 #include <string>
 #include <iostream>
+#include "../../Common/ModeloCommon.h"
 
 using namespace std;
 
@@ -17,10 +18,11 @@ public:
 	bool conectado;
 	int posX;
 	int posY;
-	string estado;
 	int alto;
 	int ancho;
 	int velocidad;
+	estadoJugador estado = PARADO;
+
 
 	Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto);
 	virtual ~Jugador();

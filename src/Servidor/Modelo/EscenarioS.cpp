@@ -30,19 +30,22 @@ void EscenarioS::addJugador(Jugador* jugador) {
 }
 
 
-list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string direccion){
+list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje){
 	Jugador* jugador = this->mapJugadores[jugadorId];
 
+	int vecesX = atoi(mensaje.c_str());
 	list<mensajeStruct> returnList;
 
-	if (direccion == "DERECHA"){
+	jugador->mover(this->ancho,vecesX);
+
+	/*if (direccion == "DERECHA"){
 		//jugador->getMovimiento()->setDirDerecha();
 		jugador->mover(this->ancho,+1);
 
 	}else if (direccion == "IZQUIERDA"){
 		//jugador->getMovimiento()->setDirIzquierda();
 		jugador->mover(this->ancho,-1);
-	}
+	}*/
 
 	returnList.push_back(getMensajeJugador(jugador));
 
@@ -91,8 +94,6 @@ mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
 	msjJug.message = jugador->getPosConcat();
 	msjJug.objectId = jugador->getCodJugador();
 
-	cout << "QUE ID MANDO: " << msjJug.objectId << endl;
-	cout << "QUE POS MANDO: " << msjJug.message << endl;
 	return msjJug;
 }
 

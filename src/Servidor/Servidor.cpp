@@ -36,9 +36,8 @@ void* Servidor::procesarMensajesMain (void *data) {
 	while(!finish && !context->cerrarPrograma){
 		if (!context->colaPrincipalMensajes.empty()){
 			msg=context->colaPrincipalMensajes.front();
-			cout << "  APENAS ENTRA EN PROCESAR SOCKET :  "<< msg.socketCli << endl;
 			context->colaPrincipalMensajes.pop();
-			printf("Procesando Mensaje %s",msg.message.c_str());
+			//printf("Procesando Mensaje %s",msg.message.c_str());
 			Log::log('s',1,"Procesando Mensaje: ",msg.message.c_str());
 			result = context->procesarMensajeCola(msg);
 			finish = (result != 0);
@@ -101,11 +100,14 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
 
    list<mensajeStruct> mensajesRta;
-   if (msg.message == "DERECHA" ){
+
+   mensajesRta = this->escenario->moverJugador(1,msg.message);
+
+  /* if (msg.message == "DERECHA" ){
 		   mensajesRta = this->escenario->moverJugador(1,"DERECHA");
    }else if (msg.message == "IZQUIERDA" ){
 		   mensajesRta = this->escenario->moverJugador(1,"IZQUIERDA");
-   }
+   }*/
 
    queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
 

@@ -33,15 +33,22 @@ string Jugador::getCodJugador() {
 
 void Jugador::mover(int anchoEscenario, int vecesX) {
 
-	this->posX += (vecesX * this->velocidad);
-	if (this->posX > (anchoEscenario-this->ancho)){
-		//ESTO ES PARA QUE NO SE VAYA, HAY QUE AGREGAR EL MARGEN
-		this->posX = anchoEscenario-this->ancho;
+	if (vecesX == 0){
+		this->estado = PARADO;
+	}else{
+		this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
+
+		this->posX += (vecesX * this->velocidad);
+		if (this->posX > (anchoEscenario-this->ancho)){
+			//ESTO ES PARA QUE NO SE VAYA, HAY QUE AGREGAR EL MARGEN
+			this->posX = anchoEscenario-this->ancho;
+		}
+
+		if (this->posX < 0){
+			this->posX = 0;
+		}
 	}
 
-	if (this->posX < 0){
-		this->posX = 0;
-	}
 }
 
 
