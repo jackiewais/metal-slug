@@ -19,6 +19,12 @@ void ObjetoGraficable::actualizarPosicion(int x, int y) {
 
 void ObjetoGraficable::render() {
 	this->textura->render(this->x, this->y);
+	if ( (this->factorParallax != 0) ) {
+		this->textura->render(this->x + this->textura->getWidth(), this->y);
+		if (this->x <= -this->textura->getWidth()) {
+			this->actualizarPosicion(this->x + this->textura->getWidth(), this->y);
+		}
+	}
 }
 
 int ObjetoGraficable::getAncho() {
