@@ -1,9 +1,4 @@
 #include "EscenarioS.h"
-/*#include "Direccion.h"
-#include "DirDerecha.h"
-#include "DirIzquierda.h"
-#include "Movimiento.h"*/
-
 
 EscenarioS::EscenarioS(int alto, int ancho) {
 
@@ -13,19 +8,6 @@ EscenarioS::EscenarioS(int alto, int ancho) {
 
 EscenarioS::~EscenarioS() {
 	// TODO Auto-generated destructor stub
-}
-
-
-Capa* EscenarioS::getCapaById(int id) {
-
-	Capa* capa = NULL;
-
-		map<int, Capa*>::iterator it;
-
-		if((it = this->mapCapas.find(id)) != this->mapCapas.end())
-			capa = this->mapCapas[id];
-
-		return capa;
 }
 
 
@@ -109,6 +91,8 @@ mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
 	msjJug.message = jugador->getPosConcat();
 	msjJug.objectId = jugador->getCodJugador();
 
+	cout << "QUE ID MANDO: " << msjJug.objectId << endl;
+	cout << "QUE POS MANDO: " << msjJug.message << endl;
 	return msjJug;
 }
 

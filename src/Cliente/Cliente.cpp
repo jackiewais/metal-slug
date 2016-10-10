@@ -246,7 +246,9 @@ void Cliente::updateJugador(mensajeStruct msg){
 	x=atoi(dimension.c_str());
 	dimension = msg.message.substr(pos+1,msg.message.length());
 	y=atoi(dimension.c_str());
-
+	cout << "OBJECT ID: " << msg.objectId << endl;
+	cout << "POSX: " << x << endl;
+	cout << "POSY: " << y << endl;
 	escenario.actualizarPosicionObjeto(msg.objectId,x,y);
 }
 

@@ -2,13 +2,10 @@
 #define SRC_SERVIDOR_JUGADOR_H_
 #include <string>
 #include <iostream>
-/*#include "ObjetoMovible.h"
-#include "Posicion.h"*/
-#include "Capa.h"
 
 using namespace std;
 
-class Jugador /*: public ObjetoMovible*/ {
+class Jugador{
 
 private:
 	int id;
@@ -25,7 +22,7 @@ public:
 	int ancho;
 	int velocidad;
 
-	Jugador(int id, int velocidad);
+	Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto);
 	virtual ~Jugador();
 	int getId();
 	void mover(int anchoEscenario, int vecesX);

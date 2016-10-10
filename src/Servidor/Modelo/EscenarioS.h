@@ -4,14 +4,12 @@
 #include <iostream>
 #include <map>
 #include <list>
-#include "Capa.h"
 #include "Jugador.h"
 #include "../../Common/MensajeStruct.h"
 
 class EscenarioS {
 
 private:
-	map<int, Capa*> mapCapas;
 	map<int, Jugador*> mapJugadores;
 	int ancho;
 	int alto;
@@ -20,7 +18,6 @@ public:
 	int avance = 0;
 	EscenarioS(int alto, int ancho);
 	virtual ~EscenarioS();
-	Capa* getCapaById(int id);
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	list<mensajeStruct>  moverJugador(int idJugador, string direccion);
