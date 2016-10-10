@@ -1,8 +1,8 @@
 #include "EscenarioS.h"
-#include "Direccion.h"
+/*#include "Direccion.h"
 #include "DirDerecha.h"
 #include "DirIzquierda.h"
-#include "Movimiento.h"
+#include "Movimiento.h"*/
 
 
 EscenarioS::EscenarioS(int alto, int ancho) {
@@ -54,12 +54,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string direccion){
 	list<mensajeStruct> returnList;
 
 	if (direccion == "DERECHA"){
-		jugador->getMovimiento()->setDirDerecha();
-		jugador->mover(this->ancho);
+		//jugador->getMovimiento()->setDirDerecha();
+		jugador->mover(this->ancho,+1);
 
 	}else if (direccion == "IZQUIERDA"){
-		jugador->getMovimiento()->setDirIzquierda();
-		jugador->mover(this->ancho);
+		//jugador->getMovimiento()->setDirIzquierda();
+		jugador->mover(this->ancho,-1);
 	}
 
 	returnList.push_back(getMensajeJugador(jugador));
@@ -75,8 +75,8 @@ int EscenarioS::moverEscenario(list<mensajeStruct>* mainList){
 
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		if (jugador->second->conectado){
-			if (jugador->second->getPosicion()->getCoordenadaX() < minPosX){
-				minPosX = jugador->second->getPosicion()->getCoordenadaX();
+			if (jugador->second->getPosX() < minPosX){
+				minPosX = jugador->second->getPosX();
 			}
 		}
 	}
@@ -89,8 +89,8 @@ int EscenarioS::moverEscenario(list<mensajeStruct>* mainList){
 
 		for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 			if (!jugador->second->conectado){
-				if (jugador->second->getPosicion()->getCoordenadaX() < this->avance){
-					jugador->second->getPosicion()->setCoordenadaX(this->avance);
+				if (jugador->second->getPosX() < this->avance){
+					jugador->second->setPosX(this->avance);
 
 					mainList->push_back(getMensajeJugador(jugador->second));
 				}
