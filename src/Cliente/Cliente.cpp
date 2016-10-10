@@ -13,7 +13,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <exception>
-#include <sstream>
 #include <sys/socket.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -96,7 +95,6 @@ bool Cliente::handleKeyEvents(){
     evento.objectId="X0";
     evento.socketCli= this->datosConexion.sockfd;
 
-
 	while( SDL_PollEvent( &e ) != 0 ) {
 		//User requests quit
 		if( e.type == SDL_QUIT )
@@ -106,6 +104,31 @@ bool Cliente::handleKeyEvents(){
 		}
 		//User presses a key
 		else{
+
+			if( e.type == SDL_KEYDOWN && e.key.repeat == 0){
+				switch( e.key.keysym.sym ){
+					case SDLK_LEFT:
+						this->vecesX -= 1;
+						break;
+					case SDLK_RIGHT:
+						this->vecesX += 1;
+						break;
+				}
+			}
+
+			 if ( e.type == SDL_KEYUP && e.key.repeat == 0){
+				 switch( e.key.keysym.sym ){
+					case SDLK_LEFT:
+						this->vecesX = 0;
+						break;
+					case SDLK_RIGHT:
+						this->vecesX = 0;
+						break;
+				}
+			}
+
+
+/*
 
 			if ( e.type == SDL_KEYUP && e.key.repeat == 0){
 				//Select surfaces based on key press
@@ -139,12 +162,23 @@ bool Cliente::handleKeyEvents(){
 					default:
 					break;
 				}
-			}
+			}*/
 		}
+
 	}
+
+	evento.message=convertirAString(vecesX);
+	enviarEvento(&evento);
+
 	return exit;
 }
 
+
+string Cliente::convertirAString(int i) {
+	stringstream iS;
+	iS << i;
+	return iS.str();
+}
 void *Cliente::recvMessage(void * arg){
 
 	bool finish = false;
@@ -255,9 +289,6 @@ void Cliente::updateJugador(mensajeStruct msg){
 	x=atoi(dimension.c_str());
 	dimension = msg.message.substr(pos+1,msg.message.length());
 	y=atoi(dimension.c_str());
-	cout << "OBJECT ID: " << msg.objectId << endl;
-	cout << "POSX: " << x << endl;
-	cout << "POSY: " << y << endl;
 	escenario.actualizarPosicionObjeto(msg.objectId,x,y);
 }
 

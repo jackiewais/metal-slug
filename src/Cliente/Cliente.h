@@ -13,6 +13,8 @@
 class Cliente:ConexionCli {
 private:
 
+    int vecesX = 0;
+    string convertirAString(int i);
 	 datosConexionStruct datosConexion;
 	 ConexionCli conexionCli;
 	 bool semaforoReceive = false;
