@@ -5,6 +5,7 @@ ObjetoGraficable::ObjetoGraficable(std::string id, LTexture *textura, int x, int
 	this->textura = textura;
 	this->x = x;
 	this->y = y;
+	this->factorParallax = 0;
 }
 
 ObjetoGraficable::~ObjetoGraficable() {
@@ -18,4 +19,17 @@ void ObjetoGraficable::actualizarPosicion(int x, int y) {
 
 void ObjetoGraficable::render() {
 	this->textura->render(this->x, this->y);
+}
+
+int ObjetoGraficable::getAncho() {
+	return this->textura->getWidth();
+}
+
+void ObjetoGraficable::setFactorParallax(int despA, int anchoVentana) {
+	int desp = this->textura->getWidth() - anchoVentana;
+	this->factorParallax = desp / despA;
+}
+
+void ObjetoGraficable::actualizarPosicionFondo(int despA) {
+	this->actualizarPosicion(despA*this->factorParallax, this->y);
 }

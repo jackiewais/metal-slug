@@ -114,6 +114,17 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 		msgRta.socketCli = msg.socketCli;
 		colaCliente->push(msgRta);
 	 }
+
+	msg.tipo=ESCENARIO_UPD;
+	msg.objectId="X0";
+	stringstream posX;
+
+	posX << this->posicionXHarcodeada;
+	msg.message= posX.str();
+	colaCliente->push(msg);
+	posX.str("");
+
+	--this->posicionXHarcodeada;
 }
 
 void Servidor::handshake(mensajeStruct msg){
@@ -166,12 +177,12 @@ void Servidor::handshake(mensajeStruct msg){
 		msg.message="primerFondo;0;0";
 		colaCliente->push(msg);*/
 
-		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+		msg.tipo=HANDSHAKE_FONDO_NUEVO;
 		msg.objectId="F02";
 		msg.message="fondoUno;0;0";
 		colaCliente->push(msg);
 
-		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+		msg.tipo=HANDSHAKE_FONDO_NUEVO;
 		msg.objectId="F03";
 		msg.message="fondoDos;0;0";
 		colaCliente->push(msg);
@@ -181,7 +192,7 @@ void Servidor::handshake(mensajeStruct msg){
 				msg.objectId="F01";
 				msg.message="barra8;0;0";
 				colaCliente->push(msg);
-				msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+				msg.tipo=HANDSHAKE_FONDO_NUEVO;
 							msg.objectId="F04";
 							msg.message="fondoTres;0;0";
 							colaCliente->push(msg);
@@ -194,21 +205,22 @@ void Servidor::handshake(mensajeStruct msg){
 	colaCliente->push(msg);
 
 
-	msg.tipo=ESCENARIO_UPD;
+	/*msg.tipo=ESCENARIO_UPD;
 	msg.objectId="X0";
 	stringstream posX;
 	int x=0;
 
+	SDL_Delay(1000);
 	while(true){
 	posX << x;
-	SDL_Delay(100);
+	//SDL_Delay(100);
 	msg.message= posX.str();
 	colaCliente->push(msg);
 	posX.str("");
 
 	--x;
 
-	}
+	}*/
 
 }
 

@@ -60,6 +60,8 @@ private:
 	int terminarThreads();
 	void procesarTeclaPulsada(mensajeStruct msg);
 
+	int posicionXHarcodeada =0;
+
 public:
 	Servidor();
 	virtual ~Servidor();

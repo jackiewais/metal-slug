@@ -29,11 +29,14 @@ public:
 	void actualizarPosicionObjeto(std::string idObj, int x, int y);
 	void eliminarObjeto(std::string idObj);
 	void moverFondo(mensajeStruct msg);
+	void addFondo(std::string objectId);
+	void calcularParallax();
 private:
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;
 	std::map<std::string, LTexture*> mapTexturas;
 	std::map<std::string, ObjetoGraficable*> mapObjetosGraficables;
+	std::map<std::string, ObjetoGraficable*> mapFondos;
 	int screenWidth, screenHeight;
 };
 

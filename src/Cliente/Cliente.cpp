@@ -190,6 +190,9 @@ void *Cliente::recvMessage(void * arg){
 			case HANDSHAKE_OBJETO_NUEVO:
 				context->objetoNuevo(mensajeRta);
 				break;
+			case HANDSHAKE_FONDO_NUEVO:
+				context->objetoNuevo(mensajeRta);
+				break;
 			case FIN_HANDSHAKE:
 				context->escenarioOK=true;
 				break;
@@ -232,7 +235,13 @@ void Cliente::objetoNuevo(mensajeStruct msg){
 	x=atoi(posxy.c_str());
 	posxy = msg.message.substr(posX+1,posxy.length());
 	y=atoi(posxy.c_str());
+
 	escenario.crearObjeto(msg.objectId,spriteId,x,y);
+
+	if (msg.tipo == HANDSHAKE_FONDO_NUEVO) {
+		escenario.addFondo(msg.objectId);
+	}
+
 }
 
 
@@ -292,6 +301,7 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 		 // cargar alguna imagen (ni siquiera la img por defecto)
 		 return NULL;
 	 }
+	 context->escenario.calcularParallax();
 
 	 while(quit){
 		 quit=context->handleKeyEvents();

@@ -13,11 +13,14 @@ public:
 	virtual ~ObjetoGraficable();
 	void actualizarPosicion(int x, int y);
 	void render();
+	int getAncho();
+	void setFactorParallax(int despA, int anchoVentana);
+	void actualizarPosicionFondo(int despA);
 
 private:
 	std::string id;
 	LTexture *textura;
-	int x, y;
+	int x, y, factorParallax;
 };
 
 #endif /* SRC_CLIENTE_OBJETOGRAFICABLE_H_ */
