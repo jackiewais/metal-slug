@@ -6,6 +6,7 @@
 #include <list>
 #include "Jugador.h"
 #include "../../Common/MensajeStruct.h"
+#include "../../Common/Mensajeria.h"
 
 class EscenarioS {
 

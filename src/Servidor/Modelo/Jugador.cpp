@@ -7,10 +7,12 @@ Jugador::Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto)
 	this->posX = posX;
 	this->posY = posY;
 	this->velocidad = velocidad;
+	this->velSalto = velocidad*2;
 	this->ancho = ancho;
 	this->alto = alto;
 	this->puntaje = 0;
 	this->conectado = true;
+	this->estado = PARADO;
 
 
 }
@@ -31,12 +33,22 @@ string Jugador::getCodJugador() {
 	return "J" + idS.str();
 }
 
-void Jugador::mover(int anchoEscenario, int vecesX) {
+void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
+
+	if (accion == "SALTA"){
+		this->estado = SALTA;
+	}
+
+	manejarSalto();
 
 	if (vecesX == 0){
-		this->estado = PARADO;
+		if (this->estado != SALTA){
+			this->estado = PARADO;
+		}
 	}else{
-		this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
+		if (this->estado != SALTA){
+			this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
+		}
 
 		this->posX += (vecesX * this->velocidad);
 		if (this->posX > (anchoEscenario-this->ancho)){
@@ -46,6 +58,22 @@ void Jugador::mover(int anchoEscenario, int vecesX) {
 
 		if (this->posX < 0){
 			this->posX = 0;
+		}
+	}
+
+}
+
+void Jugador::manejarSalto(){
+
+
+	if (this->estado == SALTA){
+		this->posY += (velSalto * factorSalto);
+		if (this->posY < topeSalto){
+			factorSalto = 1;
+		}else if (this-> posY > piso){
+			factorSalto = -1;
+			this-> posY = piso;
+			this->estado = PARADO;
 		}
 	}
 

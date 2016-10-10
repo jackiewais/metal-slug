@@ -418,7 +418,7 @@ void Servidor::nuevaConexion(int new_fd) {
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;
-	Jugador *jugador = new Jugador(1,5,200,200,1,1);
+	Jugador *jugador = new Jugador(1,5,50,400,1,1);
 	this->escenario->addJugador(jugador);
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
 		Log::log('s',3,"Seteando el rcv timeout","");

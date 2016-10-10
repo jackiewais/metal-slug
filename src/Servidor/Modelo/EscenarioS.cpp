@@ -1,4 +1,5 @@
 #include "EscenarioS.h"
+#include <sstream>
 
 EscenarioS::EscenarioS(int alto, int ancho) {
 
@@ -30,13 +31,32 @@ void EscenarioS::addJugador(Jugador* jugador) {
 }
 
 
+void splitE(const string &s, char delim, vector<string> &elems) {
+    stringstream ss;
+    ss.str(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
+
+
+vector<string> splitE(const string &s, const char delim) {
+    vector<string> elems;
+    splitE(s, delim, elems);
+    return elems;
+}
+
 list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje){
 	Jugador* jugador = this->mapJugadores[jugadorId];
 
-	int vecesX = atoi(mensaje.c_str());
-	list<mensajeStruct> returnList;
+	vector<string> result = splitE(mensaje, ';');
 
-	jugador->mover(this->ancho,vecesX);
+	int vecesX = atoi(result[0].c_str());
+	string estado = result[1];
+
+	list<mensajeStruct> returnList;
+	jugador->mover(this->ancho,vecesX, estado);
 
 	/*if (direccion == "DERECHA"){
 		//jugador->getMovimiento()->setDirDerecha();

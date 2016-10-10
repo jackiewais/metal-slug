@@ -90,6 +90,7 @@ bool Cliente::handleKeyEvents(){
     //Event handler
     SDL_Event e;
     bool exit=true;
+    string accion = "NADA";
     mensajeStruct evento;
     evento.tipo=PULSA_TECLA;
     evento.objectId="X0";
@@ -112,6 +113,9 @@ bool Cliente::handleKeyEvents(){
 						break;
 					case SDLK_RIGHT:
 						this->vecesX += 1;
+						break;
+					case SDLK_UP:
+						accion = "SALTA";
 						break;
 				}
 			}
@@ -167,7 +171,8 @@ bool Cliente::handleKeyEvents(){
 
 	}
 
-	evento.message=convertirAString(vecesX);
+	evento.message=convertirAString(vecesX) + ";" + accion;
+	cout << "MENSAJE: " << evento.message << endl;
 	enviarEvento(&evento);
 
 	return exit;
