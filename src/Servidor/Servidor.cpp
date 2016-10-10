@@ -36,9 +36,8 @@ void* Servidor::procesarMensajesMain (void *data) {
 	while(!finish && !context->cerrarPrograma){
 		if (!context->colaPrincipalMensajes.empty()){
 			msg=context->colaPrincipalMensajes.front();
-			cout << "  APENAS ENTRA EN PROCESAR SOCKET :  "<< msg.socketCli << endl;
 			context->colaPrincipalMensajes.pop();
-			printf("Procesando Mensaje %s",msg.message.c_str());
+			//printf("Procesando Mensaje %s",msg.message.c_str());
 			Log::log('s',1,"Procesando Mensaje: ",msg.message.c_str());
 			result = context->procesarMensajeCola(msg);
 			finish = (result != 0);

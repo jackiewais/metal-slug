@@ -231,7 +231,6 @@ void *Cliente::recvMessage(void * arg){
 				context->escenarioOK=true;
 				break;
 			case ESCENARIO_UPD:
-				cout << "ACTUALIZANDO FONDO : " << mensajeRta.message << endl;
 				context->escenario.moverFondo(mensajeRta);
 				break;
 			case JUGADOR_UPD:

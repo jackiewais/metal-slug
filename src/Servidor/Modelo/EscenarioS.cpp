@@ -34,8 +34,8 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje){
 	Jugador* jugador = this->mapJugadores[jugadorId];
 
 	int vecesX = atoi(mensaje.c_str());
-	cout << "VECES X:" << vecesX << endl;
 	list<mensajeStruct> returnList;
+
 	jugador->mover(this->ancho,vecesX);
 
 	/*if (direccion == "DERECHA"){
@@ -94,8 +94,6 @@ mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
 	msjJug.message = jugador->getPosConcat();
 	msjJug.objectId = jugador->getCodJugador();
 
-	cout << "QUE ID MANDO: " << msjJug.objectId << endl;
-	cout << "QUE POS MANDO: " << msjJug.message << endl;
 	return msjJug;
 }
 

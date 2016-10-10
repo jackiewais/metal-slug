@@ -2,10 +2,6 @@
 #define MENSAJESTRUCT_H_
 
 #include <iostream>
-/*
-
-
- */
 
 enum tipoMensaje {
 	LOG_OK = 01,
@@ -34,6 +30,7 @@ enum tipoMensaje {
 	HANDSHAKE_FONDO_NUEVO = 29
 
 };
+
 
 struct mensajeStruct {
 	tipoMensaje tipo;
