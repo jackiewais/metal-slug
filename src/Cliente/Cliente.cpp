@@ -106,6 +106,18 @@ bool Cliente::handleKeyEvents(){
 		//User presses a key
 		else{
 
+
+			 if ( e.type == SDL_KEYUP && e.key.repeat == 0){
+				 switch( e.key.keysym.sym ){
+					case SDLK_LEFT:
+						this->vecesX += 1;
+						break;
+					case SDLK_RIGHT:
+						this->vecesX -= 1;
+						break;
+				}
+			}
+
 			if( e.type == SDL_KEYDOWN && e.key.repeat == 0){
 				switch( e.key.keysym.sym ){
 					case SDLK_LEFT:
@@ -120,16 +132,6 @@ bool Cliente::handleKeyEvents(){
 				}
 			}
 
-			 if ( e.type == SDL_KEYUP && e.key.repeat == 0){
-				 switch( e.key.keysym.sym ){
-					case SDLK_LEFT:
-						this->vecesX = 0;
-						break;
-					case SDLK_RIGHT:
-						this->vecesX = 0;
-						break;
-				}
-			}
 
 
 /*
@@ -172,7 +174,6 @@ bool Cliente::handleKeyEvents(){
 	}
 
 	evento.message=convertirAString(vecesX) + ";" + accion;
-	cout << "MENSAJE: " << evento.message << endl;
 	enviarEvento(&evento);
 
 	return exit;
