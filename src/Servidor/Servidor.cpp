@@ -98,33 +98,32 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 
 	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
-
    list<mensajeStruct> mensajesRta;
 
    mensajesRta = this->escenario->moverJugador(1,msg.message);
 
-  /* if (msg.message == "DERECHA" ){
-		   mensajesRta = this->escenario->moverJugador(1,"DERECHA");
-   }else if (msg.message == "IZQUIERDA" ){
-		   mensajesRta = this->escenario->moverJugador(1,"IZQUIERDA");
-   }*/
 
-   queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
+	for(auto const &user :  this->contenedor->socket_usuario) {
+	  if(user.second->isConectado()){
+		  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
 
-	for (mensajeStruct msgRta : mensajesRta) {
-		//msgRta.objectId = "J1";
-		msgRta.socketCli = msg.socketCli;
-		colaCliente->push(msgRta);
-	 }
+			for (mensajeStruct msgRta : mensajesRta) {
+				msgRta.socketCli = user.first;
+				colaCliente->push(msgRta);
+			 }
 
-	msg.tipo=ESCENARIO_UPD;
-	msg.objectId="X0";
-	stringstream posX;
 
-	posX << this->posicionXHarcodeada;
-	msg.message= posX.str();
-	colaCliente->push(msg);
-	posX.str("");
+			msg.tipo=ESCENARIO_UPD;
+			msg.objectId="X0";
+			stringstream posX;
+
+			posX << this->posicionXHarcodeada;
+			msg.message= posX.str();
+			colaCliente->push(msg);
+
+			posX.str("");
+	  }
+	}
 
 	--this->posicionXHarcodeada;
 }
@@ -641,13 +640,11 @@ void Servidor::createTimerThread(){
 }
 
 void* Servidor::manejarTimer (void *data) {
-	cout <<  "JW 1" << endl;
 	Servidor* context = (Servidor*)data;
 
 	while (1){
-		cout <<  "JW 2" << endl;
 		context->escenario->aceptarCambios();
-		usleep(100);
+		usleep(10000);
 	}
 }
 
