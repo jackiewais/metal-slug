@@ -17,6 +17,7 @@ private:
 	int piso = 400;
 public:
 	bool conectado;
+	bool aceptaCambios = true;
 	int posX;
 	int posY;
 	int alto;
@@ -25,6 +26,8 @@ public:
 	int velSalto;
 
 	estadoJugador estado;
+
+
 
 
 	Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto);

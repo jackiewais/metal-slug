@@ -74,6 +74,11 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje){
 	return returnList;
 }
 
+void EscenarioS::aceptarCambios(){
+	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+		jugador->second->aceptaCambios = true;
+	}
+}
 
 int EscenarioS::moverEscenario(list<mensajeStruct>* mainList){
 	int minPosX;

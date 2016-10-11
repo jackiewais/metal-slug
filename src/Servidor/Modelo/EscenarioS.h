@@ -25,6 +25,7 @@ public:
 	int moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();
+	void aceptarCambios();
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ESCENARIOS_H_ */

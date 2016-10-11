@@ -233,6 +233,8 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.objectId="X0";
 	msg.message="termino el handshake";
 	colaCliente->push(msg);
+
+	createTimerThread();
 }
 
 
@@ -549,6 +551,7 @@ void Servidor::runServer(){
 	this->cerrarPrograma = false;
 	this->threadExit = 0;
 	this->threadMain= 0;
+	this->threadTimer= 0;
 
 	short puerto = getPuerto();
 
@@ -567,6 +570,7 @@ void Servidor::runServer(){
 int Servidor::terminarThreads(){
 	pthread_join(this->threadExit, NULL);
 	pthread_join(this->threadMain, NULL);
+	pthread_join(this->threadTimer, NULL);
 
 	return 0;
 }
@@ -626,6 +630,28 @@ void Servidor::createMainProcessorThread(){
 		Log::log('s',3,"Creando el thread de procesamiento principal","");
 	}
 }
+
+void Servidor::createTimerThread(){
+	cout <<  "createTimerThread" << endl;
+	int rc = pthread_create(&this->threadTimer, NULL,&Servidor::manejarTimer, this);
+	if (rc){
+		printf("ERROR creando el thread del timer %i \n",rc);
+		Log::log('s',3,"Creando el thread del timer","");
+	}
+}
+
+void* Servidor::manejarTimer (void *data) {
+	cout <<  "JW 1" << endl;
+	Servidor* context = (Servidor*)data;
+
+	while (1){
+		cout <<  "JW 2" << endl;
+		context->escenario->aceptarCambios();
+		usleep(100);
+	}
+}
+
+
 
 Servidor::Servidor() {
 	this->contenedor = new ContenedorUsuarios();

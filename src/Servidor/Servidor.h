@@ -56,12 +56,13 @@ private:
 	EscenarioS* escenario;
 
 	bool cerrarPrograma;
-	pthread_t threadExit, threadMain;
+	pthread_t threadExit, threadMain, threadTimer;
 	int terminarThreads();
 	void procesarTeclaPulsada(mensajeStruct msg);
 
 	int posicionXHarcodeada =0;
-
+	void createTimerThread();
+	static void* manejarTimer (void *data);
 public:
 	Servidor();
 	virtual ~Servidor();

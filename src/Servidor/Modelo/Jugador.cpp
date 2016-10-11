@@ -35,32 +35,34 @@ string Jugador::getCodJugador() {
 
 void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 
-	if (accion == "SALTA"){
-		this->estado = SALTA;
+	if (this->aceptaCambios){
+		if (accion == "SALTA"){
+			this->estado = SALTA;
+		}
+
+		manejarSalto();
+
+		if (vecesX == 0){
+			if (this->estado != SALTA){
+				this->estado = PARADO;
+			}
+		}else{
+			if (this->estado != SALTA){
+				this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
+			}
+
+			this->posX += (vecesX * this->velocidad);
+			if (this->posX > (anchoEscenario-this->ancho)){
+				//ESTO ES PARA QUE NO SE VAYA, HAY QUE AGREGAR EL MARGEN
+				this->posX = anchoEscenario-this->ancho;
+			}
+
+			if (this->posX < 0){
+				this->posX = 0;
+			}
+		}
+		this->aceptaCambios = false;
 	}
-
-	manejarSalto();
-
-	if (vecesX == 0){
-		if (this->estado != SALTA){
-			this->estado = PARADO;
-		}
-	}else{
-		if (this->estado != SALTA){
-			this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
-		}
-
-		this->posX += (vecesX * this->velocidad);
-		if (this->posX > (anchoEscenario-this->ancho)){
-			//ESTO ES PARA QUE NO SE VAYA, HAY QUE AGREGAR EL MARGEN
-			this->posX = anchoEscenario-this->ancho;
-		}
-
-		if (this->posX < 0){
-			this->posX = 0;
-		}
-	}
-
 }
 
 void Jugador::manejarSalto(){
