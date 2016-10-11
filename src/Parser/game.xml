@@ -1,0 +1,55 @@
+<ventana>
+    <tipo>19</tipo>
+    <objectId>X0</objectId>
+	<ancho>800</ancho>
+	<alto>600</alto>
+</ventana>
+<sprites>
+    <tipo>20</tipo>
+	<sprite>
+	    <objectId>primerFondo</objectId>
+		<ancho>0</ancho>
+		<alto>0</alto>
+	</sprite>
+	<sprite>
+	    <objectId>primerFondo</objectId>
+		<ancho>0</ancho>
+		<alto>0</alto>
+	</sprite>
+</sprites>
+<objetos>
+    <tipo>21</tipo>
+	<objeto>
+	    <objectId>F01</objectId>
+	    <imagen>primerFondo</imagen>
+		<ancho>0</ancho>
+		<alto>0</alto>
+	</objeto>
+	<objeto>
+	    <objectId>J01</objectId>
+	    <imagen>foo</imagen>
+		<ancho>200</ancho>
+		<alto>200</alto>
+	</objeto>
+</objetos>
+<fondos>
+    <tipo>29</tipo>
+	<fondo>
+	    <imagen>primerFondo</imagen>
+		<ancho>0</ancho>
+		<alto>0</alto>
+		<zIndex>1</zIndex>
+	</fondo>
+	<fondo>
+	    <imagen>foo</imagen>
+		<ancho>200</ancho>
+		<alto>200</alto>
+		<zIndex>2</zIndex>
+	</fondo>
+	<fondo>
+	    <imagen>foo</imagen>
+		<ancho>200</ancho>
+		<alto>200</alto>
+		<zIndex>1</zIndex>
+	</fondo>
+</fondos>

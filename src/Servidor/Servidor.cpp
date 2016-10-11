@@ -133,6 +133,25 @@ void Servidor::handshake(mensajeStruct msg){
 	//apunto a la cola de mensajes de clientes que voy a mandar mensajes.
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
 
+	 /*   Parser *parser = new Parser();
+	    parser->parsearArchivoXML(XML_PATH);
+
+	    //MANDO DIMENSIONES DE VENTANA.
+	    colaCliente->push(parser->getVentana());
+		//MANDAR SPRITES
+	    for(std::vector<mensajeStruct>::iterator i = parser->getListaSprites().begin(); i != parser->getListaSprites().end(); ++i) {
+	    	   colaCliente->push(*i);
+	    }
+	    //MANDAR OBJETOS NUEVOS
+	    for(std::vector<mensajeStruct>::iterator i = parser->getListaObjetos().begin(); i != parser->getListaObjetos().end(); ++i) {
+	    	   colaCliente->push(*i);
+	    }
+	    //MANDAR FONDO
+	    for(std::vector<mensajeStruct>::iterator i = parser->getListaFondos().begin(); i != parser->getListaFondos().end(); ++i) {
+	    	   colaCliente->push(*i);
+	    }
+
+	    parser->~Parser();*/
 
 
 	//comienzo a mandar info
