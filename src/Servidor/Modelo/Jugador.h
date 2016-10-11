@@ -33,7 +33,7 @@ public:
 	Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto);
 	virtual ~Jugador();
 	int getId();
-	void mover(int anchoEscenario, int vecesX, string accion);
+	bool mover(int anchoEscenario, int vecesX, string accion);
 	string getPosConcat();
 	string getCodJugador();
 	int getPosX();

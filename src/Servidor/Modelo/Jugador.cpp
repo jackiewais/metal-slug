@@ -33,7 +33,9 @@ string Jugador::getCodJugador() {
 	return "J" + idS.str();
 }
 
-void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
+bool Jugador::mover(int margen, int vecesX, string accion) {
+
+	bool cruzoMargen = false;
 
 	if (this->aceptaCambios){
 		if (accion == "SALTA"){
@@ -52,17 +54,21 @@ void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 			}
 
 			this->posX += (vecesX * this->velocidad);
-			if (this->posX > (anchoEscenario-this->ancho)){
-				//ESTO ES PARA QUE NO SE VAYA, HAY QUE AGREGAR EL MARGEN
-				this->posX = anchoEscenario-this->ancho;
+
+			if (this->posX > (margen - this->ancho)) {
+				//si cruza el margen se tiene que mover el escenario
+				cruzoMargen = true;
 			}
 
 			if (this->posX < 0){
+				//no puede retroceder en el escenario
+				//un jugador desconectado sera arrastrado
 				this->posX = 0;
 			}
 		}
 		this->aceptaCambios = false;
 	}
+	return cruzoMargen;
 }
 
 void Jugador::manejarSalto(){
@@ -115,4 +121,3 @@ void Jugador::setPosY(int y) {
 
 	this->posY = y;
 }
-

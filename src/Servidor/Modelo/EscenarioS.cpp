@@ -47,30 +47,21 @@ vector<string> splitE(const string &s, const char delim) {
     return elems;
 }
 
-list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje){
+list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	Jugador* jugador = this->mapJugadores[jugadorId];
-
 	vector<string> result = splitE(mensaje, ';');
-
 	int vecesX = atoi(result[0].c_str());
 	string estado = result[1];
-
 	list<mensajeStruct> returnList;
-	jugador->mover(this->ancho,vecesX, estado);
 
-	/*if (direccion == "DERECHA"){
-		//jugador->getMovimiento()->setDirDerecha();
-		jugador->mover(this->ancho,+1);
-
-	}else if (direccion == "IZQUIERDA"){
-		//jugador->getMovimiento()->setDirIzquierda();
-		jugador->mover(this->ancho,-1);
-	}*/
-
-	returnList.push_back(getMensajeJugador(jugador));
-
-	moverEscenario(&returnList);
-
+	if (jugador->mover(this->margen,vecesX, estado)) {
+		if (!moverEscenario(&returnList)) {
+			//Si no se puede mover el escenario, ya que hay un jugador conectado que lo impide
+			//entonces el jugador retrocede
+			jugador->mover(this->margen,-1, estado);
+			returnList.push_back(getMensajeJugador(jugador));
+		}
+	}
 	return returnList;
 }
 
@@ -80,8 +71,9 @@ void EscenarioS::aceptarCambios(){
 	}
 }
 
-int EscenarioS::moverEscenario(list<mensajeStruct>* mainList){
-	int minPosX;
+bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
+	bool puedeMover;
+	int minPosX = this->distancia;
 
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		if (jugador->second->conectado){
@@ -91,24 +83,24 @@ int EscenarioS::moverEscenario(list<mensajeStruct>* mainList){
 		}
 	}
 
+	if (minPosX == 0) {
+		puedeMover = false;
+	}
+	else {
+		puedeMover = true;
+		int distRecorrida = 1;
 
-	if (minPosX > this->avance){
-		this->avance = minPosX;
-
-		mainList->push_back(getMensajeEscenario());
-
-		for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
-			if (!jugador->second->conectado){
-				if (jugador->second->getPosX() < this->avance){
-					jugador->second->setPosX(this->avance);
-
+		while (distRecorrida <= minPosX) {
+			for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador) {
+					jugador->second->mover(this->margen,-1, "CAMINA_IZQ");
 					mainList->push_back(getMensajeJugador(jugador->second));
-				}
 			}
+			this->avance += distRecorrida;
+			mainList->push_back(getMensajeEscenario());
+			distRecorrida += 1;
 		}
 	}
-
-	return 0;
+	return puedeMover;
 }
 
 

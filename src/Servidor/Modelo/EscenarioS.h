@@ -14,15 +14,17 @@ private:
 	map<int, Jugador*> mapJugadores;
 	int ancho;
 	int alto;
+	int margen;
+	int distancia;
+	int avance;
 
 public:
-	int avance = 0;
 	EscenarioS(int alto, int ancho);
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
-	int moverEscenario(list<mensajeStruct>* mainList);
+	bool moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();
 	void aceptarCambios();
