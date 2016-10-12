@@ -72,6 +72,7 @@ void EscenarioS::aceptarCambios(){
 }
 
 bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
+
 	bool puedeMover;
 	int minPosX = this->distancia;
 

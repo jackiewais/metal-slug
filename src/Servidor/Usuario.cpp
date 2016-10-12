@@ -10,6 +10,7 @@ Usuario::Usuario(int idUsuario, string nombre, string pass) {
 	this->nombre = nombre;
 	this->pass = pass;
 	this->conectado = false;
+	this->idJugador = 0;
 }
 
 Usuario::~Usuario() {
@@ -24,6 +25,16 @@ int  Usuario::getIdUsuario() {
 
 void Usuario::setIdUsuario(int idUsuario) {
 	this->idUsuario = idUsuario;
+}
+
+
+int  Usuario::getIdJugador() {
+	return this->idJugador;
+}
+
+
+void Usuario::setIdJugador(int idJugador) {
+	this->idJugador = idJugador;
 }
 
 

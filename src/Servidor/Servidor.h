@@ -63,6 +63,8 @@ private:
 	int posicionXHarcodeada =0;
 	void createTimerThread();
 	static void* manejarTimer (void *data);
+	int idJugadores = 0;
+
 public:
 	Servidor();
 	virtual ~Servidor();

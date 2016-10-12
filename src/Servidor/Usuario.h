@@ -13,6 +13,7 @@ private:
 	string nombre;
 	string pass;
 	bool conectado;
+	int idJugador;
 
 public:
 	Usuario(int idUsuario, string nombre, string pass);
@@ -28,6 +29,9 @@ public:
 	bool isConectado();
 	void iniciarSesion(int idSocket);
 	void cerrarSesion();
+
+	int getIdJugador();
+	void setIdJugador(int idJugador);
 };
 
 #endif /* USUARIO_H_ */

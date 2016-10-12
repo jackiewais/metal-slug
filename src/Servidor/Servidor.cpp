@@ -57,6 +57,17 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 		std::cout << "OK"  <<endl;
 		mensaje.tipo = LOG_OK;
 		mensaje.message = this->contenedor->getIdNombresUsuarios(msg.message);
+
+		Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
+		if (usuario->getIdJugador() == 0){
+			this->idJugadores++;
+			usuario->setIdJugador(this->idJugadores);
+			Jugador *jugador = new Jugador(usuario->getIdJugador(),5,50,400,1,1, usuario );
+			this->escenario->addJugador(jugador);
+			this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
+		}else{
+			this->contenedor->addIdSocketIdJugador(msg.socketCli, usuario->getIdJugador());
+		}
 	}else{
 		std::cout << "DENEGADO" <<endl;
 		mensaje.tipo = LOG_NOTOK;
@@ -100,7 +111,7 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
    list<mensajeStruct> mensajesRta;
 
-   mensajesRta = this->escenario->moverJugador(1,msg.message);
+   mensajesRta = this->escenario->moverJugador(usuario->getIdJugador(),msg.message);
 
 
 	for(auto const &user :  this->contenedor->socket_usuario) {
@@ -224,6 +235,12 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
 	msg.objectId="J1";
 	msg.message="jugador;0;0";
+	colaCliente->push(msg);
+
+
+	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+	msg.objectId="J2";
+	msg.message="foo;0;0";
 	colaCliente->push(msg);
 	//---------------------------------
 
@@ -439,11 +456,6 @@ void Servidor::nuevaConexion(int new_fd) {
 	pthread_t precvMessage;
 	pthread_t psendMessage;
 
-	Jugador *jugador = new Jugador(1,5,50,400,1,1, this->contenedor->getUsuarioBySocket(new_fd));
-	this->escenario->addJugador(jugador);
-
-	this->contenedor->addIdSocketIdJugador(new_fd, jugador->getId());
-
 	if (setsockopt (new_fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,sizeof(timeout)) < 0)
 		Log::log('s',3,"Seteando el rcv timeout","");
 	//	printf("ERROR seteando el rcv timeout \n");
@@ -635,7 +647,6 @@ void Servidor::createMainProcessorThread(){
 }
 
 void Servidor::createTimerThread(){
-	cout <<  "createTimerThread" << endl;
 	int rc = pthread_create(&this->threadTimer, NULL,&Servidor::manejarTimer, this);
 	if (rc){
 		printf("ERROR creando el thread del timer %i \n",rc);

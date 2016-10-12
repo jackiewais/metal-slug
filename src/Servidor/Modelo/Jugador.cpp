@@ -32,6 +32,71 @@ string Jugador::getCodJugador() {
 	return "J" + idS.str();
 }
 
+/*estadoJugador Jugador::resolverEstado(string accion, int vecesX){
+	if (accion == "SALTA"){
+		return SALTA;
+	}else if (vecesX == 0){
+		return PARADO;
+	}else if (vecesX > 0){
+		return CAMINA_DER;
+	}else{
+		return CAMINA_IZQ;
+	}
+}
+
+bool Jugador::mover(int margen, int vecesX, string accion) {
+
+	bool cruzoMargen = false;
+
+	estadoJugador nuevoEstado = resolverEstado(accion, vecesX);
+
+	if (this->aceptaCambios || (nuevoEstado == SALTA && this->estado != SALTA) ){
+		this->estado = nuevoEstado;
+
+		bool llegoAlPiso = manejarSalto();
+		if (llegoAlPiso){
+			this->estado = resolverEstado("NO SALTA", vecesX);
+		}
+
+		if (vecesX != 0){
+			this->posX += (vecesX * this->velocidad);
+
+			if (this->posX > (margen - this->ancho)) {
+				//si cruza el margen se tiene que mover el escenario
+				cruzoMargen = true;
+			}
+
+			if (this->posX < 0){
+				//no puede retroceder en el escenario
+				//un jugador desconectado sera arrastrado
+				this->posX = 0;
+			}
+		}
+		this->aceptaCambios = false;
+
+	}
+	return cruzoMargen;
+}
+
+bool Jugador::manejarSalto(){
+
+	bool llegoAlPiso = false;
+
+	if (this->estado == SALTA){
+		this->posY += (velSalto * factorSalto);
+		if (this->posY < topeSalto){
+			factorSalto = 1;
+		}else if (this-> posY > piso){
+			factorSalto = -1;
+			this-> posY = piso;
+			llegoAlPiso = true;
+		}
+	}
+
+	return llegoAlPiso;
+
+}
+*/
 bool Jugador::mover(int margen, int vecesX, string accion) {
 
 	bool cruzoMargen = false;
@@ -123,7 +188,6 @@ void Jugador::setPosY(int y) {
 
 
 bool Jugador::conectado() {
-
 	return this->usuario->isConectado();
 }
 

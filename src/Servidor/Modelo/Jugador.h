@@ -42,9 +42,11 @@ public:
 	void setPosX(int x);
 	int getPosY();
 	void setPosY(int y);
+	//bool manejarSalto();
 	void manejarSalto();
 	bool conectado();
 	int getIdSocket();
+	//estadoJugador resolverEstado(string accion, int vecesX);
 };
 
 #endif /* SRC_SERVIDOR_JUGADOR_H_ */
