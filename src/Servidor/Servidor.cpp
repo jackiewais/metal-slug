@@ -240,7 +240,7 @@ void Servidor::handshake(mensajeStruct msg){
 
 	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
 	msg.objectId="J2";
-	msg.message="foo;0;0";
+	msg.message="jugador;0;0";
 	colaCliente->push(msg);
 	//---------------------------------
 
