@@ -27,6 +27,8 @@ class LTexture
 
 		int mWidth;
 		int mHeight;
+		int widthScaled;
+		int heightScaled;
 		Escenario *escenario;
 		std::string path;
 };

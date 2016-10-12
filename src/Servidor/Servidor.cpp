@@ -188,7 +188,7 @@ void Servidor::handshake(mensajeStruct msg){
 			msg.message="0;0";
 			colaCliente->push(msg);
 
-			msg.objectId="foo";
+			msg.objectId="jugador";
 			msg.message="0;0";
 			colaCliente->push(msg);
 
@@ -223,7 +223,7 @@ void Servidor::handshake(mensajeStruct msg){
 
 	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
 	msg.objectId="J1";
-	msg.message="foo;0;0";
+	msg.message="jugador;0;0";
 	colaCliente->push(msg);
 	//---------------------------------
 

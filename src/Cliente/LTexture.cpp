@@ -10,6 +10,8 @@ LTexture::LTexture(Escenario *escenario, std::string path)
 	this->mTexture = NULL;
 	this->mWidth = 0;
 	this->mHeight = 0;
+	this->widthScaled = 0;
+	this->heightScaled = 0;
 	this->escenario = escenario;
 	this->path = path;
 
@@ -49,12 +51,8 @@ bool LTexture::loadFromFile()
 		else
 		{
 			//Get image dimensions
-			if (mWidth == 0) {
-				mWidth = loadedSurface->w;
-			}
-			if (mHeight == 0) {
-				mHeight = loadedSurface->h;
-			}
+			mWidth = loadedSurface->w;
+			mHeight = loadedSurface->h;
 		}
 
 		//Get rid of old loaded surface
@@ -78,29 +76,49 @@ void LTexture::free()
 
 void LTexture::render( int x, int y )
 {
+	int anchoFrame = mWidth;
+	int altoFrame = mHeight;
+	int anchoRender = this->getWidth();
+	int altoRender = this->getHeight();
+
+	// Esto por ahora esta harcodeado
+	if (this->path == "images/jugador.png") {
+		anchoFrame = 37;
+		altoFrame = 49;
+		anchoRender = 37;
+		altoRender = 49;
+	}
+
+	SDL_Rect frame = { 0, 0, anchoFrame, altoFrame };
 	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-	SDL_RenderCopy( this->escenario->getGRenderer(), mTexture, NULL, &renderQuad );
+	SDL_Rect renderQuad = { x, y, anchoRender, altoRender };
+	SDL_RenderCopy( this->escenario->getGRenderer(), mTexture, &frame, &renderQuad );
 }
 
 int LTexture::getWidth()
 {
-	return mWidth;
+	if (this->widthScaled == 0) {
+		return this->mWidth;
+	}
+	return this->widthScaled;
 }
 
 int LTexture::getHeight()
 {
-	return mHeight;
+	if (this->heightScaled == 0) {
+		return this->mHeight;
+	}
+	return this->heightScaled;
 }
 
 void LTexture::setWidth(int mWidth)
 {
-	this->mWidth = mWidth;
+	this->widthScaled = mWidth;
 }
 
 void LTexture::setHeight(int mHeight)
 {
-	this->mHeight = mHeight;
+	this->heightScaled = mHeight;
 }
 
 void LTexture::setPath(std::string path)
