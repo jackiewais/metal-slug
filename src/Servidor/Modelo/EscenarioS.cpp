@@ -76,7 +76,7 @@ bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 	int minPosX = this->distancia;
 
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
-		if (jugador->second->conectado){
+		if (jugador->second->conectado()){
 			if (jugador->second->getPosX() < minPosX){
 				minPosX = jugador->second->getPosX();
 			}

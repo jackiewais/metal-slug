@@ -1,5 +1,5 @@
-#ifndef CONTENEDORUSUARIOS_H_
-#define CONTENEDORUSUARIOS_H_
+#ifndef Contenedor_H_
+#define Contenedor_H_
 
 #include "ImportarCSV.h"
 #include "Usuario.h"
@@ -10,24 +10,27 @@
 
 using namespace std;
 
-class ContenedorUsuarios {
+class Contenedor {
 
 private:
 	map<string, Usuario*> mapUsuarios;
+	map<int, int> idSocket_idJugador;
 
 	Usuario* autentificar(string message);
 
 public:
 	map<int, Usuario*> socket_usuario;
 
-	ContenedorUsuarios();
-	virtual ~ContenedorUsuarios();
+	Contenedor();
+	virtual ~Contenedor();
 	void inicializarContenedor(string csv);
 	bool iniciarSesion(string message, int idSocket);
 	bool cerrarSesion(int idSocket);
 	Usuario* getUsuarioBySocket(int idSocket);
 	string getIdNombresUsuarios(string message);
 	list<int> getIdOtrosUsuarios(int idUsuarioActual);
+	void addIdSocketIdJugador(int idSocket, int idJugador);
+	int getIdJugadorByIdSocket(int idSocket);
 };
 
-#endif /* CONTENEDORUSUARIOS_H_ */
+#endif /* Contenedor_H_ */

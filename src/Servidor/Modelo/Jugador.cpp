@@ -1,7 +1,7 @@
 #include "Jugador.h"
 #include <sstream>
 
-Jugador::Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto) {
+Jugador::Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto, Usuario* usuario) {
 
 	this->id = id;
 	this->posX = posX;
@@ -11,9 +11,8 @@ Jugador::Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto)
 	this->ancho = ancho;
 	this->alto = alto;
 	this->puntaje = 0;
-	this->conectado = true;
 	this->estado = PARADO;
-
+	this->usuario = usuario;
 
 }
 
@@ -121,3 +120,16 @@ void Jugador::setPosY(int y) {
 
 	this->posY = y;
 }
+
+
+bool Jugador::conectado() {
+
+	return this->usuario->isConectado();
+}
+
+
+int Jugador::getIdSocket() {
+
+	return this->usuario->getIdSocket();
+}
+
