@@ -9,8 +9,8 @@
 #include "../Common/ChatStruct.h"
 #include "../Common/Mensajeria.h"
 #include <queue>
-#include "ContenedorUsuarios.h"
 #include "./Modelo/EscenarioS.h"
+#include "Contenedor.h"
 
 //using namespace std;
 
@@ -51,7 +51,7 @@ private:
 	void handshake(mensajeStruct msg);
 	int enviarMensajeSegmentado(int socketCli, chatStruct* elemento, queue<mensajeStruct>* colaCliente );
 	Mensajeria mensajeria;
-	ContenedorUsuarios* contenedor;
+	Contenedor* contenedor;
 	int procesarDesconexion(mensajeStruct mensaje);
 	EscenarioS* escenario;
 

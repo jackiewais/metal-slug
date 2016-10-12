@@ -1,4 +1,5 @@
-#include "ContenedorUsuarios.h"
+#include "Contenedor.h"
+
 #include "Usuario.h"
 #include <stdio.h>
 #include <string>
@@ -8,10 +9,10 @@
 using namespace std;
 
 
-ContenedorUsuarios::ContenedorUsuarios() {
+Contenedor::Contenedor() {
 }
 
-ContenedorUsuarios::~ContenedorUsuarios() {
+Contenedor::~Contenedor() {
 	map<string, Usuario*>::iterator it;
 	Usuario *usuario;
 
@@ -22,7 +23,7 @@ ContenedorUsuarios::~ContenedorUsuarios() {
 }
 
 
-void ContenedorUsuarios::inicializarContenedor(string csv) {
+void Contenedor::inicializarContenedor(string csv) {
 	ImportarCSV *importar = new ImportarCSV();
 	string **tablaUsuarios = importar->importar(csv);
 
@@ -42,7 +43,7 @@ void ContenedorUsuarios::inicializarContenedor(string csv) {
 }
 
 
-Usuario* ContenedorUsuarios::autentificar(string message) {
+Usuario* Contenedor::autentificar(string message) {
 
 	Usuario *usuario = NULL;
 
@@ -55,7 +56,7 @@ Usuario* ContenedorUsuarios::autentificar(string message) {
 }
 
 
-bool ContenedorUsuarios::iniciarSesion(string message, int idSocket){
+bool Contenedor::iniciarSesion(string message, int idSocket){
 
 	bool sesionIniciada = false;
 	Usuario *usuario = this->autentificar(message);
@@ -69,7 +70,7 @@ bool ContenedorUsuarios::iniciarSesion(string message, int idSocket){
 }
 
 
-bool ContenedorUsuarios::cerrarSesion(int idSocket) {
+bool Contenedor::cerrarSesion(int idSocket) {
 
 	bool sesionCerrada = false;
 	Usuario *usuario = this->getUsuarioBySocket(idSocket);
@@ -82,7 +83,7 @@ bool ContenedorUsuarios::cerrarSesion(int idSocket) {
 	return sesionCerrada;
 }
 
-Usuario* ContenedorUsuarios::getUsuarioBySocket(int idSocket) {
+Usuario* Contenedor::getUsuarioBySocket(int idSocket) {
 
 	Usuario *usuario = NULL;
 
@@ -95,7 +96,7 @@ Usuario* ContenedorUsuarios::getUsuarioBySocket(int idSocket) {
 }
 
 
-string ContenedorUsuarios::getIdNombresUsuarios(string message) {
+string Contenedor::getIdNombresUsuarios(string message) {
 
 	map<string, Usuario*>::iterator it;
 	Usuario *usuario;
@@ -119,7 +120,7 @@ string ContenedorUsuarios::getIdNombresUsuarios(string message) {
 }
 
 
-list<int> ContenedorUsuarios::getIdOtrosUsuarios(int idUsuarioActual) {
+list<int> Contenedor::getIdOtrosUsuarios(int idUsuarioActual) {
 
 	list<int> idOtrosUsuarios;
 	map<string, Usuario*>::iterator it;
@@ -137,3 +138,24 @@ list<int> ContenedorUsuarios::getIdOtrosUsuarios(int idUsuarioActual) {
 	}
 	return idOtrosUsuarios;
 }
+
+
+void Contenedor::addIdSocketIdJugador(int IdSocket, int idJugador) {
+
+	this->idSocket_idJugador[IdSocket] = idJugador;
+}
+
+
+int Contenedor::getIdJugadorByIdSocket(int idSocket) {
+
+	int idJugador = NULL;
+
+	map<int, int>::iterator it;
+
+	if((it = this->idSocket_idJugador.find(idSocket)) != this->idSocket_idJugador.end())
+		idJugador = this->idSocket_idJugador[idSocket];
+
+	return idJugador;
+}
+
+

@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include "../../Common/ModeloCommon.h"
+#include "../Usuario.h"
 
 using namespace std;
 
@@ -15,11 +16,12 @@ private:
 	int factorSalto = -1;
 	int topeSalto = 325;
 	int piso = 400;
-public:
-	bool conectado;
-	bool aceptaCambios = true;
 	int posX;
 	int posY;
+	Usuario* usuario;
+
+public:
+	bool aceptaCambios = true;
 	int alto;
 	int ancho;
 	int velocidad;
@@ -30,7 +32,7 @@ public:
 
 
 
-	Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto);
+	Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto, Usuario* usuario);
 	virtual ~Jugador();
 	int getId();
 	bool mover(int anchoEscenario, int vecesX, string accion);
@@ -41,6 +43,8 @@ public:
 	int getPosY();
 	void setPosY(int y);
 	void manejarSalto();
+	bool conectado();
+	int getIdSocket();
 };
 
 #endif /* SRC_SERVIDOR_JUGADOR_H_ */
