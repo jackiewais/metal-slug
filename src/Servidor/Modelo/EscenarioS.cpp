@@ -89,6 +89,7 @@ bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 	}
 	else {
 		puedeMover = true;
+		/*
 		int distRecorrida = 1;
 
 		while (distRecorrida <= minPosX) {
@@ -100,6 +101,16 @@ bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 			mainList->push_back(getMensajeEscenario());
 			distRecorrida += 1;
 		}
+		*/
+		//Por ahora solo le seteo la posicion final del retroceso, desp hay que tener en cuenta la velocidad para las demas posiciones
+		int posActual;
+		for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador) {
+			posActual = jugador->second->getPosX();
+			jugador->second->setPosX(posActual - minPosX);
+			mainList->push_back(getMensajeJugador(jugador->second));
+		}
+		this->avance += minPosX;
+		mainList->push_back(getMensajeEscenario());
 	}
 	return puedeMover;
 }
