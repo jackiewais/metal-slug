@@ -24,6 +24,7 @@ private:
 	};
 
 	const int MAX_CON = 6;
+	int cantJugadores = 2;
 	std::queue<mensajeStruct> colaPrincipalMensajes;
 	std::map<int,queue<mensajeStruct>*> socketIdQueue;
 	int sockfd = 0;
@@ -64,7 +65,7 @@ private:
 	void createTimerThread();
 	static void* manejarTimer (void *data);
 	int idJugadores = 0;
-
+	string convertirAString(int i);
 public:
 	Servidor();
 	virtual ~Servidor();

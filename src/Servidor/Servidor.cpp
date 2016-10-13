@@ -60,11 +60,18 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
 		Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
 		if (usuario->getIdJugador() == 0){
-			this->idJugadores++;
-			usuario->setIdJugador(this->idJugadores);
-			Jugador *jugador = new Jugador(usuario->getIdJugador(),5,50,400,1,1, usuario );
-			this->escenario->addJugador(jugador);
-			this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
+			//Jugador que entra por primera vez
+			if (idJugadores < cantJugadores){
+				this->idJugadores++;
+				usuario->setIdJugador(this->idJugadores);
+				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,getPosXInicial(usuario->getIdJugador()),400,1,1, usuario );
+				this->escenario->addJugador(jugador);
+				this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
+			}else{
+				std::cout << "DENEGADO: No se aceptan nuevos jugadores" <<endl;
+				mensaje.tipo = LOG_NOTOK;
+				mensaje.message = "";
+			}
 		}else{
 			this->contenedor->addIdSocketIdJugador(msg.socketCli, usuario->getIdJugador());
 		}
@@ -139,6 +146,9 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 	--this->posicionXHarcodeada;
 }
 
+int getPosXInicial(int idJugador){
+	return 10+idJugador*30;
+}
 void Servidor::handshake(mensajeStruct msg){
 	//apunto a la cola de mensajes de clientes que voy a mandar mensajes.
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
@@ -232,16 +242,23 @@ void Servidor::handshake(mensajeStruct msg){
 							msg.message="fondoTres;0;0";
 							colaCliente->push(msg);
 
-	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
-	msg.objectId="J1";
-	msg.message="jugador;0;0";
-	colaCliente->push(msg);
 
+	for(int i = 1; i <= this->cantJugadores; i++)
+	{
+		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+		msg.objectId="J"+convertirAString(i);
+		Jugador* jugador = this->escenario->getJugadorById(i);
 
-	msg.tipo=HANDSHAKE_OBJETO_NUEVO;
-	msg.objectId="J2";
-	msg.message="jugador;0;0";
-	colaCliente->push(msg);
+		string pos;
+		if(jugador != NULL){
+			pos = jugador->getPosConcat();
+		}else{
+			pos = convertirAString(getPosXInicial(i))+";400";
+		}
+		msg.message="jugador;"+pos;
+		colaCliente->push(msg);
+	}
+
 	//---------------------------------
 
     //FIN DE HANDSHAKE.
@@ -253,6 +270,11 @@ void Servidor::handshake(mensajeStruct msg){
 	createTimerThread();
 }
 
+string Servidor::convertirAString(int i) {
+		stringstream iS;
+		iS << i;
+		return iS.str();
+}
 
 int Servidor::enviarChat(mensajeStruct msg){
 	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();

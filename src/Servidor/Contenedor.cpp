@@ -177,7 +177,7 @@ void Contenedor::addIdSocketIdJugador(int IdSocket, int idJugador) {
 
 int Contenedor::getIdJugadorByIdSocket(int idSocket) {
 
-	int idJugador = NULL;
+	int idJugador = 0;
 
 	map<int, int>::iterator it;
 

@@ -11,7 +11,6 @@
 class EscenarioS {
 
 private:
-	map<int, Jugador*> mapJugadores;
 	int ancho;
 	int alto;
 	int margen;
@@ -19,6 +18,8 @@ private:
 	int avance;
 
 public:
+	map<int, Jugador*> mapJugadores;
+
 	EscenarioS(int alto, int ancho);
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
