@@ -59,9 +59,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			//Si no se puede mover el escenario, ya que hay un jugador conectado que lo impide
 			//entonces el jugador retrocede
 			jugador->mover(this->margen,-1, estado);
-			returnList.push_back(getMensajeJugador(jugador));
 		}
+
 	}
+	returnList.push_back(getMensajeJugador(jugador));
+	returnList.push_back(getMensajeEscenario());
+
 	return returnList;
 }
 
@@ -77,8 +80,8 @@ bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 	int minPosX = this->distancia;
 
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
-		if (jugador->second->conectado()){
-			if (jugador->second->getPosX() < minPosX){
+		if (jugador->second->conectado()) {
+			if (jugador->second->getPosX() < minPosX) {
 				minPosX = jugador->second->getPosX();
 			}
 		}
@@ -105,12 +108,16 @@ bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 		//Por ahora solo le seteo la posicion final del retroceso, desp hay que tener en cuenta la velocidad para las demas posiciones
 		int posActual;
 		for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador) {
-			posActual = jugador->second->getPosX();
-			jugador->second->setPosX(posActual - minPosX);
+			posActual = jugador->second->getPosX() - minPosX;
+			if (!jugador->second->conectado() && posActual < 0) {
+				jugador->second->setPosX(0);
+			}
+			else {
+				jugador->second->setPosX(posActual);
+			}
 			mainList->push_back(getMensajeJugador(jugador->second));
 		}
 		this->avance += minPosX;
-		mainList->push_back(getMensajeEscenario());
 	}
 	return puedeMover;
 }
