@@ -13,19 +13,19 @@ class EscenarioS {
 private:
 	int ancho;
 	int alto;
-	int margen;
 	int distancia;
 	int avance;
 
 public:
+	int margen;
 	map<int, Jugador*> mapJugadores;
 
-	EscenarioS(int alto, int ancho);
+	EscenarioS(int ancho, int alto);
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
-	bool moverEscenario(list<mensajeStruct>* mainList);
+	bool moverEscenario(list<mensajeStruct>* mainList, int velocidad);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();
 	void aceptarCambios();
