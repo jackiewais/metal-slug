@@ -174,6 +174,9 @@ bool Cliente::handleKeyEvents(){
 	}
 
 	evento.message=convertirAString(vecesX) + ";" + accion;
+	SDL_Delay(1);
+	SDL_FlushEvent(SDL_KEYDOWN);
+	SDL_FlushEvent(SDL_KEYUP);
 	enviarEvento(&evento);
 
 	return exit;

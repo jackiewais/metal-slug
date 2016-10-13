@@ -9,8 +9,8 @@
 class Mensajeria {
 
 public:
-	#define BUFLEN 1012
-	#define MAXDATASIZE 1000 // máximo número de bytes que se pueden leer de una vez
+	#define BUFLEN 62
+	#define MAXDATASIZE 50 // máximo número de bytes que se pueden leer de una vez
 
 	int encode(char output[BUFLEN], mensajeStruct* mensaje );
 	int decode(char output[BUFLEN], mensajeStruct* mensaje);

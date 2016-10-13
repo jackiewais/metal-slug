@@ -25,7 +25,9 @@ using namespace std;
 
 SDL_mutex *mutexQueue;
 
-
+int getPosXInicial(int idJugador){
+	return 10+idJugador*30;
+}
 
 void* Servidor::procesarMensajesMain (void *data) {
 	mensajeStruct msg;
@@ -146,9 +148,7 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 	--this->posicionXHarcodeada;
 }
 
-int getPosXInicial(int idJugador){
-	return 10+idJugador*30;
-}
+
 void Servidor::handshake(mensajeStruct msg){
 	//apunto a la cola de mensajes de clientes que voy a mandar mensajes.
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
@@ -455,7 +455,7 @@ void *Servidor::sendMessage(void *arguments){
 		    	if(msg->tipo == DISCONNECTED){
 		    		finish = true;
 		    	}else{
-
+		    		SDL_Delay(1);
 					result=args->context->encodeAndSend(socketCli,msg);
 					idSocket <<  msg->socketCli;
 					Log::log('s',1,"Respondiendo mensaje al cliente: " +idSocket.str(), msg->message);
