@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -43,15 +44,43 @@ void Contenedor::inicializarContenedor(string csv) {
 }
 
 
+void split3(const string &s, char delim, vector<string> &elems) {
+    stringstream ss;
+    ss.str(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
+
+
+vector<string> split3(const string &s, const char delim) {
+    vector<string> elems;
+    split3(s, delim, elems);
+    return elems;
+}
+
+
 Usuario* Contenedor::autentificar(string message) {
 
 	Usuario *usuario = NULL;
-
+	int i = 0;
 	map<string, Usuario*>::iterator it;
 
-	if((it = this->mapUsuarios.find(message)) != this->mapUsuarios.end())
+	if((it = this->mapUsuarios.find(message)) != this->mapUsuarios.end()) {
 		usuario = this->mapUsuarios[message];
+		i++;
+	}
 
+	if (usuario == NULL) {
+		vector<string> vector = split3(message, ';');
+		string nombre = vector[0];
+		string pass = vector[1];
+
+		//falta chekear que no se repita el nombre de usuario para crear uno nuevo
+		usuario = new Usuario(i+1,nombre,pass);
+		this->mapUsuarios[message] = usuario;
+	}
 	return usuario;
 }
 
@@ -61,7 +90,7 @@ bool Contenedor::iniciarSesion(string message, int idSocket){
 	bool sesionIniciada = false;
 	Usuario *usuario = this->autentificar(message);
 
-	if (usuario != NULL) {
+	if ((usuario != NULL) && (!usuario->isConectado())) {
 		this->socket_usuario[idSocket] = usuario;
 		usuario->iniciarSesion(idSocket);
 		sesionIniciada = true;
