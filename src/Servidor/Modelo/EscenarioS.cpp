@@ -5,6 +5,9 @@ EscenarioS::EscenarioS(int alto, int ancho) {
 
 	this->ancho = ancho;
 	this->alto = alto;
+	this->margen = 2*ancho/3;
+	this->distancia = this->margen/2;
+	this->avance = 0;
 }
 
 EscenarioS::~EscenarioS() {
