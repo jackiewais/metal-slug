@@ -132,7 +132,7 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 				colaCliente->push(msgRta);
 			 }
 
-
+			/*
 			msg.tipo=ESCENARIO_UPD;
 			msg.objectId="X0";
 			stringstream posX;
@@ -142,6 +142,7 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 			colaCliente->push(msg);
 
 			posX.str("");
+			*/
 	  }
 	}
 

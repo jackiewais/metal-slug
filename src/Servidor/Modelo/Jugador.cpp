@@ -97,7 +97,7 @@ bool Jugador::manejarSalto(){
 
 }
 */
-bool Jugador::mover(int margen, int vecesX, string accion) {
+bool Jugador::mover(int anchoEscenario, int margen, int vecesX, string accion) {
 
 	bool cruzoMargen = false;
 
@@ -122,6 +122,11 @@ bool Jugador::mover(int margen, int vecesX, string accion) {
 			if (this->posX > (margen - this->ancho)) {
 				//si cruza el margen se tiene que mover el escenario
 				cruzoMargen = true;
+			}
+
+			if (this->posX > (anchoEscenario - this->ancho)) {
+				//no puede pasar el borde derecho
+				this->posX = (anchoEscenario - this->ancho);
 			}
 
 			if (this->posX < 0){
