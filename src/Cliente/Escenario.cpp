@@ -159,18 +159,18 @@ void Escenario::setDimensiones(int screenWidth, int screenHeight){
 	this->screenHeight = screenHeight;
 }
 
-void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int y) {
+void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int y, estadoJugador estado, string conectado) {
 	// Se comprueba que el sprite haya sido cargado antes
 	if ( this->mapTexturas.find(idSprite) != this->mapTexturas.end() ) {
 		LTexture *textura = this->mapTexturas[idSprite];
 		this->mapObjetosGraficables[idObj] = new ObjetoGraficable(idObj, textura, x, y);
+		this->mapObjetosGraficables[idObj]->grisar((conectado == "D"));
 	}
 }
 
 void Escenario::renderizarObjetos() {
 	SDL_SetRenderDrawColor( this->gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( this->gRenderer );
-
 	std::map<std::string, ObjetoGraficable*>::iterator it;
 	for (it = this->mapObjetosGraficables.begin(); it != this->mapObjetosGraficables.end(); it++) {
 		it->second->render();
@@ -179,10 +179,12 @@ void Escenario::renderizarObjetos() {
 	SDL_RenderPresent( this->gRenderer );
 }
 
-void Escenario::actualizarPosicionObjeto(std::string idObj, int x, int y) {
+void Escenario::actualizarPosicionObjeto(std::string idObj, int x, int y, estadoJugador estado, string conectado) {
 	// Si el objeto esta en el map
 	if ( this->mapObjetosGraficables.find(idObj) != this->mapObjetosGraficables.end() ) {
-		this->mapObjetosGraficables[idObj]->actualizarPosicion(x, y);
+		ObjetoGraficable* objeto = this->mapObjetosGraficables[idObj];
+		objeto->actualizarPosicion(x, y);
+		objeto->grisar((conectado == "D"));
 	}
 }
 

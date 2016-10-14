@@ -9,6 +9,7 @@
 #include <map>
 #include <list>
 #include "Escenario.h"
+#include "../Common/Util.h"
 
 class Cliente:ConexionCli {
 private:

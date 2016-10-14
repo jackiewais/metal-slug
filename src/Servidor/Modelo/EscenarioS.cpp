@@ -134,7 +134,7 @@ mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
 	mensajeStruct msjJug;
 
 	msjJug.tipo = JUGADOR_UPD;
-	msjJug.message = jugador->getPosConcat();
+	msjJug.message = jugador->getStringMensaje();
 	msjJug.objectId = jugador->getCodJugador();
 
 	return msjJug;

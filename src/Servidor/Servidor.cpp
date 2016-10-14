@@ -252,9 +252,9 @@ void Servidor::handshake(mensajeStruct msg){
 
 		string pos;
 		if(jugador != NULL){
-			pos = jugador->getPosConcat();
+			pos = jugador->getStringMensaje();
 		}else{
-			pos = convertirAString(getPosXInicial(i))+";400";
+			pos = convertirAString(getPosXInicial(i))+";400;01;D";
 		}
 		msg.message="jugador;"+pos;
 		colaCliente->push(msg);

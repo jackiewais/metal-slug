@@ -157,14 +157,14 @@ void Jugador::manejarSalto(){
 }
 
 
-string Jugador::getPosConcat() {
-
-    stringstream x,y;
+string Jugador::getStringMensaje() {
+    stringstream x,y,estado;
     x << (this->posX);
     y << (this->posY);
-	return (x.str() + ";" + y.str());
+    estado << this->estado;
+    string conectado = (this->usuario->isConectado())?"C":"D";
+	return (x.str() + ";" + y.str() + ";" + estado.str() + ";" + conectado);
 }
-
 
 
 

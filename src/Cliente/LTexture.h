@@ -9,7 +9,7 @@
 #include <list>
 #include <string>
 #include <map>
-#include "../Common/ModeloCommon.h"
+#include "../Common/Modelo.h"
 
 using namespace std;
 
@@ -29,6 +29,7 @@ class LTexture
 		void setHeight(int mHeight);
 		void setPath(std::string path);
 		void actualizarEstado(estadoJugador estado);
+		void setAlpha( Uint8 alpha );
 
 	private:
 		SDL_Texture* mTexture;

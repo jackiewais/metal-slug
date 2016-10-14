@@ -2,7 +2,7 @@
 #define SRC_SERVIDOR_JUGADOR_H_
 #include <string>
 #include <iostream>
-#include "../../Common/ModeloCommon.h"
+#include "../../Common/Modelo.h"
 #include "../Usuario.h"
 
 using namespace std;
@@ -36,7 +36,7 @@ public:
 	virtual ~Jugador();
 	int getId();
 	bool mover(int anchoEscenario, int margen, int vecesX, string accion);
-	string getPosConcat();
+	string getStringMensaje();
 	string getCodJugador();
 	int getPosX();
 	void setPosX(int x);

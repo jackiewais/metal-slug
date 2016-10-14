@@ -6,6 +6,7 @@ ObjetoGraficable::ObjetoGraficable(std::string id, LTexture *textura, int x, int
 	this->x = x;
 	this->y = y;
 	this->factorParallax = 0;
+	this->grisado = false;
 }
 
 ObjetoGraficable::~ObjetoGraficable() {
@@ -39,3 +40,12 @@ void ObjetoGraficable::setFactorParallax(int despA, int anchoVentana) {
 void ObjetoGraficable::actualizarPosicionFondo(int despA) {
 	this->actualizarPosicion(despA*this->factorParallax, this->y);
 }
+
+void ObjetoGraficable::grisar(bool grisa){
+	if (true || this->grisado != grisa){
+		this->grisado = grisa;
+		int alpha = (grisa)?128:255;
+		this->textura->setAlpha(alpha);
+	}
+}
+

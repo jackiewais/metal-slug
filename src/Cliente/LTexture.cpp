@@ -7,7 +7,7 @@
 #include <list>
 #include <string>
 #include <map>
-#include "../Common/ModeloCommon.h"
+#include "../Common/Modelo.h"
 
 using namespace std;
 
@@ -177,4 +177,9 @@ void LTexture::setHeight(int mHeight)
 void LTexture::setPath(std::string path)
 {
 	this->path = path;
+}
+
+void LTexture::setAlpha( Uint8 alpha )
+{
+	SDL_SetTextureAlphaMod( mTexture, alpha );
 }
