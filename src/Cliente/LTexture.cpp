@@ -3,6 +3,13 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include "Escenario.h"
+#include <iostream>
+#include <list>
+#include <string>
+#include <map>
+#include "../Common/ModeloCommon.h"
+
+using namespace std;
 
 LTexture::LTexture(Escenario *escenario, std::string path)
 {
@@ -15,6 +22,38 @@ LTexture::LTexture(Escenario *escenario, std::string path)
 	this->escenario = escenario;
 	this->path = path;
 
+	list<SDL_Rect>* pList = NULL;
+	int anchoFrame = 37;
+	int altoFrame = 49;
+
+	// Esto por ahora esta harcodeado
+	if (this->path == "images/jugador.png") {
+		pList = new list<SDL_Rect>;
+		mapFrames[PARADO] = pList;
+		for(int i=1; i<4; i++) {
+			pList->push_back(this->crearFrame(1, i, anchoFrame, altoFrame));
+		}
+		this->itEstado = pList->begin();
+		this->estadoActual = PARADO;
+		pList = new list<SDL_Rect>;
+		mapFrames[CAMINA_DER] = pList;
+		for(int i=1; i<9; i++) {
+			pList->push_back(this->crearFrame(2, i, anchoFrame, altoFrame));
+		}
+		pList = new list<SDL_Rect>;
+		mapFrames[SALTA] = pList;
+		for(int i=1; i<13; i++) {
+			pList->push_back(this->crearFrame(3, i, anchoFrame, altoFrame));
+		}
+	}
+
+}
+
+SDL_Rect LTexture::crearFrame(int fila, int columna, int anchoFrame, int altoFrame) {
+	int v = (columna - 1)*anchoFrame;
+	int w = (fila - 1)*altoFrame;
+	SDL_Rect frame = { v, w, v + anchoFrame, w + altoFrame };
+	return frame;
 }
 
 LTexture::~LTexture()
@@ -80,19 +119,33 @@ void LTexture::render( int x, int y )
 	int altoFrame = mHeight;
 	int anchoRender = this->getWidth();
 	int altoRender = this->getHeight();
+	SDL_Rect frame;
 
 	// Esto por ahora esta harcodeado
 	if (this->path == "images/jugador.png") {
 		anchoFrame = 37;
 		altoFrame = 49;
+
+		frame = *(this->itEstado);
+
 		anchoRender = 37;
 		altoRender = 49;
+	} else {
+		frame = { 0, 0, anchoFrame, altoFrame };
 	}
 
-	SDL_Rect frame = { 0, 0, anchoFrame, altoFrame };
-	//Set rendering space and render to screen
 	SDL_Rect renderQuad = { x, y, anchoRender, altoRender };
 	SDL_RenderCopy( this->escenario->getGRenderer(), mTexture, &frame, &renderQuad );
+}
+
+void LTexture::actualizarEstado(estadoJugador estado)
+{
+	if (this->estadoActual == estado) {
+		this->itEstado++;
+	} else {
+		this->estadoActual = estado;
+		this->itEstado = this->mapFrames[estado]->begin();
+	}
 }
 
 int LTexture::getWidth()

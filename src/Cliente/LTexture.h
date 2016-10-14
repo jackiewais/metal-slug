@@ -5,6 +5,13 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include "Escenario.h"
+#include <iostream>
+#include <list>
+#include <string>
+#include <map>
+#include "../Common/ModeloCommon.h"
+
+using namespace std;
 
 class Escenario;
 
@@ -21,6 +28,7 @@ class LTexture
 		void setWidth(int mWidth);
 		void setHeight(int mHeight);
 		void setPath(std::string path);
+		void actualizarEstado(estadoJugador estado);
 
 	private:
 		SDL_Texture* mTexture;
@@ -31,6 +39,10 @@ class LTexture
 		int heightScaled;
 		Escenario *escenario;
 		std::string path;
+		map<estadoJugador, list<SDL_Rect>*> mapFrames;
+		list<SDL_Rect>::iterator itEstado;
+		estadoJugador estadoActual;
+		SDL_Rect crearFrame(int fila, int columna, int anchoFrame, int altoFrame);
 };
 
 #endif /* SRC_CLIENTE_LTEXTURE_H_ */
