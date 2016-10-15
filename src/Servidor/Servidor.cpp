@@ -131,20 +131,6 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 				msgRta.socketCli = user.first;
 				colaCliente->push(msgRta);
 			 }
-
-
-			/*
-
-			msg.tipo=ESCENARIO_UPD;
-			msg.objectId="X0";
-			stringstream posX;
-			posX << this->posicionXHarcodeada;
-			msg.message= posX.str();
-			colaCliente->push(msg);
-
-
-			posX.str("");
-			*/
 	  }
 
 	}
@@ -300,9 +286,21 @@ int Servidor::enviarChat(mensajeStruct msg){
 	return 0;
 }
 int Servidor::procesarDesconexion(mensajeStruct mensaje){
-	queue<mensajeStruct>* colaCliente = socketIdQueue[mensaje.socketCli];
-	colaCliente->push(mensaje);
+	//Mando mensaje desconexión a la cola del cliente
+	socketIdQueue[mensaje.socketCli]->push(mensaje);
+	Usuario* usuario = this->contenedor->getUsuarioBySocket(mensaje.socketCli);
 
+	mensajeStruct msgRta = this->escenario->getMensajeDesconexion(usuario->getIdJugador());
+	//Mando un mensaje al resto de los usuarios con la desconexión
+	for(auto const &user :  this->contenedor->socket_usuario) {
+	  if(user.second->isConectado()){
+		  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
+		  msgRta.socketCli = user.first;
+		  colaCliente->push(msgRta);
+	  }
+	}
+	this->contenedor->socket_usuario.erase(mensaje.socketCli);
+	//JUGADOR
 	return 0;
 }
 int Servidor::recibirTodosLosChats(mensajeStruct msgPedido){
@@ -408,7 +406,6 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 	   finish = args->context->mensajeria.receiveAndDecode(socketCli,&mensaje);
 
 	   if (mensaje.tipo == DISCONNECTED){
-		   cout << "Usuario Desconectado" << endl;
 		   args->context->contenedor->cerrarSesion(socketCli);
 		   args->context->colaPrincipalMensajes.push(mensaje);
 		   args->context->cantCon--;

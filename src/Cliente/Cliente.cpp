@@ -357,7 +357,7 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 	 }
 
 	 context->escenario.close();
-	 context->seleccDesconectar();
+	 context->salir();
 };
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){

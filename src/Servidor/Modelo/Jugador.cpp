@@ -97,9 +97,7 @@ bool Jugador::manejarSalto(){
 
 }
 */
-bool Jugador::mover(int anchoEscenario, int margen, int vecesX, string accion) {
-
-	bool cruzoMargen = false;
+void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 
 	if (this->aceptaCambios){
 		if (accion == "SALTA"){
@@ -119,25 +117,22 @@ bool Jugador::mover(int anchoEscenario, int margen, int vecesX, string accion) {
 
 			this->posX += (vecesX * this->velocidad);
 
-			if (this->posX > (margen - this->ancho)) {
-				//si cruza el margen se tiene que mover el escenario
-				cruzoMargen = true;
-			}
-
-			if (this->posX > (anchoEscenario - this->ancho)) {
-				//no puede pasar el borde derecho
-				this->posX = (anchoEscenario - this->ancho);
-			}
-
-			if (this->posX < 0){
-				//no puede retroceder en el escenario
-				//un jugador desconectado sera arrastrado
-				this->posX = 0;
+			//validar limites
+			if (vecesX > 0) {
+				if (this->posX > (anchoEscenario - this->ancho)) {
+					//no puede pasar el borde derecho
+					this->posX = (anchoEscenario - this->ancho);
+				}
+			}else {
+					if (this->posX < 0){
+						//no puede retroceder en el escenario
+						//un jugador desconectado sera arrastrado
+						this->posX = 0;
+					}
 			}
 		}
 		this->aceptaCambios = false;
 	}
-	return cruzoMargen;
 }
 
 void Jugador::manejarSalto(){
