@@ -23,6 +23,7 @@ LTexture::LTexture(Escenario *escenario, std::string path)
 	this->path = path;
 	this->anchoFrame = 0;
 	this->altoFrame = 0;
+	this->iteradorDeItEstado = 0;
 
 	/*int anchoFrame = 37;
 	int altoFrame = 49;*/
@@ -37,6 +38,7 @@ void LTexture::agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame
 	}
 	if (this->mapFrames.size() == 1) {
 		this->itEstado = pList->begin();
+		this->iteradorDeItEstado = 0;
 		this->estadoActual = estado;
 		this->anchoFrame = anchoFrame;
 		this->altoFrame = altoFrame;
@@ -131,13 +133,18 @@ SDL_Rect LTexture::getFrameActual() {
 void LTexture::actualizarEstado(estadoJugador estado)
 {
 	if (this->estadoActual == estado) {
-		this->itEstado++;
-		if (this->itEstado == this->mapFrames[estado]->end()) {
-			this->itEstado = this->mapFrames[estado]->begin();
+		this->iteradorDeItEstado++;
+		if (this->iteradorDeItEstado >= 2) {
+			this->iteradorDeItEstado = 0;
+			this->itEstado++;
+			if (this->itEstado == this->mapFrames[estado]->end()) {
+				this->itEstado = this->mapFrames[estado]->begin();
+			}
 		}
 	} else {
 		this->estadoActual = estado;
 		this->itEstado = this->mapFrames[estado]->begin();
+		this->iteradorDeItEstado = 0;
 	}
 }
 

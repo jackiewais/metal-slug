@@ -45,6 +45,7 @@ class LTexture
 		std::string path;
 		map<estadoJugador, list<SDL_Rect>*> mapFrames;
 		list<SDL_Rect>::iterator itEstado;
+		int iteradorDeItEstado;
 		estadoJugador estadoActual;
 		SDL_Rect crearFrame(int fila, int columna, int anchoFrame, int altoFrame);
 		SDL_Rect getFrameActual();
