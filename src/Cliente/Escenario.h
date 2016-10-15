@@ -40,6 +40,7 @@ private:
 	std::map<std::string, ObjetoGraficable*> mapObjetosGraficables;
 	std::map<std::string, ObjetoGraficable*> mapFondos;
 	int screenWidth, screenHeight;
+	int fondoMasChico = 0 ; // para el calculo de parallax.
 };
 
 #endif /* SRC_CLIENTE_ESCENARIO_H_ */

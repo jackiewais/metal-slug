@@ -24,7 +24,7 @@ private:
 	};
 
 	const int MAX_CON = 6;
-	int cantJugadores = 2;
+	int cantJugadores = 5;
 	std::queue<mensajeStruct> colaPrincipalMensajes;
 	std::map<int,queue<mensajeStruct>*> socketIdQueue;
 	int sockfd = 0;

@@ -145,8 +145,10 @@ mensajeStruct EscenarioS::getMensajeEscenario(){
 	stringstream avanceFondo;
 	avanceFondo << this->avance;
 
+
 	msjEscenario.tipo = ESCENARIO_UPD;
 	msjEscenario.message = ("-"+ avanceFondo.str());
+
 	msjEscenario.objectId = "E00";
 
 	return msjEscenario;

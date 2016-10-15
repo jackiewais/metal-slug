@@ -132,18 +132,21 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 				colaCliente->push(msgRta);
 			 }
 
+
 			/*
+
 			msg.tipo=ESCENARIO_UPD;
 			msg.objectId="X0";
 			stringstream posX;
-
 			posX << this->posicionXHarcodeada;
 			msg.message= posX.str();
 			colaCliente->push(msg);
 
+
 			posX.str("");
 			*/
 	  }
+
 	}
 
 	--this->posicionXHarcodeada;
@@ -187,26 +190,23 @@ void Servidor::handshake(mensajeStruct msg){
 	//MANDAR SPRITES
 	//DEBE DE ITERAR ENTRE TODOS LOS SPRITES
 	msg.tipo=HANDSHAKE_SPRITES;
-	msg.objectId="primerFondo";
+//	msg.objectId="primerFondo";
 	// RESOLUCION DEL OBJETO, PARA ESCALAR LA IMAGEN SI ES NECASARIO
 	// VER SI ES NECESARIO PASARLE LA CANT DE FOTOGRAMAS TMB
 	// ANCHO;ALTO
+	//msg.message="0;0";
+	//colaCliente->push(msg);
+
+	msg.objectId="fondoUnoPrueba";
 	msg.message="0;0";
 	colaCliente->push(msg);
 
-	msg.objectId="fondoUno";
+	msg.objectId="fondoDosPrueba";
 	msg.message="0;0";
 	colaCliente->push(msg);
 
-	msg.objectId="fondoDos";
-	msg.message="0;0";
-	colaCliente->push(msg);
 
-	msg.objectId="barra8";
-		msg.message="0;0";
-		colaCliente->push(msg);
-
-		msg.objectId="fondoTres";
+		msg.objectId="fondoTresPrueba";
 			msg.message="0;0";
 			colaCliente->push(msg);
 
@@ -225,22 +225,19 @@ void Servidor::handshake(mensajeStruct msg){
 
 		msg.tipo=HANDSHAKE_FONDO_NUEVO;
 		msg.objectId="F02";
-		msg.message="fondoUno;0;0";
+		msg.message="fondoTresPrueba;0;0";
 		colaCliente->push(msg);
 
 		msg.tipo=HANDSHAKE_FONDO_NUEVO;
 		msg.objectId="F03";
-		msg.message="fondoDos;0;0";
+		msg.message="fondoUnoPrueba;0;50";
 		colaCliente->push(msg);
 
 
-		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
-				msg.objectId="F01";
-				msg.message="barra8;0;0";
-				colaCliente->push(msg);
+
 				msg.tipo=HANDSHAKE_FONDO_NUEVO;
 							msg.objectId="F04";
-							msg.message="fondoTres;0;0";
+							msg.message="fondoDosPrueba;0;100";
 							colaCliente->push(msg);
 
 
