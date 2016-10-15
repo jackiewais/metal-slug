@@ -112,6 +112,7 @@ void Escenario::moverFondo(mensajeStruct msg){
 	std::map<std::string, ObjetoGraficable*>::iterator it;
 	for (it = this->mapFondos.begin(); it != this->mapFondos.end(); it++) {
 		it->second->actualizarPosicionFondo(desplA);
+
 	}
 }
 
@@ -121,10 +122,21 @@ void Escenario::addFondo(std::string objectId) {
 
 void Escenario::calcularParallax() {
 	std::map<std::string, ObjetoGraficable*>::iterator it;
-	int despA = this->mapFondos.begin()->second->getAncho() - this->screenWidth;
+	int despA = 0 ;
+	this->fondoMasChico = this->mapFondos.begin()->second->getAncho();
+	cout << "primer fondo " << fondoMasChico <<endl;
+	//ME FIJO CUAL DE TODOS LOS FONDOS TIENE LA DIMENSION MAS CHICA
+	for (it = this->mapFondos.begin(); it != this->mapFondos.end(); it++) {
+		if (this->fondoMasChico >= it->second->getAncho()){
+			this->fondoMasChico = it->second->getAncho();
+		    }
+	}
+	//CALCULO EL PARALLAX PARA TODOS
+	cout << "el fondo más chico es : " << this->fondoMasChico << endl;
+	despA = this->fondoMasChico - this->screenWidth;
 	for (it = this->mapFondos.begin(); it != this->mapFondos.end(); it++) {
 		it->second->setFactorParallax(despA, this->screenWidth);
-	}
+		}
 }
 
 void Escenario::close()

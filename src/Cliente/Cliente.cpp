@@ -240,6 +240,7 @@ void *Cliente::recvMessage(void * arg){
 				context->escenarioOK=true;
 				break;
 			case ESCENARIO_UPD:
+
 				context->escenario.moverFondo(mensajeRta);
 				break;
 			case JUGADOR_UPD:
