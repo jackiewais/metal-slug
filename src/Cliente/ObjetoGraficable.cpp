@@ -7,6 +7,7 @@ ObjetoGraficable::ObjetoGraficable(std::string id, LTexture *textura, int x, int
 	this->y = y;
 	this->factorParallax = 0;
 	this->grisado = false;
+	//this->posMozaico = this->getAncho();
 }
 
 ObjetoGraficable::~ObjetoGraficable() {
@@ -19,16 +20,22 @@ void ObjetoGraficable::actualizarPosicion(int x, int y) {
 }
 
 void ObjetoGraficable::render(){
-	this->textura->render(this->x, this->y);
 
-	if ( (this->factorParallax != 0) ) {
+	if ( (this->factorParallax == 0) ) {
+		this->textura->render(this->x, this->y);
+	}else{
+		if(this->x + posMozaico <-this->textura->getWidth()){
+			posMozaico+=this->textura->getWidth();
 
-		this->textura->render(this->x + this->textura->getWidth(), this->y);
+		}
+
+		this->textura->render(this->x + posMozaico, this->y);
+		this->textura->render(this->x + posMozaico + this->textura->getWidth(), this->y);
 	}
-	/*if (this->x <= -this->textura->getWidth()) {
-			this->actualizarPosicion(this->x + this->textura->getWidth(), this->y);
 
-	}*/
+
+
+
 }
 
 int ObjetoGraficable::getAncho() {
@@ -39,7 +46,7 @@ void ObjetoGraficable::setFactorParallax(int despA, int anchoVentana) {
 	int desp = this->textura->getWidth() - anchoVentana;
 	double desp1 = double(desp);
 	double desp2 = double(despA);
-	double factorP =(desp1 / desp2);
+	double factorP =round(desp1 / desp2);
 
 	this->factorParallax = factorP;
 	std::cout << desp << " / " << despA << std::endl;

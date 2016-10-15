@@ -25,6 +25,8 @@ private:
 	std::string id;
 	LTexture *textura;
 	int x, y, factorParallax;
+	int aux =1 ;
+	int posMozaico = 0;
 };
 
 #endif /* SRC_CLIENTE_OBJETOGRAFICABLE_H_ */

@@ -183,7 +183,7 @@ void Servidor::handshake(mensajeStruct msg){
 	//MANDO DIMENSIONES DE VENTANA.
 	msg.tipo=HANDSHAKE_DIMENSIONES_VENTANA;
 	msg.objectId="X0";
-	msg.message="900x600";
+	msg.message="600x600";
 	colaCliente->push(msg);
 	//---------------------------------------------
 
@@ -211,7 +211,7 @@ void Servidor::handshake(mensajeStruct msg){
 			colaCliente->push(msg);
 
 			msg.objectId="jugador";
-			msg.message="0;0";
+			msg.message="100;100";
 			colaCliente->push(msg);
 
 	// -------------------------------
@@ -225,19 +225,19 @@ void Servidor::handshake(mensajeStruct msg){
 
 		msg.tipo=HANDSHAKE_FONDO_NUEVO;
 		msg.objectId="F02";
-		msg.message="fondoTresPrueba;0;0";
+		msg.message="fondoUnoPrueba;0;0";
 		colaCliente->push(msg);
 
 		msg.tipo=HANDSHAKE_FONDO_NUEVO;
 		msg.objectId="F03";
-		msg.message="fondoUnoPrueba;0;50";
+		msg.message="fondoDosPrueba;0;50";
 		colaCliente->push(msg);
 
 
 
 				msg.tipo=HANDSHAKE_FONDO_NUEVO;
 							msg.objectId="F04";
-							msg.message="fondoDosPrueba;0;100";
+							msg.message="fondoTresPrueba;0;100";
 							colaCliente->push(msg);
 
 

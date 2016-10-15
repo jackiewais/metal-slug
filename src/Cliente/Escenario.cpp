@@ -109,7 +109,10 @@ void Escenario::moverFondo(mensajeStruct msg){
 	int desplA = 0;
 	int posA = atoi(msg.message.c_str());
 	desplA = posA;
+  /*	if(posA<=-this->screenWidth){
 
+		desplA+=this->screenWidth;
+	}*/
 	std::map<std::string, ObjetoGraficable*>::iterator it;
 	for (it = this->mapFondos.begin(); it != this->mapFondos.end(); it++) {
 		it->second->actualizarPosicionFondo(desplA);
