@@ -64,23 +64,24 @@ vector<string> split3(const string &s, const char delim) {
 Usuario* Contenedor::autentificar(string message) {
 
 	Usuario *usuario = NULL;
-	int i = 0;
+//	int id = 0;
 	map<string, Usuario*>::iterator it;
 
 	if((it = this->mapUsuarios.find(message)) != this->mapUsuarios.end()) {
 		usuario = this->mapUsuarios[message];
-		i++;
+//		id++;
 	}
-
+/*
 	if (usuario == NULL) {
 		vector<string> vector = split3(message, ';');
 		string nombre = vector[0];
 		string pass = vector[1];
 
 		//falta chekear que no se repita el nombre de usuario para crear uno nuevo
-		usuario = new Usuario(i+1,nombre,pass);
+		usuario = new Usuario(id+1,nombre,pass);
 		this->mapUsuarios[message] = usuario;
 	}
+*/
 	return usuario;
 }
 
