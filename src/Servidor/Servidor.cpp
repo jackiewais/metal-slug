@@ -131,20 +131,6 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 				msgRta.socketCli = user.first;
 				colaCliente->push(msgRta);
 			 }
-
-
-			/*
-
-			msg.tipo=ESCENARIO_UPD;
-			msg.objectId="X0";
-			stringstream posX;
-			posX << this->posicionXHarcodeada;
-			msg.message= posX.str();
-			colaCliente->push(msg);
-
-
-			posX.str("");
-			*/
 	  }
 
 	}
@@ -179,7 +165,7 @@ void Servidor::handshake(mensajeStruct msg){
 
 
 	//comienzo a mandar info
-	cout << "HAGO TODO LO QUE TENGA QUE HACER EL HANDSHAKE" << endl;
+	cout << "Handshake" << endl;
 	//MANDO DIMENSIONES DE VENTANA.
 	msg.tipo=HANDSHAKE_DIMENSIONES_VENTANA;
 	msg.objectId="X0";
@@ -210,8 +196,40 @@ void Servidor::handshake(mensajeStruct msg){
 			msg.message="0;0";
 			colaCliente->push(msg);
 
-			msg.objectId="jugador";
-			msg.message="100;100";
+
+			msg.objectId="jugador1";
+			msg.message="0;0";
+			colaCliente->push(msg);
+
+
+			msg.objectId="jugador2";
+			msg.message="0;0";
+
+			colaCliente->push(msg);
+
+			msg.tipo=HANDSHAKE_ESTADO_SPRITE;
+			msg.objectId="jugador1";
+			msg.message="1;37;49;3;1"; //PARADO
+			colaCliente->push(msg);
+			msg.message="2;37;49;9;2"; //CAMINA_DER
+			colaCliente->push(msg);
+			msg.message="3;37;49;9;4"; //SALTA_IZQ
+			colaCliente->push(msg);
+			msg.message="4;37;49;13;3"; //SALTA_DER
+			colaCliente->push(msg);
+			msg.message="5;37;49;13;3"; //SALTA_IZQ
+			colaCliente->push(msg);
+
+			msg.objectId="jugador2";
+			msg.message="1;37;49;3;1"; //PARADO
+			colaCliente->push(msg);
+			msg.message="2;37;49;9;2"; //CAMINA_DER
+			colaCliente->push(msg);
+			msg.message="3;37;49;9;4"; //SALTA_IZQ
+			colaCliente->push(msg);
+			msg.message="4;37;49;13;3"; //SALTA_DER
+			colaCliente->push(msg);
+			msg.message="5;37;49;13;3"; //SALTA_IZQ
 			colaCliente->push(msg);
 
 	// -------------------------------
@@ -253,7 +271,7 @@ void Servidor::handshake(mensajeStruct msg){
 		}else{
 			pos = convertirAString(getPosXInicial(i))+";400;01;D";
 		}
-		msg.message="jugador;"+pos;
+		msg.message="jugador" + convertirAString(i) + ";"+pos;
 		colaCliente->push(msg);
 	}
 
@@ -295,9 +313,21 @@ int Servidor::enviarChat(mensajeStruct msg){
 	return 0;
 }
 int Servidor::procesarDesconexion(mensajeStruct mensaje){
-	queue<mensajeStruct>* colaCliente = socketIdQueue[mensaje.socketCli];
-	colaCliente->push(mensaje);
+	//Mando mensaje desconexión a la cola del cliente
+	socketIdQueue[mensaje.socketCli]->push(mensaje);
+	Usuario* usuario = this->contenedor->getUsuarioBySocket(mensaje.socketCli);
 
+	mensajeStruct msgRta = this->escenario->getMensajeDesconexion(usuario->getIdJugador());
+	//Mando un mensaje al resto de los usuarios con la desconexión
+	for(auto const &user :  this->contenedor->socket_usuario) {
+	  if(user.second->isConectado()){
+		  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
+		  msgRta.socketCli = user.first;
+		  colaCliente->push(msgRta);
+	  }
+	}
+	this->contenedor->socket_usuario.erase(mensaje.socketCli);
+	//JUGADOR
 	return 0;
 }
 int Servidor::recibirTodosLosChats(mensajeStruct msgPedido){
@@ -403,7 +433,6 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 	   finish = args->context->mensajeria.receiveAndDecode(socketCli,&mensaje);
 
 	   if (mensaje.tipo == DISCONNECTED){
-		   cout << "Usuario Desconectado" << endl;
 		   args->context->contenedor->cerrarSesion(socketCli);
 		   args->context->colaPrincipalMensajes.push(mensaje);
 		   args->context->cantCon--;

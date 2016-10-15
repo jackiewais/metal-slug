@@ -30,11 +30,11 @@ LTexture::LTexture(Escenario *escenario, std::string path)
 }
 
 // Los estados hay que irselos pasando en el orden en que estan en la imagen
-void LTexture::agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames) {
+void LTexture::agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado) {
 	list<SDL_Rect>* pList = new list<SDL_Rect>;
 	this->mapFrames[estado] = pList;
 	for(int i=1; i<=cantFrames; i++) {
-		pList->push_back(this->crearFrame(this->mapFrames.size(), i, anchoFrame, altoFrame));
+		pList->push_back(this->crearFrame(ordenEstado, i, anchoFrame, altoFrame));
 	}
 	if (this->mapFrames.size() == 1) {
 		this->itEstado = pList->begin();
@@ -97,11 +97,14 @@ bool LTexture::loadFromFile()
 
 void LTexture::free()
 {
+	map<estadoJugador, list<SDL_Rect>*>::iterator it;
 	//Free texture if it exists
-	if( mTexture != NULL )
-	{
+	if( mTexture != NULL ) {
 		SDL_DestroyTexture( mTexture );
 		mTexture = NULL;
+		for(it = this->mapFrames.begin(); it != this->mapFrames.end(); it++) {
+			delete it->second;
+		}
 	}
 }
 
@@ -112,8 +115,12 @@ void LTexture::render( int x, int y )
 	SDL_Rect frame = this->getFrameActual();
 
 	if (this->mapFrames.size() != 0) {
-		anchoRender = this->anchoFrame;
-		altoRender = this->altoFrame;
+		if (this->widthScaled == 0) {
+			anchoRender = this->anchoFrame;
+		}
+		if (this->heightScaled == 0) {
+			altoRender = this->altoFrame;
+		}
 	}
 
 	SDL_Rect renderQuad = { x, y, anchoRender, altoRender };

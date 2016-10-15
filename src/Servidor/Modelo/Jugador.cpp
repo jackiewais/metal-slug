@@ -97,53 +97,52 @@ bool Jugador::manejarSalto(){
 
 }
 */
-bool Jugador::mover(int anchoEscenario, int margen, int vecesX, string accion) {
 
-	bool cruzoMargen = false;
+bool Jugador::estaSaltando(){
+	return (this->estado == SALTA_DER || this->estado == SALTA_IZQ);
+}
+void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 
 	if (this->aceptaCambios){
 		if (accion == "SALTA"){
-			this->estado = SALTA;
+			this->estado = (vecesX >= 0)?SALTA_DER:SALTA_IZQ;
 		}
 
 		manejarSalto();
 
 		if (vecesX == 0){
-			if (this->estado != SALTA){
+			if (!estaSaltando()){
 				this->estado = PARADO;
 			}
 		}else{
-			if (this->estado != SALTA){
+			if (!estaSaltando()){
 				this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
 			}
 
 			this->posX += (vecesX * this->velocidad);
 
-			if (this->posX > (margen - this->ancho)) {
-				//si cruza el margen se tiene que mover el escenario
-				cruzoMargen = true;
-			}
-
-			if (this->posX > (anchoEscenario - this->ancho)) {
-				//no puede pasar el borde derecho
-				this->posX = (anchoEscenario - this->ancho);
-			}
-
-			if (this->posX < 0){
-				//no puede retroceder en el escenario
-				//un jugador desconectado sera arrastrado
-				this->posX = 0;
+			//validar limites
+			if (vecesX > 0) {
+				if (this->posX > (anchoEscenario - this->ancho)) {
+					//no puede pasar el borde derecho
+					this->posX = (anchoEscenario - this->ancho);
+				}
+			}else {
+					if (this->posX < 0){
+						//no puede retroceder en el escenario
+						//un jugador desconectado sera arrastrado
+						this->posX = 0;
+					}
 			}
 		}
 		this->aceptaCambios = false;
 	}
-	return cruzoMargen;
 }
 
 void Jugador::manejarSalto(){
 
 
-	if (this->estado == SALTA){
+	if (estaSaltando()){
 		this->posY += (velSalto * factorSalto);
 		if (this->posY < topeSalto){
 			factorSalto = 1;

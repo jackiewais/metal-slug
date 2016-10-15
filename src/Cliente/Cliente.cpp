@@ -230,6 +230,9 @@ void *Cliente::recvMessage(void * arg){
 			case HANDSHAKE_SPRITES:
 				context->addSprite(mensajeRta);
 				break;
+			case HANDSHAKE_ESTADO_SPRITE:
+				context->addEstadoSprite(mensajeRta);
+				break;
 			case HANDSHAKE_OBJETO_NUEVO:
 				context->objetoNuevo(mensajeRta);
 				break;
@@ -275,6 +278,7 @@ void Cliente::objetoNuevo(mensajeStruct msg){
 		 estado = static_cast<estadoJugador>(atoi(result[3].c_str()));
 	 	 conectado = result[4];
 	}
+
 	escenario.crearObjeto(msg.objectId,spriteId,x,y,estado,conectado);
 
 	if (msg.tipo == HANDSHAKE_FONDO_NUEVO) {
@@ -286,19 +290,15 @@ void Cliente::objetoNuevo(mensajeStruct msg){
 
 void Cliente::updateJugador(mensajeStruct msg){
 	int x,y;
-	string conectado = "C";
-	estadoJugador estado = CAMINA_DER;
+	string conectado;
+	estadoJugador estado;
 	vector<string> result = Util::Split(msg.message, ';');
 	x=atoi(result[0].c_str());
 	y=atoi(result[1].c_str());
-	if (result.size() > 2){
-		//estado jugador
-		static_cast<estadoJugador>(atoi(result[2].c_str()));
-		conectado =result[3] ;
-	}
-
+	//estado jugador
+	estado = static_cast<estadoJugador>(atoi(result[2].c_str()));
+	conectado =result[3] ;
 	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
-
 }
 
 
@@ -314,11 +314,23 @@ void Cliente::addSprite(mensajeStruct msg){
 	strAux = msg.message.substr(pos+1,msg.message.length());
 	alto = atoi(strAux.c_str());
 	textura = this->escenario.addSprite(msg.objectId, ancho, alto);
-	if (msg.objectId == "jugador" || msg.objectId == "jugador2") {
-		textura->agregarEstado(PARADO, 37, 49, 3);
-		textura->agregarEstado(CAMINA_DER, 37, 49, 9);
-		textura->agregarEstado(SALTA, 37, 49, 13);
-	}
+	/*if (msg.objectId == "jugador1" || msg.objectId == "jugador2") {
+		textura->agregarEstado(PARADO, 37, 49, 3,1);
+		textura->agregarEstado(CAMINA_DER, 37, 49, 9,2);
+		textura->agregarEstado(SALTA_DER, 37, 49, 13,3);
+		textura->agregarEstado(SALTA_IZQ, 37, 49, 13,3);
+		textura->agregarEstado(CAMINA_IZQ, 37, 49, 9,4);
+	}*/
+}
+
+void Cliente::addEstadoSprite(mensajeStruct msg){
+	vector<string> result = Util::Split(msg.message,';');
+	estadoJugador estado = static_cast<estadoJugador>(atoi(result[0].c_str()));
+	int anchoFrame = atoi(result[1].c_str());
+	int altoFrame = atoi(result[2].c_str());
+	int cantFrame = atoi(result[3].c_str());
+	int ordenEstado = atoi(result[4].c_str());
+	this->escenario.agregarEstado(msg.objectId, estado,anchoFrame,altoFrame,cantFrame,ordenEstado);
 }
 
 
@@ -359,7 +371,7 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 	 }
 
 	 context->escenario.close();
-	 context->seleccDesconectar();
+	 context->salir();
 };
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){

@@ -35,7 +35,7 @@ public:
 	Jugador(int id, int velocidad, int posX, int posY, int ancho, int alto, Usuario* usuario);
 	virtual ~Jugador();
 	int getId();
-	bool mover(int anchoEscenario, int margen, int vecesX, string accion);
+	void mover(int anchoEscenario, int vecesX, string accion);
 	string getStringMensaje();
 	string getCodJugador();
 	int getPosX();
@@ -46,6 +46,7 @@ public:
 	void manejarSalto();
 	bool conectado();
 	int getIdSocket();
+	bool estaSaltando();
 	//estadoJugador resolverEstado(string accion, int vecesX);
 };
 

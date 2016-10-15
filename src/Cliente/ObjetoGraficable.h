@@ -16,8 +16,9 @@ public:
 	int getAncho();
 	void setFactorParallax(int despA, int anchoVentana);
 	void actualizarPosicionFondo(int despA);
-	void grisar(bool grisa);
+	void setGrisado(bool grisa);
 	void actualizarEstado(estadoJugador estado);
+	void actualizarGrisado();
 
 	bool grisado = false;
 	int tipoObjeto = 0;
@@ -25,8 +26,10 @@ private:
 	std::string id;
 	LTexture *textura;
 	int x, y, factorParallax;
-	int aux =1 ;
+
 	int posMozaico = 0;
+	bool flagGrisado = false;
+
 };
 
 #endif /* SRC_CLIENTE_OBJETOGRAFICABLE_H_ */

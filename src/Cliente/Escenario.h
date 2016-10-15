@@ -32,6 +32,7 @@ public:
 	void moverFondo(mensajeStruct msg);
 	void addFondo(std::string objectId);
 	void calcularParallax();
+	void agregarEstado(std::string idSprite, estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado);
 
 private:
 	SDL_Window* gWindow;
