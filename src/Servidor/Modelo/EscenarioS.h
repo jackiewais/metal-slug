@@ -25,7 +25,7 @@ public:
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
-	bool moverEscenario(list<mensajeStruct>* mainList, int velocidad);
+	void moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();
 	void aceptarCambios();

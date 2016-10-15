@@ -6,7 +6,7 @@ EscenarioS::EscenarioS(int ancho, int alto) {
 	this->ancho = ancho;
 	this->alto = alto;
 	this->margen = ancho/2;
-	this->distancia = ancho/80;
+	this->distancia = 5;
 	this->avance = 0;
 }
 
@@ -60,13 +60,9 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	string estado = result[1];
 	list<mensajeStruct> returnList;
 
-	if (jugador->mover(this->ancho, this->margen,vecesX, estado)) {
-		if (!moverEscenario(&returnList, jugador->velocidad)) {
-			//Si no se puede mover el escenario, ya que hay un jugador conectado que lo impide
-			//entonces el jugador retrocede
-			jugador->mover(this->ancho, this->margen,-1, estado);
-		}
-	}
+	jugador->mover(this->ancho,vecesX, estado);
+	moverEscenario(&returnList);
+
 	returnList.push_back(getMensajeJugador(jugador));
 	returnList.push_back(getMensajeEscenario());
 
@@ -79,37 +75,37 @@ void EscenarioS::aceptarCambios(){
 	}
 }
 
-bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList, int velocidad) {
+void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 
-	bool puedeMover;
+	bool cruzoMargen = false;
 	int minPosX = this->distancia;
 
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		if (jugador->second->conectado()) {
 			if (jugador->second->getPosX() < minPosX) {
 				minPosX = jugador->second->getPosX();
-			}
+
+			} else if (jugador->second->getPosX() > (this->margen - jugador->second->ancho)) {
+					   //si cruza el margen se tiene que mover el escenario
+						cruzoMargen = true;
+				   }
 		}
 	}
 
-	if (minPosX == 0) {
-		puedeMover = false;
-	}
-	else {
-		puedeMover = true;
-		/*
+	if (minPosX != 0 && cruzoMargen) {
+/*
 		int distRecorrida = 1;
 
 		while (distRecorrida <= (minPosX/velocidad)) {
 			for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador) {
-					jugador->second->mover(this->margen,-1, "CAMINA_IZQ");
+					jugador->second->mover(this->ancho,this->margen,-1, "");
 					mainList->push_back(getMensajeJugador(jugador->second));
 			}
-			this->avance = distRecorrida;
+			this->avance += distRecorrida;
 			mainList->push_back(getMensajeEscenario());
 			distRecorrida += 1;
 		}
-		*/
+*/
 
 		//Por ahora solo le seteo la posicion final del retroceso, desp hay que tener en cuenta la velocidad para las demas posiciones
 		int posActual;
@@ -124,10 +120,9 @@ bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList, int velocidad) {
 			mainList->push_back(getMensajeJugador(jugador->second));
 		}
 		this->avance += minPosX;
-
 	}
-	return puedeMover;
 }
+
 
 
 mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
