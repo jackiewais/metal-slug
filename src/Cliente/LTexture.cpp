@@ -112,8 +112,12 @@ void LTexture::render( int x, int y )
 	SDL_Rect frame = this->getFrameActual();
 
 	if (this->mapFrames.size() != 0) {
-		anchoRender = this->anchoFrame;
-		altoRender = this->altoFrame;
+		if (this->widthScaled == 0) {
+			anchoRender = this->anchoFrame;
+		}
+		if (this->heightScaled == 0) {
+			altoRender = this->altoFrame;
+		}
 	}
 
 	SDL_Rect renderQuad = { x, y, anchoRender, altoRender };
