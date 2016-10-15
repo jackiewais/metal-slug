@@ -97,11 +97,15 @@ bool LTexture::loadFromFile()
 
 void LTexture::free()
 {
+	map<string, list<SDL_Rect>*>::iterator it;
 	//Free texture if it exists
 	if( mTexture != NULL )
 	{
 		SDL_DestroyTexture( mTexture );
 		mTexture = NULL;
+	}
+	for(it = this->mapFrames.begin(); it != this->mapFrames.end(); it++) {
+		delete it->second;
 	}
 }
 
