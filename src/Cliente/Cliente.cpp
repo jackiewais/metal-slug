@@ -314,8 +314,8 @@ void Cliente::addSprite(mensajeStruct msg){
 	if (msg.objectId == "jugador1" || msg.objectId == "jugador2") {
 		textura->agregarEstado(PARADO, 37, 49, 3,1);
 		textura->agregarEstado(CAMINA_DER, 37, 49, 9,2);
-		textura->agregarEstado(CAMINA_IZQ, 37, 49, 9,2);
 		textura->agregarEstado(SALTA, 37, 49, 13,3);
+		textura->agregarEstado(CAMINA_IZQ, 37, 49, 9,4);
 	}
 }
 
