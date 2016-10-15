@@ -97,7 +97,7 @@ bool LTexture::loadFromFile()
 
 void LTexture::free()
 {
-	map<string, list<SDL_Rect>*>::iterator it;
+	map<estadoJugador, list<SDL_Rect>*>::iterator it;
 	//Free texture if it exists
 	if( mTexture != NULL )
 	{
