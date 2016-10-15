@@ -139,7 +139,7 @@ mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
 mensajeStruct EscenarioS::getMensajeEscenario(){
 	mensajeStruct msjEscenario;
 
-	msjEscenario.tipo = ESCENARIO_UPD;
+	//msjEscenario.tipo = ESCENARIO_UPD;
 	msjEscenario.message = this->avance;
 	msjEscenario.objectId = "E00";
 
