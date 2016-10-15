@@ -1,12 +1,12 @@
 #include "EscenarioS.h"
 #include <sstream>
 
-EscenarioS::EscenarioS(int alto, int ancho) {
+EscenarioS::EscenarioS(int ancho, int alto) {
 
 	this->ancho = ancho;
 	this->alto = alto;
-	this->margen = 2*ancho/3;
-	this->distancia = this->margen/2;
+	this->margen = ancho/2;
+	this->distancia = ancho/80;
 	this->avance = 0;
 }
 
@@ -31,6 +31,9 @@ Jugador* EscenarioS::getJugadorById(int id) {
 void EscenarioS::addJugador(Jugador* jugador) {
 
 	this->mapJugadores[jugador->getId()] = jugador;
+	if (this->mapJugadores.size() > 1) {
+		this->margen = 3*this->ancho/4;
+	}
 }
 
 
@@ -57,13 +60,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	string estado = result[1];
 	list<mensajeStruct> returnList;
 
-	if (jugador->mover(this->margen,vecesX, estado)) {
-		if (!moverEscenario(&returnList)) {
+	if (jugador->mover(this->ancho, this->margen,vecesX, estado)) {
+		if (!moverEscenario(&returnList, jugador->velocidad)) {
 			//Si no se puede mover el escenario, ya que hay un jugador conectado que lo impide
 			//entonces el jugador retrocede
-			jugador->mover(this->margen,-1, estado);
+			jugador->mover(this->ancho, this->margen,-1, estado);
 		}
-
 	}
 	returnList.push_back(getMensajeJugador(jugador));
 	returnList.push_back(getMensajeEscenario());
@@ -77,7 +79,7 @@ void EscenarioS::aceptarCambios(){
 	}
 }
 
-bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
+bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList, int velocidad) {
 
 	bool puedeMover;
 	int minPosX = this->distancia;
@@ -98,16 +100,17 @@ bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 		/*
 		int distRecorrida = 1;
 
-		while (distRecorrida <= minPosX) {
+		while (distRecorrida <= (minPosX/velocidad)) {
 			for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador) {
 					jugador->second->mover(this->margen,-1, "CAMINA_IZQ");
 					mainList->push_back(getMensajeJugador(jugador->second));
 			}
-			this->avance += distRecorrida;
+			this->avance = distRecorrida;
 			mainList->push_back(getMensajeEscenario());
 			distRecorrida += 1;
 		}
 		*/
+
 		//Por ahora solo le seteo la posicion final del retroceso, desp hay que tener en cuenta la velocidad para las demas posiciones
 		int posActual;
 		for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador) {
@@ -121,6 +124,7 @@ bool EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 			mainList->push_back(getMensajeJugador(jugador->second));
 		}
 		this->avance += minPosX;
+
 	}
 	return puedeMover;
 }
@@ -130,7 +134,7 @@ mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
 	mensajeStruct msjJug;
 
 	msjJug.tipo = JUGADOR_UPD;
-	msjJug.message = jugador->getPosConcat();
+	msjJug.message = jugador->getStringMensaje();
 	msjJug.objectId = jugador->getCodJugador();
 
 	return msjJug;
@@ -138,9 +142,13 @@ mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
 
 mensajeStruct EscenarioS::getMensajeEscenario(){
 	mensajeStruct msjEscenario;
+	stringstream avanceFondo;
+	avanceFondo << this->avance;
 
-	//msjEscenario.tipo = ESCENARIO_UPD;
-	msjEscenario.message = this->avance;
+
+	msjEscenario.tipo = ESCENARIO_UPD;
+	msjEscenario.message = ("-"+ avanceFondo.str());
+
 	msjEscenario.objectId = "E00";
 
 	return msjEscenario;

@@ -4,7 +4,9 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <vector>
 #include "MensajeStruct.h"
+#include "Util.h"
 
 class Mensajeria {
 
@@ -20,6 +22,8 @@ public:
 	bool insertarMensajeCola(int msgqid, mensajeStruct *msg);
 	bool crearCola(int &queue);
 	bool extraerMensajeCola(int queue, mensajeStruct &msg);
+
+
 };
 
 #endif

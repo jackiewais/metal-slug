@@ -133,7 +133,8 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 			 }
 
 
-		//	if(posicionXHarcodeada >= -100){
+			/*
+
 			msg.tipo=ESCENARIO_UPD;
 			msg.objectId="X0";
 			stringstream posX;
@@ -142,8 +143,9 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 			colaCliente->push(msg);
 
 
-			posX.str("");}
-	  	  // }
+			posX.str("");
+			*/
+	  }
 
 	}
 
@@ -247,9 +249,9 @@ void Servidor::handshake(mensajeStruct msg){
 
 		string pos;
 		if(jugador != NULL){
-			pos = jugador->getPosConcat();
+			pos = jugador->getStringMensaje();
 		}else{
-			pos = convertirAString(getPosXInicial(i))+";400";
+			pos = convertirAString(getPosXInicial(i))+";400;01;D";
 		}
 		msg.message="jugador;"+pos;
 		colaCliente->push(msg);

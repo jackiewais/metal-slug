@@ -2,6 +2,7 @@
 #define SRC_CLIENTE_ESCENARIO_H_
 
 #include "../Common/MensajeStruct.h"
+#include "../Common/Modelo.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "LTexture.h"
@@ -19,18 +20,19 @@ public:
 	Escenario();
 	virtual ~Escenario();
 	bool init();
-	void addSprite(std::string idSprite, int ancho = 0, int alto = 0);
+	LTexture* addSprite(std::string idSprite, int ancho = 0, int alto = 0);
 	bool loadMedia();
 	void setDimensiones(int screenWidth, int screenHeight);
 	void close();
 	SDL_Renderer* getGRenderer();
-	void crearObjeto(std::string idObj, std::string idSprite, int x, int y);
+	void crearObjeto(std::string idObj, std::string idSprite, int x, int y, estadoJugador estado, std::string conectado);
 	void renderizarObjetos();
-	void actualizarPosicionObjeto(std::string idObj, int x, int y);
+	void actualizarPosicionObjeto(std::string idObj, int x, int y, estadoJugador estado, std::string conectado);
 	void eliminarObjeto(std::string idObj);
 	void moverFondo(mensajeStruct msg);
 	void addFondo(std::string objectId);
 	void calcularParallax();
+
 private:
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;

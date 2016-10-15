@@ -1,5 +1,5 @@
-#ifndef MODELOCOMMON_H_
-#define MODELOCOMMON_H_
+#ifndef MODELO_H_
+#define MODELO_H_
 
 
 enum estadoJugador{

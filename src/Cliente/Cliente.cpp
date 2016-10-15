@@ -264,22 +264,18 @@ void *Cliente::recvMessage(void * arg){
 };
 
 void Cliente::objetoNuevo(mensajeStruct msg){
-	int x,y;
-	string separador = ";";
-	string spriteId;
-	string coordenadas;
-	string posxy;
-	int pos = msg.message.find(separador);
+	vector<string> result = Util::Split(msg.message,';');
+	estadoJugador estado = PARADO;
+	string conectado = "C";
 
-	spriteId = msg.message.substr(0,pos);
-	int posX = msg.message.find(separador,pos+1);
-
-	posxy = msg.message.substr(pos+1,posX);
-	x=atoi(posxy.c_str());
-	posxy = msg.message.substr(posX+1,posxy.length());
-	y=atoi(posxy.c_str());
-
-	escenario.crearObjeto(msg.objectId,spriteId,x,y);
+	string spriteId = result[0];
+	int x=atoi(result[1].c_str());
+	int y=atoi(result[2].c_str());
+	if (result.size() > 3){
+		 estado = static_cast<estadoJugador>(atoi(result[3].c_str()));
+	 	 conectado = result[4];
+	}
+	escenario.crearObjeto(msg.objectId,spriteId,x,y,estado,conectado);
 
 	if (msg.tipo == HANDSHAKE_FONDO_NUEVO) {
 		escenario.addFondo(msg.objectId);
@@ -290,15 +286,19 @@ void Cliente::objetoNuevo(mensajeStruct msg){
 
 void Cliente::updateJugador(mensajeStruct msg){
 	int x,y;
-	string separador = ";";
-	string dimension;
-	int pos = msg.message.find(separador);
+	string conectado = "C";
+	estadoJugador estado = CAMINA_DER;
+	vector<string> result = Util::Split(msg.message, ';');
+	x=atoi(result[0].c_str());
+	y=atoi(result[1].c_str());
+	if (result.size() > 2){
+		//estado jugador
+		static_cast<estadoJugador>(atoi(result[2].c_str()));
+		conectado =result[3] ;
+	}
 
-	dimension = msg.message.substr(0,pos);
-	x=atoi(dimension.c_str());
-	dimension = msg.message.substr(pos+1,msg.message.length());
-	y=atoi(dimension.c_str());
-	escenario.actualizarPosicionObjeto(msg.objectId,x,y);
+	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
+
 }
 
 
@@ -306,13 +306,19 @@ void Cliente::addSprite(mensajeStruct msg){
 	int ancho, alto;
 	string separador = ";";
 	string strAux;
+	LTexture* textura;
 	int pos = msg.message.find(separador);
 
 	strAux = msg.message.substr(0,pos);
 	ancho = atoi(strAux.c_str());
 	strAux = msg.message.substr(pos+1,msg.message.length());
 	alto = atoi(strAux.c_str());
-	this->escenario.addSprite(msg.objectId, ancho, alto);
+	textura = this->escenario.addSprite(msg.objectId, ancho, alto);
+	if (msg.objectId == "jugador" || msg.objectId == "jugador2") {
+		textura->agregarEstado(PARADO, 37, 49, 3);
+		textura->agregarEstado(CAMINA_DER, 37, 49, 9);
+		textura->agregarEstado(SALTA, 37, 49, 13);
+	}
 }
 
 

@@ -56,9 +56,9 @@ int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
 
 	return 0;
 }
+/*
 
-
-void split(const string &s, char delim, vector<string> &elems) {
+void Mensajeria::SplitElem(const string &s, char delim, vector<string> &elems) {
     stringstream ss;
     ss.str(s);
     string item;
@@ -68,16 +68,16 @@ void split(const string &s, char delim, vector<string> &elems) {
 }
 
 
-vector<string> split(const string &s, const char delim) {
+vector<string> Mensajeria::Split(const string &s, const char delim) {
     vector<string> elems;
-    split(s, delim, elems);
+    Mensajeria::SplitElem(s, delim, elems);
     return elems;
 }
-
+*/
 
 int Mensajeria::decode(char input[BUFLEN], mensajeStruct* mensaje){
 
-	vector<string> result = split(input, '|');
+	vector<string> result = Util::Split(input, '|');
 	string longitud = result[0];
 	string tipoS = result[1];
 	int tipo = atoi(tipoS.c_str());
