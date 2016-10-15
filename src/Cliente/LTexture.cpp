@@ -21,38 +21,32 @@ LTexture::LTexture(Escenario *escenario, std::string path)
 	this->heightScaled = 0;
 	this->escenario = escenario;
 	this->path = path;
+	this->anchoFrame = 0;
+	this->altoFrame = 0;
 
-	list<SDL_Rect>* pList = NULL;
-	int anchoFrame = 37;
-	int altoFrame = 49;
+	/*int anchoFrame = 37;
+	int altoFrame = 49;*/
+}
 
-	// Esto por ahora esta harcodeado
-	if (this->path == "images/jugador.png") {
-		pList = new list<SDL_Rect>;
-		mapFrames[PARADO] = pList;
-		for(int i=1; i<4; i++) {
-			pList->push_back(this->crearFrame(1, i, anchoFrame, altoFrame));
-		}
-		this->itEstado = pList->begin();
-		this->estadoActual = PARADO;
-		pList = new list<SDL_Rect>;
-		mapFrames[CAMINA_DER] = pList;
-		for(int i=1; i<9; i++) {
-			pList->push_back(this->crearFrame(2, i, anchoFrame, altoFrame));
-		}
-		pList = new list<SDL_Rect>;
-		mapFrames[SALTA] = pList;
-		for(int i=1; i<13; i++) {
-			pList->push_back(this->crearFrame(3, i, anchoFrame, altoFrame));
-		}
+// Los estados hay que irselos pasando en el orden en que estan en la imagen
+void LTexture::agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames) {
+	list<SDL_Rect>* pList = new list<SDL_Rect>;
+	this->mapFrames[estado] = pList;
+	for(int i=1; i<=cantFrames; i++) {
+		pList->push_back(this->crearFrame(this->mapFrames.size(), i, anchoFrame, altoFrame));
 	}
-
+	if (this->mapFrames.size() == 1) {
+		this->itEstado = pList->begin();
+		this->estadoActual = estado;
+		this->anchoFrame = anchoFrame;
+		this->altoFrame = altoFrame;
+	}
 }
 
 SDL_Rect LTexture::crearFrame(int fila, int columna, int anchoFrame, int altoFrame) {
 	int v = (columna - 1)*anchoFrame;
 	int w = (fila - 1)*altoFrame;
-	SDL_Rect frame = { v, w, v + anchoFrame, w + altoFrame };
+	SDL_Rect frame = { v, w, anchoFrame, altoFrame };
 	return frame;
 }
 
@@ -66,11 +60,8 @@ bool LTexture::loadFromFile()
 {
 	//Get rid of preexisting texture
 	free();
-
-	//The final texture
 	SDL_Texture* newTexture = NULL;
 
-	//Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load( this->path.c_str() );
 	if( loadedSurface == NULL )
 	{
@@ -98,7 +89,6 @@ bool LTexture::loadFromFile()
 		SDL_FreeSurface( loadedSurface );
 	}
 
-	//Return success
 	mTexture = newTexture;
 	return mTexture != NULL;
 }
@@ -115,33 +105,36 @@ void LTexture::free()
 
 void LTexture::render( int x, int y )
 {
-	int anchoFrame = mWidth;
-	int altoFrame = mHeight;
 	int anchoRender = this->getWidth();
 	int altoRender = this->getHeight();
-	SDL_Rect frame;
+	SDL_Rect frame = this->getFrameActual();
 
-	// Esto por ahora esta harcodeado
-	if (this->path == "images/jugador.png") {
-		anchoFrame = 37;
-		altoFrame = 49;
-
-		frame = *(this->itEstado);
-
-		anchoRender = 37;
-		altoRender = 49;
-	} else {
-		frame = { 0, 0, anchoFrame, altoFrame };
+	if (this->mapFrames.size() != 0) {
+		anchoRender = this->anchoFrame;
+		altoRender = this->altoFrame;
 	}
 
 	SDL_Rect renderQuad = { x, y, anchoRender, altoRender };
 	SDL_RenderCopy( this->escenario->getGRenderer(), mTexture, &frame, &renderQuad );
 }
 
+SDL_Rect LTexture::getFrameActual() {
+	SDL_Rect frame;
+	if (this->mapFrames.size() == 0) {
+		frame = { 0, 0, this->mWidth, this->mHeight };
+	} else {
+		frame = *(this->itEstado);
+	}
+	return frame;
+}
+
 void LTexture::actualizarEstado(estadoJugador estado)
 {
 	if (this->estadoActual == estado) {
 		this->itEstado++;
+		if (this->itEstado == this->mapFrames[estado]->end()) {
+			this->itEstado = this->mapFrames[estado]->begin();
+		}
 	} else {
 		this->estadoActual = estado;
 		this->itEstado = this->mapFrames[estado]->begin();

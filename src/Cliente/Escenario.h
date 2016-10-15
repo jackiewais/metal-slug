@@ -20,7 +20,7 @@ public:
 	Escenario();
 	virtual ~Escenario();
 	bool init();
-	void addSprite(std::string idSprite, int ancho = 0, int alto = 0);
+	LTexture* addSprite(std::string idSprite, int ancho = 0, int alto = 0);
 	bool loadMedia();
 	void setDimensiones(int screenWidth, int screenHeight);
 	void close();

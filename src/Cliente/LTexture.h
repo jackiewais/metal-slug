@@ -29,6 +29,7 @@ class LTexture
 		void setHeight(int mHeight);
 		void setPath(std::string path);
 		void actualizarEstado(estadoJugador estado);
+		void agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames);
 		void setAlpha( Uint8 alpha );
 
 	private:
@@ -38,12 +39,15 @@ class LTexture
 		int mHeight;
 		int widthScaled;
 		int heightScaled;
+		int anchoFrame;
+		int altoFrame;
 		Escenario *escenario;
 		std::string path;
 		map<estadoJugador, list<SDL_Rect>*> mapFrames;
 		list<SDL_Rect>::iterator itEstado;
 		estadoJugador estadoActual;
 		SDL_Rect crearFrame(int fila, int columna, int anchoFrame, int altoFrame);
+		SDL_Rect getFrameActual();
 };
 
 #endif /* SRC_CLIENTE_LTEXTURE_H_ */

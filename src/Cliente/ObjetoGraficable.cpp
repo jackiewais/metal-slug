@@ -49,3 +49,6 @@ void ObjetoGraficable::grisar(bool grisa){
 	}
 }
 
+void ObjetoGraficable::actualizarEstado(estadoJugador estado) {
+	this->textura->actualizarEstado(estado);
+}

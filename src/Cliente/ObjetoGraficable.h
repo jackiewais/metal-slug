@@ -17,6 +17,7 @@ public:
 	void setFactorParallax(int despA, int anchoVentana);
 	void actualizarPosicionFondo(int despA);
 	void grisar(bool grisa);
+	void actualizarEstado(estadoJugador estado);
 
 	bool grisado = false;
 	int tipoObjeto = 0;

@@ -70,7 +70,7 @@ bool Escenario::init()
 	return success;
 }
 
-void Escenario::addSprite(std::string idSprite, int ancho, int alto) {
+LTexture* Escenario::addSprite(std::string idSprite, int ancho, int alto) {
 	LTexture *textura;
 
 	textura = new LTexture(this, "images/" + idSprite + ".png");
@@ -81,6 +81,7 @@ void Escenario::addSprite(std::string idSprite, int ancho, int alto) {
 		textura->setWidth(ancho);
 	if (alto != 0)
 		textura->setHeight(alto);
+	return textura;
 }
 
 bool Escenario::loadMedia()
@@ -185,6 +186,7 @@ void Escenario::actualizarPosicionObjeto(std::string idObj, int x, int y, estado
 		ObjetoGraficable* objeto = this->mapObjetosGraficables[idObj];
 		objeto->actualizarPosicion(x, y);
 		objeto->grisar((conectado == "D"));
+		objeto->actualizarEstado(estado);
 	}
 }
 
