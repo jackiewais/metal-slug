@@ -230,6 +230,9 @@ void *Cliente::recvMessage(void * arg){
 			case HANDSHAKE_SPRITES:
 				context->addSprite(mensajeRta);
 				break;
+			case HANDSHAKE_ESTADO_SPRITE:
+				context->addEstadoSprite(mensajeRta);
+				break;
 			case HANDSHAKE_OBJETO_NUEVO:
 				context->objetoNuevo(mensajeRta);
 				break;
@@ -311,12 +314,23 @@ void Cliente::addSprite(mensajeStruct msg){
 	strAux = msg.message.substr(pos+1,msg.message.length());
 	alto = atoi(strAux.c_str());
 	textura = this->escenario.addSprite(msg.objectId, ancho, alto);
-	if (msg.objectId == "jugador1" || msg.objectId == "jugador2") {
+	/*if (msg.objectId == "jugador1" || msg.objectId == "jugador2") {
 		textura->agregarEstado(PARADO, 37, 49, 3,1);
 		textura->agregarEstado(CAMINA_DER, 37, 49, 9,2);
-		textura->agregarEstado(SALTA, 37, 49, 13,3);
+		textura->agregarEstado(SALTA_DER, 37, 49, 13,3);
+		textura->agregarEstado(SALTA_IZQ, 37, 49, 13,3);
 		textura->agregarEstado(CAMINA_IZQ, 37, 49, 9,4);
-	}
+	}*/
+}
+
+void Cliente::addEstadoSprite(mensajeStruct msg){
+	vector<string> result = Util::Split(msg.message,';');
+	estadoJugador estado = static_cast<estadoJugador>(atoi(result[0].c_str()));
+	int anchoFrame = atoi(result[1].c_str());
+	int altoFrame = atoi(result[2].c_str());
+	int cantFrame = atoi(result[3].c_str());
+	int ordenEstado = atoi(result[4].c_str());
+	this->escenario.agregarEstado(msg.objectId, estado,anchoFrame,altoFrame,cantFrame,ordenEstado);
 }
 
 

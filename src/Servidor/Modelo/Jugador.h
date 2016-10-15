@@ -46,6 +46,7 @@ public:
 	void manejarSalto();
 	bool conectado();
 	int getIdSocket();
+	bool estaSaltando();
 	//estadoJugador resolverEstado(string accion, int vecesX);
 };
 

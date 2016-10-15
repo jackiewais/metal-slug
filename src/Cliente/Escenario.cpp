@@ -84,6 +84,10 @@ LTexture* Escenario::addSprite(std::string idSprite, int ancho, int alto) {
 	return textura;
 }
 
+void Escenario::agregarEstado(string idSprite, estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado) {
+	this->mapTexturas[idSprite]->agregarEstado(estado, anchoFrame, altoFrame, cantFrames,ordenEstado);
+}
+
 bool Escenario::loadMedia()
 {
 	LTexture *textura;

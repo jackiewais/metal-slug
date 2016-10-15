@@ -97,21 +97,25 @@ bool Jugador::manejarSalto(){
 
 }
 */
+
+bool Jugador::estaSaltando(){
+	return (this->estado == SALTA_DER || this->estado == SALTA_IZQ);
+}
 void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 
 	if (this->aceptaCambios){
 		if (accion == "SALTA"){
-			this->estado = SALTA;
+			this->estado = (vecesX >= 0)?SALTA_DER:SALTA_IZQ;
 		}
 
 		manejarSalto();
 
 		if (vecesX == 0){
-			if (this->estado != SALTA){
+			if (!estaSaltando()){
 				this->estado = PARADO;
 			}
 		}else{
-			if (this->estado != SALTA){
+			if (!estaSaltando()){
 				this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
 			}
 
@@ -138,7 +142,7 @@ void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 void Jugador::manejarSalto(){
 
 
-	if (this->estado == SALTA){
+	if (estaSaltando()){
 		this->posY += (velSalto * factorSalto);
 		if (this->posY < topeSalto){
 			factorSalto = 1;

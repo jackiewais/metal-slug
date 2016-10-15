@@ -165,7 +165,7 @@ void Servidor::handshake(mensajeStruct msg){
 
 
 	//comienzo a mandar info
-	cout << "HAGO TODO LO QUE TENGA QUE HACER EL HANDSHAKE" << endl;
+	cout << "Handshake" << endl;
 	//MANDO DIMENSIONES DE VENTANA.
 	msg.tipo=HANDSHAKE_DIMENSIONES_VENTANA;
 	msg.objectId="X0";
@@ -203,6 +203,31 @@ void Servidor::handshake(mensajeStruct msg){
 
 			msg.objectId="jugador2";
 			msg.message="0;0";
+			colaCliente->push(msg);
+
+			msg.tipo=HANDSHAKE_ESTADO_SPRITE;
+			msg.objectId="jugador1";
+			msg.message="1;37;49;3;1"; //PARADO
+			colaCliente->push(msg);
+			msg.message="2;37;49;9;2"; //CAMINA_DER
+			colaCliente->push(msg);
+			msg.message="3;37;49;9;4"; //SALTA_IZQ
+			colaCliente->push(msg);
+			msg.message="4;37;49;13;3"; //SALTA_DER
+			colaCliente->push(msg);
+			msg.message="5;37;49;13;3"; //SALTA_IZQ
+			colaCliente->push(msg);
+
+			msg.objectId="jugador2";
+			msg.message="1;37;49;3;1"; //PARADO
+			colaCliente->push(msg);
+			msg.message="2;37;49;9;2"; //CAMINA_DER
+			colaCliente->push(msg);
+			msg.message="3;37;49;9;4"; //SALTA_IZQ
+			colaCliente->push(msg);
+			msg.message="4;37;49;13;3"; //SALTA_DER
+			colaCliente->push(msg);
+			msg.message="5;37;49;13;3"; //SALTA_IZQ
 			colaCliente->push(msg);
 
 	// -------------------------------
