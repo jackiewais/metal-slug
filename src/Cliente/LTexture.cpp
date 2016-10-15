@@ -99,13 +99,12 @@ void LTexture::free()
 {
 	map<estadoJugador, list<SDL_Rect>*>::iterator it;
 	//Free texture if it exists
-	if( mTexture != NULL )
-	{
+	if( mTexture != NULL ) {
 		SDL_DestroyTexture( mTexture );
 		mTexture = NULL;
-	}
-	for(it = this->mapFrames.begin(); it != this->mapFrames.end(); it++) {
-		delete it->second;
+		for(it = this->mapFrames.begin(); it != this->mapFrames.end(); it++) {
+			delete it->second;
+		}
 	}
 }
 
