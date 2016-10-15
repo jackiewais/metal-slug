@@ -42,21 +42,25 @@ void ObjetoGraficable::setFactorParallax(int despA, int anchoVentana) {
 	double factorP =(desp1 / desp2);
 
 	this->factorParallax = factorP;
-	std::cout << desp << " / " << despA << std::endl;
-	std::cout << "FACTOR PARALLAX : " << factorP << std::endl;
-
 }
 
 void ObjetoGraficable::actualizarPosicionFondo(int despA) {
 	this->actualizarPosicion(despA*this->factorParallax, this->y);
 }
 
-void ObjetoGraficable::grisar(bool grisa){
-	if (true || this->grisado != grisa){
-		this->grisado = grisa;
-		int alpha = (grisa)?128:255;
+
+void ObjetoGraficable::actualizarGrisado(){
+	if (flagGrisado != this->grisado){
+		int alpha = (this->grisado)?128:255;
 		this->textura->setAlpha(alpha);
+		flagGrisado = this->grisado;
 	}
+}
+void ObjetoGraficable::setGrisado(bool grisa){
+	if (grisa && !this->grisado){
+		std::cout << "Jugador " << this->id << " desconectado" << endl;
+	}
+	this->grisado = grisa;
 }
 
 void ObjetoGraficable::actualizarEstado(estadoJugador estado) {

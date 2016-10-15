@@ -177,7 +177,7 @@ void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int 
 	if ( this->mapTexturas.find(idSprite) != this->mapTexturas.end() ) {
 		LTexture *textura = this->mapTexturas[idSprite];
 		this->mapObjetosGraficables[idObj] = new ObjetoGraficable(idObj, textura, x, y);
-		this->mapObjetosGraficables[idObj]->grisar((conectado == "D"));
+		this->mapObjetosGraficables[idObj]->setGrisado((conectado == "D"));
 	}
 }
 
@@ -186,7 +186,7 @@ void Escenario::renderizarObjetos() {
 	SDL_RenderClear( this->gRenderer );
 	std::map<std::string, ObjetoGraficable*>::iterator it;
 	for (it = this->mapObjetosGraficables.begin(); it != this->mapObjetosGraficables.end(); it++) {
-		it->second->grisar(it->second->grisado);
+		it->second->actualizarGrisado();
 		it->second->render();
 	}
 
@@ -198,7 +198,7 @@ void Escenario::actualizarPosicionObjeto(std::string idObj, int x, int y, estado
 	if ( this->mapObjetosGraficables.find(idObj) != this->mapObjetosGraficables.end() ) {
 		ObjetoGraficable* objeto = this->mapObjetosGraficables[idObj];
 		objeto->actualizarPosicion(x, y);
-		objeto->grisar((conectado == "D"));
+		objeto->setGrisado((conectado == "D"));
 		objeto->actualizarEstado(estado);
 	}
 }

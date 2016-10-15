@@ -53,6 +53,11 @@ vector<string> splitE(const string &s, const char delim) {
     return elems;
 }
 
+mensajeStruct EscenarioS::getMensajeDesconexion(int jugadorId){
+	Jugador* jugador = this->mapJugadores[jugadorId];
+	return getMensajeJugador(jugador);
+}
+
 list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	Jugador* jugador = this->mapJugadores[jugadorId];
 	vector<string> result = splitE(mensaje, ';');
@@ -127,11 +132,9 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 
 mensajeStruct EscenarioS::getMensajeJugador(Jugador* jugador){
 	mensajeStruct msjJug;
-
 	msjJug.tipo = JUGADOR_UPD;
 	msjJug.message = jugador->getStringMensaje();
 	msjJug.objectId = jugador->getCodJugador();
-
 	return msjJug;
 }
 

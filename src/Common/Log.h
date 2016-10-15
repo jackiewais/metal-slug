@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#define NIVEL 3
+#define NIVEL 1
 #define TAMANIO 100
 #define SERVER "Servidor/log.txt"
 #define CLIENT "Cliente/log.txt"
