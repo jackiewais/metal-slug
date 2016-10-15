@@ -22,8 +22,9 @@ public:
 
 	bool grisado = false;
 	int tipoObjeto = 0;
-private:
 	std::string id;
+private:
+
 	LTexture *textura;
 	int x, y, factorParallax;
 

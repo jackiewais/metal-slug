@@ -33,6 +33,7 @@ public:
 	void addFondo(std::string objectId);
 	void calcularParallax();
 	void agregarEstado(std::string idSprite, estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado);
+	void crearJugadorPrincipal(mensajeStruct msg);
 
 private:
 	SDL_Window* gWindow;
@@ -40,6 +41,7 @@ private:
 	std::map<std::string, LTexture*> mapTexturas;
 	std::map<std::string, ObjetoGraficable*> mapObjetosGraficables;
 	std::map<std::string, ObjetoGraficable*> mapFondos;
+	ObjetoGraficable *jugadorPrincipal;
 	int screenWidth, screenHeight;
 	int fondoMasChico = 0 ; // para el calculo de parallax.
 };

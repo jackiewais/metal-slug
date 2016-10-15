@@ -88,6 +88,13 @@ void Escenario::agregarEstado(string idSprite, estadoJugador estado, int anchoFr
 	this->mapTexturas[idSprite]->agregarEstado(estado, anchoFrame, altoFrame, cantFrames,ordenEstado);
 }
 
+void Escenario::crearJugadorPrincipal(mensajeStruct msg){
+
+	this->jugadorPrincipal = this->mapObjetosGraficables[msg.objectId];
+
+
+}
+
 bool Escenario::loadMedia()
 {
 	LTexture *textura;
@@ -191,14 +198,19 @@ void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int 
 void Escenario::renderizarObjetos() {
 	SDL_SetRenderDrawColor( this->gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( this->gRenderer );
+
 	std::map<std::string, ObjetoGraficable*>::iterator it;
 	for (it = this->mapObjetosGraficables.begin(); it != this->mapObjetosGraficables.end(); it++) {
 		it->second->actualizarGrisado();
-		it->second->render();
-	}
+		if(this->jugadorPrincipal->id != it->second->id){
+			it->second->render();
+			}
+		}
+	this->jugadorPrincipal->render();
 
 	SDL_RenderPresent( this->gRenderer );
 }
+
 
 void Escenario::actualizarPosicionObjeto(std::string idObj, int x, int y, estadoJugador estado, string conectado) {
 	// Si el objeto esta en el map

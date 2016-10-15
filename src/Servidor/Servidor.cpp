@@ -312,6 +312,10 @@ void Servidor::handshake(mensajeStruct msg){
 		colaCliente->push(msg);
 	}
 
+	msg.tipo = JUGADOR_SO_VO;
+	msg.objectId = "J"+ convertirAString(this->contenedor->getIdJugadorByIdSocket(msg.socketCli));
+	msg.message = "------------";
+	colaCliente->push(msg);
 	//---------------------------------
 
     //FIN DE HANDSHAKE.

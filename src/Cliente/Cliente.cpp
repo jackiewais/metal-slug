@@ -243,8 +243,10 @@ void *Cliente::recvMessage(void * arg){
 				context->escenarioOK=true;
 				break;
 			case ESCENARIO_UPD:
-
 				context->escenario.moverFondo(mensajeRta);
+				break;
+			case JUGADOR_SO_VO:
+				context->escenario.crearJugadorPrincipal(mensajeRta);
 				break;
 			case JUGADOR_UPD:
 				context->updateJugador(mensajeRta);
@@ -265,6 +267,7 @@ void *Cliente::recvMessage(void * arg){
     }
 	return 0;
 };
+
 
 void Cliente::objetoNuevo(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
