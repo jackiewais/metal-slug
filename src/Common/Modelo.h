@@ -6,7 +6,7 @@ enum estadoJugador{
 	PARADO = 01,
 	CAMINA_DER = 02,
 	CAMINA_IZQ = 03,
-	SALTA = 05
+	SALTA = 04
 };
 
 #endif

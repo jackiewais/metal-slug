@@ -210,7 +210,12 @@ void Servidor::handshake(mensajeStruct msg){
 			msg.message="0;0";
 			colaCliente->push(msg);
 
-			msg.objectId="jugador";
+			msg.objectId="jugador1";
+			msg.message="0;0";
+			colaCliente->push(msg);
+
+
+			msg.objectId="jugador2";
 			msg.message="0;0";
 			colaCliente->push(msg);
 
@@ -253,7 +258,7 @@ void Servidor::handshake(mensajeStruct msg){
 		}else{
 			pos = convertirAString(getPosXInicial(i))+";400;01;D";
 		}
-		msg.message="jugador;"+pos;
+		msg.message="jugador" + convertirAString(i) + ";"+pos;
 		colaCliente->push(msg);
 	}
 

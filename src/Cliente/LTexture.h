@@ -29,7 +29,7 @@ class LTexture
 		void setHeight(int mHeight);
 		void setPath(std::string path);
 		void actualizarEstado(estadoJugador estado);
-		void agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames);
+		void agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado);
 		void setAlpha( Uint8 alpha );
 
 	private:

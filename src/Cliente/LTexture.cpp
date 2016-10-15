@@ -30,11 +30,11 @@ LTexture::LTexture(Escenario *escenario, std::string path)
 }
 
 // Los estados hay que irselos pasando en el orden en que estan en la imagen
-void LTexture::agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames) {
+void LTexture::agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado) {
 	list<SDL_Rect>* pList = new list<SDL_Rect>;
 	this->mapFrames[estado] = pList;
 	for(int i=1; i<=cantFrames; i++) {
-		pList->push_back(this->crearFrame(this->mapFrames.size(), i, anchoFrame, altoFrame));
+		pList->push_back(this->crearFrame(ordenEstado, i, anchoFrame, altoFrame));
 	}
 	if (this->mapFrames.size() == 1) {
 		this->itEstado = pList->begin();

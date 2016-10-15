@@ -186,6 +186,7 @@ void Escenario::renderizarObjetos() {
 	SDL_RenderClear( this->gRenderer );
 	std::map<std::string, ObjetoGraficable*>::iterator it;
 	for (it = this->mapObjetosGraficables.begin(); it != this->mapObjetosGraficables.end(); it++) {
+		it->second->grisar(it->second->grisado);
 		it->second->render();
 	}
 
