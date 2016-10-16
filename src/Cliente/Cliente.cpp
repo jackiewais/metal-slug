@@ -626,10 +626,6 @@ int Cliente::printMenu(){
 	cout << "1 - Conectar" << endl;
 	cout << "2 - Desconectar" << endl;
 	cout << "3 - Salir" << endl;
-	cout << "4 - Enviar" << endl;
-	cout << "5 - Recibir" << endl;
-	cout << "6 - Lorem Ipsum" << endl;
-	cout << "7 - Reingresar ip y puerto" << endl;
 	cout << "---------------------------------------" << endl;
 
 	return 0;
@@ -673,7 +669,7 @@ int Cliente::selectFromMenu(){
 		case 3:
 			status = salir();
 			break;
-		case 4:
+	/*	case 4:
 			status = enviar();
 			break;
 		case 5:
@@ -684,7 +680,7 @@ int Cliente::selectFromMenu(){
 			break;
 		case 7:
 			status = getIpAndPort();
-			break;
+			break;*/
 	}
 
 	return status;
