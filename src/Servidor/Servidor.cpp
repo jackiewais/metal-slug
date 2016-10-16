@@ -85,6 +85,20 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
 	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);
 
+	if(idJugadores == cantJugadores-1){
+		mensaje.tipo = JUEGO_COMENZAR;
+		mensaje.message = "";
+	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
+
+
+		for(auto const &user :  this->contenedor->socket_usuario) {
+		  if(user.second->isConectado()){
+			  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
+
+					colaCliente->push(mensaje);
+		  	  }
+		}
+	}
 	return 0;
 }
 

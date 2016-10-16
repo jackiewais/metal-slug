@@ -107,7 +107,7 @@ bool Cliente::handleKeyEvents(){
 		else{
 
 
-			 if ( e.type == SDL_KEYUP && e.key.repeat == 0){
+			 if ( e.type == SDL_KEYUP && e.key.repeat == 0 ){
 				 switch( e.key.keysym.sym ){
 					case SDLK_LEFT:
 						this->vecesX += 1;
@@ -132,43 +132,6 @@ bool Cliente::handleKeyEvents(){
 				}
 			}
 
-
-
-/*
-
-			if ( e.type == SDL_KEYUP && e.key.repeat == 0){
-				//Select surfaces based on key press
-				switch( e.key.keysym.sym )
-				{
-					case SDLK_w:
-					evento.message="ARRIBA";
-					enviarEvento(&evento);
-
-					cout << "FLECHITA ARRIBA" <<endl;
-					break;
-
-					case SDLK_s:
-					evento.message="ABAJO";
-					enviarEvento(&evento);
-					cout << "FLECHITA ABAJO" <<endl;
-					break;
-
-					case SDLK_a:
-					evento.message="IZQUIERDA";
-					enviarEvento(&evento);
-					cout << "FLECHITA IZQUIERDA" <<endl;
-					break;
-
-					case SDLK_d:
-					evento.message="DERECHA";
-					enviarEvento(&evento);
-					cout << "FLECHITA DERECHA" <<endl;
-					break;
-
-					default:
-					break;
-				}
-			}*/
 		}
 
 	}
@@ -248,6 +211,9 @@ void *Cliente::recvMessage(void * arg){
 			case JUGADOR_SO_VO:
 				context->escenario.crearJugadorPrincipal(mensajeRta);
 				break;
+			case JUEGO_COMENZAR:
+				context->esperarJugador();
+				break;
 			case JUGADOR_UPD:
 				context->updateJugador(mensajeRta);
 				break;
@@ -267,7 +233,11 @@ void *Cliente::recvMessage(void * arg){
     }
 	return 0;
 };
+void Cliente::esperarJugador(){
 
+	this->esperarJugadores=true;
+
+}
 
 void Cliente::objetoNuevo(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
@@ -367,9 +337,12 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 	 context->escenario.calcularParallax();
 
 	 while(quit){
-		 quit=context->handleKeyEvents();
 
-		 context->escenario.renderizarObjetos();
+		quit=context->handleKeyEvents();
+		context->escenario.renderizarObjetos();
+
+
+
 
 	 }
 

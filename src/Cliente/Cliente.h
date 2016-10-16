@@ -13,7 +13,7 @@
 
 class Cliente:ConexionCli {
 private:
-
+	bool esperarJugadores = false;
     int vecesX = 0;
     string convertirAString(int i);
 	 datosConexionStruct datosConexion;
@@ -45,6 +45,7 @@ private:
 	void addSprite(mensajeStruct msg);
 	void updateJugador(mensajeStruct msg);
 	Escenario escenario;
+	void esperarJugador();
 	void addEstadoSprite(mensajeStruct msg);
 
 public:
