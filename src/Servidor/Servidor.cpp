@@ -66,7 +66,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 			if (idJugadores < cantJugadores){
 				this->idJugadores++;
 				usuario->setIdJugador(this->idJugadores);
-				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,getPosXInicial(usuario->getIdJugador()),400,1,1, usuario );
+				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,getPosXInicial(usuario->getIdJugador()),400,74,98, usuario );
 				this->escenario->addJugador(jugador);
 				this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
 			}else{
