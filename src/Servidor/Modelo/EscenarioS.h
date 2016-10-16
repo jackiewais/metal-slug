@@ -30,6 +30,7 @@ public:
 	mensajeStruct getMensajeEscenario();
 	void aceptarCambios();
 	mensajeStruct getMensajeDesconexion(int jugadorId);
+	void resetEscenario();
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ESCENARIOS_H_ */

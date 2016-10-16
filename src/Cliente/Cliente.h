@@ -47,6 +47,7 @@ private:
 	Escenario escenario;
 	void esperarJugador();
 	void addEstadoSprite(mensajeStruct msg);
+	bool jugando = true;
 
 public:
 	bool escenarioOK =false;

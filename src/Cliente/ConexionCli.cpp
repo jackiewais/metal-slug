@@ -170,7 +170,6 @@ void ConexionCli::handshake(datosConexionStruct* datosConexion){
 	mensaje.objectId = "X0";
 	mensaje.message = "RECIBIR CONFIGURACION DEL MAPA";
 	encodeAndSend(datosConexion->sockfd, &mensaje);
-
 };
 
 void split2(const string &s, char delim, vector<string> &elems) {

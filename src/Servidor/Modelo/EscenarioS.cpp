@@ -65,11 +65,19 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	string estado = result[1];
 	list<mensajeStruct> returnList;
 
-	jugador->mover(this->ancho,vecesX, estado);
-	moverEscenario(&returnList);
-
-	returnList.push_back(getMensajeJugador(jugador));
-	returnList.push_back(getMensajeEscenario());
+	if(estado=="RESET"){
+		mensajeStruct msjReset;
+		msjReset.tipo = RESET;
+		msjReset.objectId = "X0";
+		msjReset.message = "RESET";
+		returnList.push_back(msjReset);
+		this->resetEscenario();
+	}else{
+		jugador->mover(this->ancho,vecesX, estado);
+		moverEscenario(&returnList);
+		returnList.push_back(getMensajeJugador(jugador));
+		returnList.push_back(getMensajeEscenario());
+	}
 
 	return returnList;
 }
@@ -150,4 +158,11 @@ mensajeStruct EscenarioS::getMensajeEscenario(){
 	msjEscenario.objectId = "E00";
 
 	return msjEscenario;
+}
+
+void EscenarioS::resetEscenario(){
+	this->avance = 0;
+	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+		jugador->second->moverAPosicionInicial();
+	}
 }

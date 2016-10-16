@@ -89,7 +89,7 @@ int Cliente::seleccConectar(){
 bool Cliente::handleKeyEvents(){
     //Event handler
     SDL_Event e;
-    bool exit=true;
+    bool salir=false;
     string accion = "NADA";
     mensajeStruct evento;
     evento.tipo=PULSA_TECLA;
@@ -101,7 +101,10 @@ bool Cliente::handleKeyEvents(){
 		if( e.type == SDL_QUIT )
 		{
 			cout << "quit event"<< endl;
-			exit=false;
+			salir=true;
+			this->jugando = false;
+
+		    evento.tipo=DISCONNECTED;
 		}
 		//User presses a key
 		else{
@@ -129,9 +132,11 @@ bool Cliente::handleKeyEvents(){
 					case SDLK_UP:
 						accion = "SALTA";
 						break;
+					case SDLK_r:
+						accion = "RESET";
+						break;
 				}
 			}
-
 		}
 
 	}
@@ -142,7 +147,7 @@ bool Cliente::handleKeyEvents(){
 	SDL_FlushEvent(SDL_KEYUP);
 	enviarEvento(&evento);
 
-	return exit;
+	return salir;
 }
 
 
@@ -160,8 +165,6 @@ void *Cliente::recvMessage(void * arg){
 	mensajeStruct mensajeRta;
 	string nombre;
 	string mensajeAMostrar;
-
-
 
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
@@ -228,6 +231,11 @@ void *Cliente::recvMessage(void * arg){
 					cout << endl;
 					cout << "Presione cualquier tecla y después ENTER para continuar" << endl;
 				}
+				break;
+			case RESET:
+				context->jugando=false;
+				context->escenarioOK=false;
+				context->handshake(&context->datosConexion);
 				break;
 		}
     }
@@ -322,32 +330,33 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 }
 
  void* Cliente::crearEscenario(void *arg){
-	 bool quit=true;
+	 bool salir=false;
 	 Cliente* context = (Cliente*)arg;
 
-	 while(!context->escenarioOK){
+	 while (!salir){
+		 while(!context->escenarioOK){
+		 }
+		 context->jugando = true;
+		 context->escenario.init();
+		 if ( !context->escenario.loadMedia() ) {
+			 // Aca deberia salir del programa, xq no se pudo
+			 // cargar alguna imagen (ni siquiera la img por defecto)
+			 return NULL;
+		 }
+		 context->escenario.calcularParallax();
+
+		 while(context->jugando){
+			 salir=context->handleKeyEvents();
+			 if(context->jugando) context->escenario.renderizarObjetos();
+
+		 }
+
+		 context->escenario.close();
+
 	 }
-
-	 context->escenario.init();
-	 if ( !context->escenario.loadMedia() ) {
-		 // Aca deberia salir del programa, xq no se pudo
-		 // cargar alguna imagen (ni siquiera la img por defecto)
-		 return NULL;
-	 }
-	 context->escenario.calcularParallax();
-
-	 while(quit){
-
-		quit=context->handleKeyEvents();
-		context->escenario.renderizarObjetos();
-
-
-
-
-	 }
-
-	 context->escenario.close();
 	 context->salir();
+
+	 return 0;
 };
 
 int Cliente::getUsuarioYContrasenia(string &usuario, string &contrasenia){

@@ -201,3 +201,9 @@ int Jugador::getIdSocket() {
 	return this->usuario->getIdSocket();
 }
 
+void Jugador::moverAPosicionInicial(){
+	this->posX = 10+this->id*30;
+	this->posY = piso;
+}
+
+

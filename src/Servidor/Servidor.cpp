@@ -302,12 +302,11 @@ void Servidor::handshake(mensajeStruct msg){
 		msg.message="fondoDosPrueba;0;50";
 		colaCliente->push(msg);
 
+		msg.tipo=HANDSHAKE_FONDO_NUEVO;
+		msg.objectId="F04";
+		msg.message="fondoTresPrueba;0;100";
+		colaCliente->push(msg);
 
-
-				msg.tipo=HANDSHAKE_FONDO_NUEVO;
-							msg.objectId="F04";
-							msg.message="fondoTresPrueba;0;100";
-							colaCliente->push(msg);
 
 
 	for(int i = 1; i <= this->cantJugadores; i++)

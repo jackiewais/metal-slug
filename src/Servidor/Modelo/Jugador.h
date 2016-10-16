@@ -47,6 +47,7 @@ public:
 	bool conectado();
 	int getIdSocket();
 	bool estaSaltando();
+	void moverAPosicionInicial();
 	//estadoJugador resolverEstado(string accion, int vecesX);
 };
 

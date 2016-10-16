@@ -156,25 +156,40 @@ void Escenario::calcularParallax() {
 
 void Escenario::close()
 {
+	cout << "Escenario Start" << endl;
 	std::map<std::string, LTexture*>::iterator it;
 	//Free loaded images
 	for (it = this->mapTexturas.begin(); it != this->mapTexturas.end(); it++) {
 		it->second->free();
 	}
+
+	cout << "Escenario Start 2" << endl;
 	std::map<std::string, ObjetoGraficable*>::iterator itOb;
 	for (itOb = this->mapObjetosGraficables.begin(); itOb != this->mapObjetosGraficables.end(); itOb++) {
 		delete itOb->second;
 	}
 
+	cout << "Escenario Start 3" << endl;
+	/*std::map<std::string, ObjetoGraficable*>::iterator itObF;
+	for (itObF = this->mapFondos.begin(); itObF != this->mapFondos.end(); itObF++) {
+		delete itObF->second;
+	}*/
+
+	cout << "Escenario Start 4" << endl;
 	//Destroy window
 	SDL_DestroyRenderer( gRenderer );
+
+	cout << "Escenario Start 5" << endl;
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 	gRenderer = NULL;
 
+	cout << "Escenario 6" << endl;
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
+
+	cout << "Escenario Close" << endl;
 }
 
 SDL_Renderer* Escenario::getGRenderer()
