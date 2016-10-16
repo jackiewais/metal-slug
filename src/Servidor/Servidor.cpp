@@ -212,22 +212,22 @@ void Servidor::handshake(mensajeStruct msg){
 
 
 			msg.objectId="jugador1";
-			msg.message="50;50";
+			msg.message="74;98";
 			colaCliente->push(msg);
 
 
 			msg.objectId="jugador2";
-			msg.message="100;100";
+			msg.message="74;98";
 
 			colaCliente->push(msg);
 
 			msg.objectId="jugador3";
-			msg.message="300;50";
+			msg.message="74;98";
 
 			colaCliente->push(msg);
 
 			msg.objectId="jugador4";
-			msg.message="50;300";
+			msg.message="74;98";
 
 			colaCliente->push(msg);
 
@@ -237,11 +237,11 @@ void Servidor::handshake(mensajeStruct msg){
 			colaCliente->push(msg);
 			msg.message="2;37;49;9;2"; //CAMINA_DER
 			colaCliente->push(msg);
-			msg.message="3;37;49;9;4"; //SALTA_IZQ
+			msg.message="3;37;49;9;4"; //CAMINA_IZQ
 			colaCliente->push(msg);
 			msg.message="4;37;49;13;3"; //SALTA_DER
 			colaCliente->push(msg);
-			msg.message="5;37;49;13;3"; //SALTA_IZQ
+			msg.message="5;37;49;13;5"; //SALTA_IZQ
 			colaCliente->push(msg);
 
 			msg.objectId="jugador2";
@@ -249,11 +249,11 @@ void Servidor::handshake(mensajeStruct msg){
 			colaCliente->push(msg);
 			msg.message="2;37;49;9;2"; //CAMINA_DER
 			colaCliente->push(msg);
-			msg.message="3;37;49;9;4"; //SALTA_IZQ
+			msg.message="3;37;49;9;4"; //CAMINA_IZQ
 			colaCliente->push(msg);
 			msg.message="4;37;49;13;3"; //SALTA_DER
 			colaCliente->push(msg);
-			msg.message="5;37;49;13;3"; //SALTA_IZQ
+			msg.message="5;37;49;13;5"; //SALTA_IZQ
 			colaCliente->push(msg);
 
 			msg.tipo=HANDSHAKE_ESTADO_SPRITE;
@@ -262,11 +262,11 @@ void Servidor::handshake(mensajeStruct msg){
 						colaCliente->push(msg);
 						msg.message="2;37;49;9;2"; //CAMINA_DER
 						colaCliente->push(msg);
-						msg.message="3;37;49;9;4"; //SALTA_IZQ
+						msg.message="3;37;49;9;4"; //CAMINA_IZQ
 						colaCliente->push(msg);
 						msg.message="4;37;49;13;3"; //SALTA_DER
 						colaCliente->push(msg);
-						msg.message="5;37;49;13;3"; //SALTA_IZQ
+						msg.message="5;37;49;13;5"; //SALTA_IZQ
 						colaCliente->push(msg);
 
 						msg.tipo=HANDSHAKE_ESTADO_SPRITE;
@@ -275,11 +275,11 @@ void Servidor::handshake(mensajeStruct msg){
 									colaCliente->push(msg);
 									msg.message="2;37;49;9;2"; //CAMINA_DER
 									colaCliente->push(msg);
-									msg.message="3;37;49;9;4"; //SALTA_IZQ
+									msg.message="3;37;49;9;4"; //CAMINA_IZQ
 									colaCliente->push(msg);
 									msg.message="4;37;49;13;3"; //SALTA_DER
 									colaCliente->push(msg);
-									msg.message="5;37;49;13;3"; //SALTA_IZQ
+									msg.message="5;37;49;13;5"; //SALTA_IZQ
 									colaCliente->push(msg);
 
 
