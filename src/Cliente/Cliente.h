@@ -20,7 +20,7 @@ private:
 	 ConexionCli conexionCli;
 	 bool semaforoReceive = false;
 	 map<int, string> mapIdNombreUsuario;
-	 bool mainCin = false;
+	 //bool mainCin = false;
 	 int seleccConectar();
 	int getIpAndPort();
 	int selectFromMenu();

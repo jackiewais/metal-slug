@@ -133,6 +133,7 @@ bool Cliente::handleKeyEvents(){
 						accion = "SALTA";
 						break;
 					case SDLK_r:
+						this->vecesX = 0;
 						accion = "RESET";
 						break;
 				}
@@ -140,12 +141,16 @@ bool Cliente::handleKeyEvents(){
 		}
 
 	}
-
 	evento.message=convertirAString(vecesX) + ";" + accion;
 	SDL_Delay(1);
 	SDL_FlushEvent(SDL_KEYDOWN);
 	SDL_FlushEvent(SDL_KEYUP);
-	enviarEvento(&evento);
+	if (enviarEvento(&evento)==1){
+		//hubo error en el send
+		cout << "SERVIDOR DESCONECTADO" << endl;
+		salir = true;
+		this->jugando = false;
+	}
 
 	return salir;
 }
@@ -223,14 +228,8 @@ void *Cliente::recvMessage(void * arg){
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
-				if (context->mainCin){
-					context->printMenu();
-					context->imprimirConsigna();
-				}else{
-					context->printMenu();
-					cout << endl;
-					cout << "Presione cualquier tecla y después ENTER para continuar" << endl;
-				}
+				context->printMenu();
+				context->imprimirConsigna();
 				break;
 			case RESET:
 				context->jugando=false;
@@ -624,9 +623,7 @@ int Cliente::selectFromMenu(){
 
 	imprimirConsigna();
 	while (!ok){
-		mainCin = true;
 		cin >> input;
-		mainCin = false;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
 			Log::log('c',3,"Menu: Numero ingresado incorrecto","");
