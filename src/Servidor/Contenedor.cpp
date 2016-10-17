@@ -101,13 +101,10 @@ bool Contenedor::iniciarSesion(string message, int idSocket){
 
 
 bool Contenedor::cerrarSesion(int idSocket) {
-
 	bool sesionCerrada = false;
 	Usuario *usuario = this->getUsuarioBySocket(idSocket);
-
-	cout << "Usuario " << usuario->getNombre() << " Desconectado" << endl;
-
 	if (usuario != NULL) {
+		cout << "Usuario " << usuario->getNombre() << " Desconectado" << endl;
 		//this->socket_usuario.erase(idSocket);
 		usuario->cerrarSesion();
 		sesionCerrada = true;

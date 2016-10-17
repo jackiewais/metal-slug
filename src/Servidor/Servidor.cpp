@@ -88,7 +88,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 	if(idJugadores == cantJugadores-1){
 		mensaje.tipo = JUEGO_COMENZAR;
 		mensaje.message = "";
-	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
+	//Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
 
 
 		for(auto const &user :  this->contenedor->socket_usuario) {
@@ -109,12 +109,12 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 		case LOGIN:
 			loginInterpretarMensaje(msg);
 			break;
-		case ENVIAR_CHAT_FIN:
+		/*case ENVIAR_CHAT_FIN:
 			enviarChat(msg);
 			break;
 		case RECIBIR_CHATS:
 			recibirTodosLosChats(msg);
-			break;
+			break;*/
 		case DISCONNECTED:
 			procesarDesconexion(msg);
 			break;
@@ -346,7 +346,7 @@ string Servidor::convertirAString(int i) {
 		return iS.str();
 }
 
-int Servidor::enviarChat(mensajeStruct msg){
+/*int Servidor::enviarChat(mensajeStruct msg){
 	int idCliente = contenedor->getUsuarioBySocket(msg.socketCli)->getIdUsuario();
     list<int> otroUsuarios = contenedor->getIdOtrosUsuarios(idCliente);
 	
@@ -365,7 +365,7 @@ int Servidor::enviarChat(mensajeStruct msg){
 	}
 		
 	return 0;
-}
+}*/
 int Servidor::procesarDesconexion(mensajeStruct mensaje){
 	//Mando mensaje desconexión a la cola del cliente
 	socketIdQueue[mensaje.socketCli]->push(mensaje);
@@ -487,13 +487,15 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 	   finish = args->context->mensajeria.receiveAndDecode(socketCli,&mensaje);
 
 	   if (mensaje.tipo == DISCONNECTED){
-		   args->context->contenedor->cerrarSesion(socketCli);
-		   args->context->colaPrincipalMensajes.push(mensaje);
-		   args->context->cantCon--;
-	   }else if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
+		   if (args->context->contenedor->cerrarSesion(socketCli)){
+			   args->context->colaPrincipalMensajes.push(mensaje);
+			   args->context->cantCon--;
+		   }
+		   finish = 1;
+	   /*}else if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
 		   //si ya existia concateno el mensaje
 		   mensajeParcial += mensaje.message;
-		   hayMsjParcial = true;
+		   hayMsjParcial = true;*/
 	   }else{
 		   if (hayMsjParcial && !finish){
 			   //primero concateno el mensaje y después lo asigno
@@ -764,6 +766,8 @@ void* Servidor::manejarTimer (void *data) {
 		context->escenario->aceptarCambios();
 		usleep(10000);
 	}
+
+	return 0;
 }
 
 
@@ -772,6 +776,7 @@ Servidor::Servidor() {
 	this->contenedor = new Contenedor();
 	this->arguments = new argsForThread();
 	this->escenario = new EscenarioS(800,600);
+	this->cerrarPrograma=false;
 }
 Servidor::~Servidor() {
 	delete this->contenedor;

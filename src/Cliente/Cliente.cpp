@@ -488,7 +488,7 @@ int Cliente::recibir(){
 	return 0;
 }
 
-int Cliente::loremIpsum(){
+/*int Cliente::loremIpsum(){
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado. Opción inválida." << endl;
 		return 0;
@@ -564,7 +564,7 @@ int Cliente::loremIpsum(){
 
 
 	return 0;
-}
+}*/
 
 
 
