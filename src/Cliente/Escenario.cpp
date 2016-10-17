@@ -67,6 +67,7 @@ bool Escenario::init()
 		}
 	}
 
+	this->running=true;
 	return success;
 }
 
@@ -89,10 +90,7 @@ void Escenario::agregarEstado(string idSprite, estadoJugador estado, int anchoFr
 }
 
 void Escenario::crearJugadorPrincipal(mensajeStruct msg){
-
 	this->jugadorPrincipal = this->mapObjetosGraficables[msg.objectId];
-
-
 }
 
 bool Escenario::loadMedia()
@@ -182,7 +180,7 @@ void Escenario::close()
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
-
+	this->running=false;
 }
 
 SDL_Renderer* Escenario::getGRenderer()
@@ -204,19 +202,21 @@ void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int 
 }
 
 void Escenario::renderizarObjetos() {
+	try{
 	SDL_SetRenderDrawColor( this->gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( this->gRenderer );
-
 	std::map<std::string, ObjetoGraficable*>::iterator it;
 	for (it = this->mapObjetosGraficables.begin(); it != this->mapObjetosGraficables.end(); it++) {
 		it->second->actualizarGrisado();
 		if(this->jugadorPrincipal->id != it->second->id){
 			it->second->render();
-			}
 		}
+	}
 	this->jugadorPrincipal->render();
-
 	SDL_RenderPresent( this->gRenderer );
+	}catch(...){
+		cout << "Problemas con el render" << endl;
+	}
 }
 
 

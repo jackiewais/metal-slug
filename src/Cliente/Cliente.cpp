@@ -166,17 +166,17 @@ void *Cliente::recvMessage(void * arg){
 	bool finish = false;
 	Cliente* context = (Cliente*)arg;
 	string mensajeParcial = "";
-	bool hayMsjParcial = false;
+	//bool hayMsjParcial = false;
 	mensajeStruct mensajeRta;
 	string nombre;
-	string mensajeAMostrar;
+	//string mensajeAMostrar;
 
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
 
 		switch (mensajeRta.tipo){
-			case RECIBIR_CHAT_SIGUE:
+			/*case RECIBIR_CHAT_SIGUE:
 			   //si ya existia concateno el mensaje
 			   mensajeParcial += mensajeRta.message;
 			   hayMsjParcial = true;
@@ -194,7 +194,7 @@ void *Cliente::recvMessage(void * arg){
 				break;
 			case RECIBIR_CHATS_LISTO: //Terminé de recibir todos los mensajes
 				context->semaforoReceive = false;
-				break;
+				break;*/
 			case HANDSHAKE_DIMENSIONES_VENTANA:
 				context->setDimensionesVentana(mensajeRta);
 				break;
@@ -214,7 +214,7 @@ void *Cliente::recvMessage(void * arg){
 				context->escenarioOK=true;
 				break;
 			case ESCENARIO_UPD:
-				context->escenario.moverFondo(mensajeRta);
+				if (context->jugando) context->escenario.moverFondo(mensajeRta);
 				break;
 			case JUGADOR_SO_VO:
 				context->escenario.crearJugadorPrincipal(mensajeRta);
@@ -223,7 +223,7 @@ void *Cliente::recvMessage(void * arg){
 				context->esperarJugador();
 				break;
 			case JUGADOR_UPD:
-				context->updateJugador(mensajeRta);
+				if (context->jugando) context->updateJugador(mensajeRta);
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
@@ -234,6 +234,7 @@ void *Cliente::recvMessage(void * arg){
 			case RESET:
 				context->jugando=false;
 				context->escenarioOK=false;
+				while(context->escenario.running){}
 				context->handshake(&context->datosConexion);
 				break;
 		}
@@ -343,15 +344,11 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 			 return NULL;
 		 }
 		 context->escenario.calcularParallax();
-
 		 while(context->jugando){
 			 salir=context->handleKeyEvents();
 			 if(context->jugando) context->escenario.renderizarObjetos();
-
 		 }
-
 		 context->escenario.close();
-
 	 }
 	 context->salir();
 
