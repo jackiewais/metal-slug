@@ -34,6 +34,7 @@ public:
 	void calcularParallax();
 	void agregarEstado(std::string idSprite, estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado);
 	void crearJugadorPrincipal(mensajeStruct msg);
+	bool running = false;
 
 private:
 	SDL_Window* gWindow;

@@ -133,6 +133,7 @@ bool Cliente::handleKeyEvents(){
 						accion = "SALTA";
 						break;
 					case SDLK_r:
+						this->vecesX = 0;
 						accion = "RESET";
 						break;
 				}
@@ -140,12 +141,16 @@ bool Cliente::handleKeyEvents(){
 		}
 
 	}
-
 	evento.message=convertirAString(vecesX) + ";" + accion;
 	SDL_Delay(1);
 	SDL_FlushEvent(SDL_KEYDOWN);
 	SDL_FlushEvent(SDL_KEYUP);
-	enviarEvento(&evento);
+	if (enviarEvento(&evento)==1){
+		//hubo error en el send
+		cout << "SERVIDOR DESCONECTADO" << endl;
+		salir = true;
+		this->jugando = false;
+	}
 
 	return salir;
 }
@@ -161,17 +166,17 @@ void *Cliente::recvMessage(void * arg){
 	bool finish = false;
 	Cliente* context = (Cliente*)arg;
 	string mensajeParcial = "";
-	bool hayMsjParcial = false;
+	//bool hayMsjParcial = false;
 	mensajeStruct mensajeRta;
 	string nombre;
-	string mensajeAMostrar;
+	//string mensajeAMostrar;
 
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
 
 		switch (mensajeRta.tipo){
-			case RECIBIR_CHAT_SIGUE:
+			/*case RECIBIR_CHAT_SIGUE:
 			   //si ya existia concateno el mensaje
 			   mensajeParcial += mensajeRta.message;
 			   hayMsjParcial = true;
@@ -189,7 +194,7 @@ void *Cliente::recvMessage(void * arg){
 				break;
 			case RECIBIR_CHATS_LISTO: //Terminé de recibir todos los mensajes
 				context->semaforoReceive = false;
-				break;
+				break;*/
 			case HANDSHAKE_DIMENSIONES_VENTANA:
 				context->setDimensionesVentana(mensajeRta);
 				break;
@@ -209,7 +214,7 @@ void *Cliente::recvMessage(void * arg){
 				context->escenarioOK=true;
 				break;
 			case ESCENARIO_UPD:
-				context->escenario.moverFondo(mensajeRta);
+				if (context->jugando) context->escenario.moverFondo(mensajeRta);
 				break;
 			case JUGADOR_SO_VO:
 				context->escenario.crearJugadorPrincipal(mensajeRta);
@@ -218,23 +223,18 @@ void *Cliente::recvMessage(void * arg){
 				context->esperarJugador();
 				break;
 			case JUGADOR_UPD:
-				context->updateJugador(mensajeRta);
+				if (context->jugando) context->updateJugador(mensajeRta);
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
-				if (context->mainCin){
-					context->printMenu();
-					context->imprimirConsigna();
-				}else{
-					context->printMenu();
-					cout << endl;
-					cout << "Presione cualquier tecla y después ENTER para continuar" << endl;
-				}
+				context->printMenu();
+				context->imprimirConsigna();
 				break;
 			case RESET:
 				context->jugando=false;
 				context->escenarioOK=false;
+				while(context->escenario.running){}
 				context->handshake(&context->datosConexion);
 				break;
 		}
@@ -344,15 +344,11 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 			 return NULL;
 		 }
 		 context->escenario.calcularParallax();
-
 		 while(context->jugando){
 			 salir=context->handleKeyEvents();
 			 if(context->jugando) context->escenario.renderizarObjetos();
-
 		 }
-
 		 context->escenario.close();
-
 	 }
 	 context->salir();
 
@@ -489,7 +485,7 @@ int Cliente::recibir(){
 	return 0;
 }
 
-int Cliente::loremIpsum(){
+/*int Cliente::loremIpsum(){
 	if (!this->datosConexion.conectado){
 		cout << "El usuario no está conectado. Opción inválida." << endl;
 		return 0;
@@ -565,7 +561,7 @@ int Cliente::loremIpsum(){
 
 
 	return 0;
-}
+}*/
 
 
 
@@ -624,9 +620,7 @@ int Cliente::selectFromMenu(){
 
 	imprimirConsigna();
 	while (!ok){
-		mainCin = true;
 		cin >> input;
-		mainCin = false;
 		if (!cin){ //Validates if its a number
 			cout << "Error: Debe ingresar un número" << endl;
 			Log::log('c',3,"Menu: Numero ingresado incorrecto","");

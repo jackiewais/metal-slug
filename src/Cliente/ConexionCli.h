@@ -18,7 +18,7 @@ class ConexionCli:Mensajeria{
 			bool conectado = false;
 		};
 
-		void enviarEvento(mensajeStruct *evento);
+		int enviarEvento(mensajeStruct *evento);
 		map<int, string> conectar(datosConexionStruct* datosConexion, std::string usuario, std::string contrasenia);
 		int desconectar(datosConexionStruct* datosConexion);
 		void enviarMensajes(datosConexionStruct* datosConexion,int usuarioTo, string msj);
