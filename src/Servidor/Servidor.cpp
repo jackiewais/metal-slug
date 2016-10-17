@@ -18,7 +18,9 @@
 #include "../Common/Log.h"
 #include "../Common/MensajeStruct.h"
 #include "./Modelo/EscenarioS.h"
+#include "../Parser/Parser.h"
 #include "Usuario.h"
+#define XML_PATH "Parser/game.xml"
 
 using namespace std;
 
@@ -157,28 +159,37 @@ void Servidor::handshake(mensajeStruct msg){
 	//apunto a la cola de mensajes de clientes que voy a mandar mensajes.
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
 
-	 /*   Parser *parser = new Parser();
-	    parser->parsearArchivoXML(XML_PATH);
+    Parser *parser = new Parser(msg.socketCli);
+    parser->parsearArchivoXML(XML_PATH);
 
-	    //MANDO DIMENSIONES DE VENTANA.
-	    colaCliente->push(parser->getVentana());
-		//MANDAR SPRITES
-	    for(std::vector<mensajeStruct>::iterator i = parser->getListaSprites().begin(); i != parser->getListaSprites().end(); ++i) {
-	    	   colaCliente->push(*i);
-	    }
-	    //MANDAR OBJETOS NUEVOS
-	    for(std::vector<mensajeStruct>::iterator i = parser->getListaObjetos().begin(); i != parser->getListaObjetos().end(); ++i) {
-	    	   colaCliente->push(*i);
-	    }
-	    //MANDAR FONDO
-	    for(std::vector<mensajeStruct>::iterator i = parser->getListaFondos().begin(); i != parser->getListaFondos().end(); ++i) {
-	    	   colaCliente->push(*i);
-	    }
-
-	    parser->~Parser();*/
-
-
-	//comienzo a mandar info
+   //MANDO DIMENSIONES DE VENTANA.
+    colaCliente->push(parser->getVentana());
+	//MANDAR SPRITES
+    std::vector<mensajeStruct> v1 = parser->getListaSprites();
+    std::vector<mensajeStruct>::iterator i1;
+    for( i1 = v1.begin(); i1 != v1.end(); ++i1) {
+   	   colaCliente->push(*i1);
+    }
+    //MANDAR FONDO
+    std::vector<mensajeStruct> v2 = parser->getListaFondos();
+    std::vector<mensajeStruct>::iterator i2;
+    for( i2 = v2.begin(); i2 != v2.end(); ++i2) {
+    	colaCliente->push(*i2);
+    }
+    //MANDAR ESTADOS SPRITES
+    std::vector<mensajeStruct> v3 = parser->getListaEstadosSpritesObjetos();
+    std::vector<mensajeStruct>::iterator i3;
+    for( i3 = v3.begin(); i3 != v3.end(); ++i3) {
+    	colaCliente->push(*i3);
+    }
+	//MANDAR OBJETOS NUEVOS
+	std::vector<mensajeStruct> v4 = parser->getListaObjetos();
+	std::vector<mensajeStruct>::iterator i4;
+	for( i4 = v4.begin(); i4 != v4.end(); ++i4) {
+			colaCliente->push(*i4);
+	}
+	parser->~Parser();
+/*	//comienzo a mandar info
 	cout << "Handshake" << endl;
 	//MANDO DIMENSIONES DE VENTANA.
 	msg.tipo=HANDSHAKE_DIMENSIONES_VENTANA;
@@ -229,8 +240,8 @@ void Servidor::handshake(mensajeStruct msg){
 			msg.objectId="jugador4";
 			msg.message="74;98";
 
-			colaCliente->push(msg);
-
+			colaCliente->push(msg);*/
+/*
 			msg.tipo=HANDSHAKE_ESTADO_SPRITE;
 			msg.objectId="jugador1";
 			msg.message="1;37;49;3;1"; //PARADO
@@ -281,7 +292,7 @@ void Servidor::handshake(mensajeStruct msg){
 									colaCliente->push(msg);
 									msg.message="5;37;49;13;5"; //SALTA_IZQ
 									colaCliente->push(msg);
-
+*/
 
 	// -------------------------------
 
@@ -292,7 +303,7 @@ void Servidor::handshake(mensajeStruct msg){
 		msg.message="primerFondo;0;0";
 		colaCliente->push(msg);*/
 
-		msg.tipo=HANDSHAKE_FONDO_NUEVO;
+/*		msg.tipo=HANDSHAKE_FONDO_NUEVO;
 		msg.objectId="F02";
 		msg.message="fondoUnoPrueba;0;0";
 		colaCliente->push(msg);
@@ -305,11 +316,10 @@ void Servidor::handshake(mensajeStruct msg){
 		msg.tipo=HANDSHAKE_FONDO_NUEVO;
 		msg.objectId="F04";
 		msg.message="fondoTresPrueba;0;100";
-		colaCliente->push(msg);
+		colaCliente->push(msg);*/
 
 
-
-	for(int i = 1; i <= this->cantJugadores; i++)
+/*	for(int i = 1; i <= this->cantJugadores; i++)
 	{
 		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
 		msg.objectId="J"+convertirAString(i);
@@ -318,12 +328,15 @@ void Servidor::handshake(mensajeStruct msg){
 		string pos;
 		if(jugador != NULL){
 			pos = jugador->getStringMensaje();
-		}else{
-			pos = convertirAString(getPosXInicial(i))+";400;01;D";
-		}
-		msg.message="jugador" + convertirAString(i) + ";"+pos;
-		colaCliente->push(msg);
-	}
+	//	}else{
+	//		pos = convertirAString(getPosXInicial(i))+";400;01;D";
+	//		cout << "2" << endl;
+	//	}
+	//	msg.message="jugador" + convertirAString(i) + ";"+pos;
+		cout << msg.objectId << endl;
+		cout << msg.message  << endl;
+		colaCliente->push(msg);}
+	}*/
 
 	msg.tipo = JUGADOR_SO_VO;
 	msg.objectId = "J"+ convertirAString(this->contenedor->getIdJugadorByIdSocket(msg.socketCli));
