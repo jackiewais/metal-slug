@@ -60,7 +60,7 @@ private:
 	pthread_t threadExit, threadMain, threadTimer;
 	int terminarThreads();
 	void procesarTeclaPulsada(mensajeStruct msg);
-
+	int cantidadJugadoresConectados = 0;
 	int posicionXHarcodeada =0;
 	void createTimerThread();
 	static void* manejarTimer (void *data);

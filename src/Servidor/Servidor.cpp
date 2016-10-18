@@ -67,6 +67,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 			//Jugador que entra por primera vez
 			if (idJugadores < cantJugadores){
 				this->idJugadores++;
+				cantidadJugadoresConectados++;
 				usuario->setIdJugador(this->idJugadores);
 				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,74,98, usuario );
 				this->escenario->addJugador(jugador);
@@ -77,6 +78,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 				mensaje.message = "";
 			}
 		}else{
+			cantidadJugadoresConectados++;
 			this->contenedor->addIdSocketIdJugador(msg.socketCli, usuario->getIdJugador());
 		}
 	}else{
@@ -86,8 +88,8 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 	}
 
 	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);
-    cout <<"CANTIDAD DE CONEXIONES "<<  cantCon << endl;
-	if(cantCon == cantJugadores){
+    cout <<"CANTIDAD DE CONEXIONES/JUGADORES "<<  cantidadJugadoresConectados << endl;
+	if(cantidadJugadoresConectados == cantJugadores){
 		mensaje.tipo = JUEGO_COMENZAR;
 		mensaje.message = "";
 	//Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
@@ -534,6 +536,8 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 		   if (args->context->contenedor->cerrarSesion(socketCli)){
 			   args->context->colaPrincipalMensajes.push(mensaje);
 			   args->context->cantCon--;
+			   args->context->cantidadJugadoresConectados--;
+			   cout << "ENTRO A DESCONEXION " << endl;
 		   }
 		   finish = 1;
 	   /*}else if (mensaje.tipo == ENVIAR_CHAT_SIGUE){
