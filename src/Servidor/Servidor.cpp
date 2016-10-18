@@ -68,7 +68,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 			if (idJugadores < cantJugadores){
 				this->idJugadores++;
 				usuario->setIdJugador(this->idJugadores);
-				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,getPosXInicial(usuario->getIdJugador()),400,74,98, usuario );
+				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,74,98, usuario );
 				this->escenario->addJugador(jugador);
 				this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
 			}else{
@@ -182,11 +182,28 @@ void Servidor::handshake(mensajeStruct msg){
     for( i3 = v3.begin(); i3 != v3.end(); ++i3) {
     	colaCliente->push(*i3);
     }
-	//MANDAR OBJETOS NUEVOS
+
+	//MANDAR JUGADORES
 	std::vector<mensajeStruct> v4 = parser->getListaObjetos();
 	std::vector<mensajeStruct>::iterator i4;
 	for( i4 = v4.begin(); i4 != v4.end(); ++i4) {
+
+		//OBTENGO LA POS INICIAL DEL JUGADOR SI EL ID ES MENOR A LA CANT DE JUGADORES, LO AGREGO
+		string idObjToInt = i4->objectId;
+		int idJugador = atoi(idObjToInt.erase(0, 1).c_str());
+		if (idJugador <= cantJugadores){
+
+			Jugador* jugador = this->escenario->getJugadorById(idJugador);
+			string datosJug;
+			if(jugador != NULL){
+				datosJug = jugador->getStringMensaje();
+			}else{
+				datosJug = "0;"+ convertirAString(this->escenario->alto + 10) +";01;D";
+			}
+			i4->message = i4->message + ";" + datosJug;
+
 			colaCliente->push(*i4);
+		}
 	}
 	parser->~Parser();
 /*	//comienzo a mandar info

@@ -3,6 +3,7 @@
 Parser::Parser(int cli)
 {
  cliente = cli;
+
 }
 
 Parser::~Parser()
@@ -80,60 +81,54 @@ void Parser::getxmlVentana(const pugi::xml_document* doc)
 }
 void Parser::getxmlObjetos(const pugi::xml_document* doc)
 {
-	pugi::xml_node objetosNode = doc->child("objetos");
+	/*pugi::xml_node objetosNode = doc->child("objetos");
 	pugi::xml_node elemNode = objetosNode.child("elementos");
 	for (pugi::xml_node i = elemNode.first_child(); i; i = i.next_sibling())
 	{
 	   mensajeStruct objeto;
 	   std::string objectId = i.child("objectId").first_child().value();
 	   std::string imagen = i.child("imagen").first_child().value();
-	   std::string ancho = i.child("ancho").first_child().value();
-	   std::string alto = i.child("alto").first_child().value();
-	   if (!validar(ancho))
+	   std::string x = i.child("x").first_child().value();
+	   std::string y = i.child("y").first_child().value();
+	   if (!validar(x))
 	   			{
-	   				ancho = "0";
+	   				x = "0";
 	   			}
-	   if (!validar(alto))
+	   if (!validar(y))
 	  	   		{
-	  	   			alto = "0";
+	  	   			y = "0";
 	  	   		}
 
 	   objeto.tipo = HANDSHAKE_OBJETO_NUEVO;
 	   objeto.objectId = objectId;
-	   objeto.message = imagen + ";" +ancho +";" + alto;
+
+
+	   string idObjToInt = objectId;
+	   int idJugador = atoi(idObjToInt.erase(0, 1).c_str());
+	   Jugador* jugador = this->escenarioS->getJugadorById(idJugador);
+		string datosJug;
+		if(jugador != NULL){
+			datosJug = jugador->getStringMensaje();
+		}else{
+			datosJug = x + ";" + y + ";1;D";
+		}
+	   objeto.message = imagen + ";" + datosJug;
 	   objeto.socketCli = cliente;
 	   listaObjetos.push_back(objeto);
-	}
-	pugi::xml_node jugadoresNode = objetosNode.child("jugadores");
+	}*/
+
+	pugi::xml_node jugadoresNode = doc->child("jugadores");
 	for (pugi::xml_node j = jugadoresNode.first_child(); j; j = j.next_sibling())
 	{
-	   mensajeStruct objeto2;
-	   std::string objectId2 = j.child("objectId").first_child().value();
-	   std::string imagen2 = j.child("imagen").first_child().value();
-	   std::string ancho2 = j.child("ancho").first_child().value();
-	   std::string alto2 = j.child("alto").first_child().value();
-	   std::string estado = j.child("estado").first_child().value();
-	   std::string conexion = j.child("conexion").first_child().value();
-	   if (!validar(ancho2))
-	   			{
-	   				ancho2 = "50";
-	   			}
-	   if (!validar(alto2))
-	  	   		{
-	  	   			alto2 = "400";
-	  	   		}
-	   if (!validar(estado) || atoi(estado.c_str())<1 || atoi(estado.c_str())>5){
-		   estado = "01";
-	   }
-	   if (conexion != "C" || conexion != "D"){
-		    conexion = "D";
-	   }
+	   mensajeStruct objeto;
+	   std::string objectId = j.child("objectId").first_child().value();
+	   std::string imagen = j.child("imagen").first_child().value();
 
-	   objeto2.tipo = HANDSHAKE_OBJETO_NUEVO;
-	   objeto2.objectId = objectId2;
-	   objeto2.message = imagen2 + ";" +ancho2 +";" + alto2 + ";" + estado + ";" + conexion;
-	   objeto2.socketCli = cliente;
-	   listaObjetos.push_back(objeto2);
+	   objeto.tipo = HANDSHAKE_OBJETO_NUEVO;
+	   objeto.objectId = objectId;
+		objeto.message = imagen;
+		objeto.socketCli = cliente;
+		listaObjetos.push_back(objeto);
 	}
 }
 void Parser::getxmlFondos(const pugi::xml_document* doc)
