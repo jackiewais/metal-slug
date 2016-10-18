@@ -32,9 +32,9 @@ class LTexture
 		void agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado);
 		void setAlpha( Uint8 alpha );
 
-	private:
-		SDL_Texture* mTexture;
 
+		SDL_Texture* mTexture;
+	private:
 		int mWidth;
 		int mHeight;
 		int widthScaled;
@@ -43,6 +43,7 @@ class LTexture
 		int altoFrame;
 		Escenario *escenario;
 		std::string path;
+
 		map<estadoJugador, list<SDL_Rect>*> mapFrames;
 		list<SDL_Rect>::iterator itEstado;
 		int iteradorDeItEstado;

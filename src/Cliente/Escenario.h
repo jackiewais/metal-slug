@@ -35,8 +35,11 @@ public:
 	void agregarEstado(std::string idSprite, estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado);
 	void crearJugadorPrincipal(mensajeStruct msg);
 	bool running = false;
-
+	bool esperandoJugadores=false;
+	void renderPausa();
 private:
+	void cargarMensajeEsperandoJugador();
+	ObjetoGraficable *esperandoJugador;
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;
 	std::map<std::string, LTexture*> mapTexturas;

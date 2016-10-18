@@ -23,11 +23,12 @@ public:
 	bool grisado = false;
 	int tipoObjeto = 0;
 	std::string id;
+
 private:
 
 	LTexture *textura;
-	int x, y, factorParallax;
-
+	int x, y;
+	int factorParallax=0;
 	int posMozaico = 0;
 	bool flagGrisado = false;
 

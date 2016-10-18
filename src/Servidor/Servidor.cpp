@@ -87,7 +87,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
 	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);
 
-	if(idJugadores == cantJugadores-1){
+	if(cantCon == cantJugadores){
 		mensaje.tipo = JUEGO_COMENZAR;
 		mensaje.message = "";
 	//Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);

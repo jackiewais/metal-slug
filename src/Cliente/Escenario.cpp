@@ -10,8 +10,15 @@ Escenario::Escenario() {
 	// Valores por defecto
 	this->screenWidth = 800;
 	this->screenHeight = 600;
+	cargarMensajeEsperandoJugador();
 }
 
+void Escenario::cargarMensajeEsperandoJugador(){
+
+this->addSprite("foo",50,60);
+this->crearObjeto("PAUSA","foo",50,50,PARADO,"C");
+
+}
 Escenario::~Escenario() {
 	// TODO Auto-generated destructor stub
 }
@@ -208,16 +215,31 @@ void Escenario::renderizarObjetos() {
 	std::map<std::string, ObjetoGraficable*>::iterator it;
 	for (it = this->mapObjetosGraficables.begin(); it != this->mapObjetosGraficables.end(); it++) {
 		it->second->actualizarGrisado();
+
 		if(this->jugadorPrincipal->id != it->second->id){
+			if(it->second->id != "PAUSA"){
 			it->second->render();
+			}
+
 		}
+
+
 	}
 	this->jugadorPrincipal->render();
+	if(!this->esperandoJugadores){
+		cout << "renderizo pausa " << endl;
+	this->renderPausa();
+	}
 	SDL_RenderPresent( this->gRenderer );
 	}catch(...){
 		cout << "Problemas con el render" << endl;
 	}
 }
+void Escenario::renderPausa(){
+
+	this->mapObjetosGraficables["PAUSA"]->render();
+}
+
 
 
 void Escenario::actualizarPosicionObjeto(std::string idObj, int x, int y, estadoJugador estado, string conectado) {

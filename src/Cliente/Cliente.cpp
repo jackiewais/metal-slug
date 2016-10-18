@@ -220,7 +220,7 @@ void *Cliente::recvMessage(void * arg){
 				context->escenario.crearJugadorPrincipal(mensajeRta);
 				break;
 			case JUEGO_COMENZAR:
-				context->esperarJugador();
+			context->escenario.esperandoJugadores=true;
 				break;
 			case JUGADOR_UPD:
 				if (context->jugando) context->updateJugador(mensajeRta);
@@ -241,11 +241,7 @@ void *Cliente::recvMessage(void * arg){
     }
 	return 0;
 };
-void Cliente::esperarJugador(){
 
-	this->esperarJugadores=true;
-
-}
 
 void Cliente::objetoNuevo(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
@@ -345,8 +341,19 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 		 }
 		 context->escenario.calcularParallax();
 		 while(context->jugando){
-			 salir=context->handleKeyEvents();
-			 if(context->jugando) context->escenario.renderizarObjetos();
+
+			 if(context->escenario.esperandoJugadores){
+				 salir=context->handleKeyEvents();
+				 }
+			 if(context->jugando) {
+				 context->escenario.renderizarObjetos();
+
+			 }
+			// if(!context->escenario.esperandoJugadores){
+				// cout << "esta renderizando pausa" << endl;
+
+
+				 //				 }
 		 }
 		 context->escenario.close();
 	 }
