@@ -367,7 +367,7 @@ void Servidor::handshake(mensajeStruct msg){
 
  	 msg.tipo=HANDSHAKE_OBJETO_NUEVO;
  	 msg.objectId="PAUSA";
- 	 msg.message="esperandoJugadores;200;100;PARADO;C";
+ 	 msg.message="esperandoJugadores;100;100;PARADO;C";
  	 colaCliente->push(msg);
 
 
