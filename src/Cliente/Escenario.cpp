@@ -14,10 +14,10 @@ Escenario::Escenario() {
 }
 
 void Escenario::cargarMensajeEsperandoJugador(){
-
-this->addSprite("esperandoJugadores",300,300);
-this->crearObjeto("PAUSA","esperandoJugadores",this->screenWidth/3,10,PARADO,"C");
-
+/*
+this->addSprite("foo",0,0);
+this->crearObjeto("PAUSA","foo",this->screenWidth/3,10,PARADO,"C");
+*/
 }
 Escenario::~Escenario() {
 	// TODO Auto-generated destructor stub

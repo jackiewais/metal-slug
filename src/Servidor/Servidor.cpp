@@ -86,7 +86,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 	}
 
 	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);
-
+    cout <<"CANTIDAD DE CONEXIONES "<<  cantCon << endl;
 	if(cantCon == cantJugadores){
 		mensaje.tipo = JUEGO_COMENZAR;
 		mensaje.message = "";
@@ -206,6 +206,8 @@ void Servidor::handshake(mensajeStruct msg){
 		}
 	}
 	parser->~Parser();
+
+
 /*	//comienzo a mandar info
 	cout << "Handshake" << endl;
 	//MANDO DIMENSIONES DE VENTANA.
@@ -354,6 +356,18 @@ void Servidor::handshake(mensajeStruct msg){
 		cout << msg.message  << endl;
 		colaCliente->push(msg);}
 	}*/
+
+
+	 msg.tipo = HANDSHAKE_SPRITES;
+	 msg.objectId="esperandoJugadores";
+ 	 msg.message="0;0";
+     colaCliente->push(msg);
+
+ 	 msg.tipo=HANDSHAKE_OBJETO_NUEVO;
+ 	 msg.objectId="PAUSA";
+ 	 msg.message="esperandoJugadores;200;100;PARADO;C";
+ 	 colaCliente->push(msg);
+
 
 	msg.tipo = JUGADOR_SO_VO;
 	msg.objectId = "J"+ convertirAString(this->contenedor->getIdJugadorByIdSocket(msg.socketCli));
