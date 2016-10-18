@@ -227,7 +227,7 @@ void Escenario::renderizarObjetos() {
 	}
 	this->jugadorPrincipal->render();
 	if(!this->esperandoJugadores){
-		cout << "renderizo pausa " << endl;
+
 	this->renderPausa();
 	}
 	SDL_RenderPresent( this->gRenderer );
