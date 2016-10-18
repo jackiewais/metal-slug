@@ -232,6 +232,7 @@ void *Cliente::recvMessage(void * arg){
 				context->imprimirConsigna();
 				break;
 			case RESET:
+				context->vecesX=0;
 				context->jugando=false;
 				context->escenarioOK=false;
 				while(context->escenario.running){}
