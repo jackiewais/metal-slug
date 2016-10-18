@@ -11,12 +11,12 @@
 class EscenarioS {
 
 private:
-	int ancho;
-	int alto;
 	int distancia;
 	int avance;
 
 public:
+	int ancho;
+	int alto;
 	int margen;
 	map<int, Jugador*> mapJugadores;
 

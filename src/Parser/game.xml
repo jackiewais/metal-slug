@@ -41,56 +41,25 @@
 			<alto>98</alto>
 		</sprite>
 </sprites>
-<objetos>
-    <elementos>
-<!--		<objeto>
-		    <objectId>F01</objectId>
-		    <imagen>barra8</imagen>
-			<ancho>0</ancho>
-			<alto>0</alto>
-		</objeto>
-		<objeto>
-		    <objectId>F04</objectId>
-		    <imagen>fondoTres</imagen>
-			<ancho>0</ancho>
-			<alto>0</alto>
-		</objeto>        -->
-	 </elementos>
-	 <jugadores>
-		<jugador>
-		    <objectId>J1</objectId>
-		    <imagen>jugador1</imagen>
-			<ancho>70</ancho>
-			<alto>400</alto>
-			<estado>1</estado>
-			<conexion>D</conexion>
-		</jugador>
-		<jugador>
-		    <objectId>J2</objectId>
-		    <imagen>jugador2</imagen>
-			<ancho>70</ancho>
-			<alto>400</alto>
-			<estado>01</estado>
-			<conexion>D</conexion>
-		</jugador>
-	    <jugador>
-		    <objectId>J3</objectId>
-		    <imagen>jugador3</imagen>
-			<ancho>70</ancho>
-			<alto>400</alto>
-			<estado>01</estado>
-			<conexion>D</conexion>
-		</jugador>
-		<jugador>
-		    <objectId>J4</objectId>
-		    <imagen>jugador4</imagen>
-			<ancho>70</ancho>
-			<alto>400</alto>
-			<estado>01</estado>
-			<conexion>D</conexion>
-		</jugador>
-	 </jugadores>
-</objetos>
+ <jugadores>
+	<jugador>
+	    <objectId>J1</objectId>
+	    <imagen>jugador1</imagen>
+	</jugador>
+	<jugador>
+	    <objectId>J2</objectId>
+	    <imagen>jugador2</imagen>
+	</jugador>
+    <jugador>
+	    <objectId>J3</objectId>
+	    <imagen>jugador3</imagen>
+	</jugador>
+	<jugador>
+	    <objectId>J4</objectId>
+	    <imagen>jugador4</imagen>
+	</jugador>
+ </jugadores>
+
 <fondos>
 		<fondo>
 		    <imagen>fondoUnoPrueba</imagen>

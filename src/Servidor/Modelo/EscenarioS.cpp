@@ -32,7 +32,7 @@ void EscenarioS::addJugador(Jugador* jugador) {
 
 	this->mapJugadores[jugador->getId()] = jugador;
 	if (this->mapJugadores.size() > 1) {
-		this->margen = 3*this->ancho/4;
+		this->margen = (this->ancho -(50));
 	}
 }
 
