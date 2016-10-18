@@ -221,6 +221,7 @@ void *Cliente::recvMessage(void * arg){
 				context->objetoNuevo(mensajeRta);
 				break;
 			case FIN_HANDSHAKE:
+				cout << "Fin del handshake" << endl;
 				context->escenarioOK=true;
 				break;
 			case ESCENARIO_UPD:
