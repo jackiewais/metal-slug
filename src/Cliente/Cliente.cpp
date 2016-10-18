@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <SDL2/SDL.h>
 #include "Escenario.h"
+#include <chrono>
 
 
 //using namespace std;
@@ -91,6 +92,8 @@ bool Cliente::handleKeyEvents(){
     SDL_Event e;
     bool salir=false;
     string accion = "NADA";
+    auto start_time = chrono::high_resolution_clock::now();
+    bool timer = false;;
     mensajeStruct evento;
     evento.tipo=PULSA_TECLA;
     evento.objectId="X0";
@@ -142,7 +145,14 @@ bool Cliente::handleKeyEvents(){
 
 	}
 	evento.message=convertirAString(vecesX) + ";" + accion;
-	SDL_Delay(1);
+	//SDL_Delay(1);
+
+	while(!timer){
+		auto end_time = chrono::high_resolution_clock::now();
+		if(chrono::duration_cast<chrono::microseconds>(end_time - start_time).count() >= 2000	){
+			timer=true;
+		}
+	}
 	SDL_FlushEvent(SDL_KEYDOWN);
 	SDL_FlushEvent(SDL_KEYUP);
 	if (enviarEvento(&evento)==1){
