@@ -15,8 +15,8 @@ Escenario::Escenario() {
 
 void Escenario::cargarMensajeEsperandoJugador(){
 
-this->addSprite("foo",50,60);
-this->crearObjeto("PAUSA","foo",50,50,PARADO,"C");
+this->addSprite("esperandoJugadores",300,300);
+this->crearObjeto("PAUSA","esperandoJugadores",this->screenWidth/3,10,PARADO,"C");
 
 }
 Escenario::~Escenario() {

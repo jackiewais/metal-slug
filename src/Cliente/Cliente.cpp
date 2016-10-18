@@ -349,6 +349,7 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 				 context->escenario.renderizarObjetos();
 
 			 }
+
 			// if(!context->escenario.esperandoJugadores){
 				// cout << "esta renderizando pausa" << endl;
 
