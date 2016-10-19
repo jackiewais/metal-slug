@@ -54,6 +54,7 @@ void* Servidor::procesarMensajesMain (void *data) {
 int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 
 	mensajeStruct mensaje;
+	bool comienzaJuego=false;
 
 	mensaje.objectId = "00";
 
@@ -67,19 +68,20 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 			//Jugador que entra por primera vez
 			if (idJugadores < cantJugadores){
 				this->idJugadores++;
-				cantidadJugadoresConectados++;
 				usuario->setIdJugador(this->idJugadores);
 				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,74,98, usuario );
 				this->escenario->addJugador(jugador);
 				this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
+
+				comienzaJuego =true;
 			}else{
 				std::cout << "DENEGADO: No se aceptan nuevos jugadores" <<endl;
 				mensaje.tipo = LOG_NOTOK;
 				mensaje.message = "";
 			}
 		}else{
-			cantidadJugadoresConectados++;
 			this->contenedor->addIdSocketIdJugador(msg.socketCli, usuario->getIdJugador());
+			//if (idJugadores=cantJugadores) comienzaJuego = true;
 		}
 	}else{
 		std::cout << "DENEGADO" <<endl;
@@ -88,21 +90,23 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 	}
 
 	Mensajeria::encodeAndSend(msg.socketCli, &mensaje);
-    cout <<"CANTIDAD DE CONEXIONES/JUGADORES "<<  cantidadJugadoresConectados << endl;
-	if(cantidadJugadoresConectados == cantJugadores){
-		mensaje.tipo = JUEGO_COMENZAR;
-		mensaje.message = "";
-	//Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
+	cout << "idJugadores: " << idJugadores << endl;
+    if (comienzaJuego){
+		if(idJugadores == cantJugadores){
+			mensajeStruct mensaje2;
+			mensaje2.tipo = JUEGO_COMENZAR;
+			mensaje2.message = "COMENZA";
+		//Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
 
 
-		for(auto const &user :  this->contenedor->socket_usuario) {
-		  if(user.second->isConectado()){
-			  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
-
-					colaCliente->push(mensaje);
-		  	  }
+			for(auto const &user :  this->contenedor->socket_usuario) {
+			  if(user.second->isConectado()){
+				  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
+						colaCliente->push(mensaje2);
+				  }
+			}
 		}
-	}
+    }
 	return 0;
 }
 
@@ -152,8 +156,6 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 	  }
 
 	}
-
-	--this->posicionXHarcodeada;
 }
 
 
@@ -416,15 +418,17 @@ int Servidor::procesarDesconexion(mensajeStruct mensaje){
 	//Mando mensaje desconexión a la cola del cliente
 	socketIdQueue[mensaje.socketCli]->push(mensaje);
 	Usuario* usuario = this->contenedor->getUsuarioBySocket(mensaje.socketCli);
-
-	mensajeStruct msgRta = this->escenario->getMensajeDesconexion(usuario->getIdJugador());
-	//Mando un mensaje al resto de los usuarios con la desconexión
-	for(auto const &user :  this->contenedor->socket_usuario) {
-	  if(user.second->isConectado()){
-		  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
-		  msgRta.socketCli = user.first;
-		  colaCliente->push(msgRta);
-	  }
+	int idJugador = usuario->getIdJugador();
+	if (idJugador != 0){
+		mensajeStruct msgRta = this->escenario->getMensajeDesconexion(idJugador);
+		//Mando un mensaje al resto de los usuarios con la desconexión
+		for(auto const &user :  this->contenedor->socket_usuario) {
+		  if(user.second->isConectado()){
+			  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
+			  msgRta.socketCli = user.first;
+			  colaCliente->push(msgRta);
+		  }
+		}
 	}
 	this->contenedor->socket_usuario.erase(mensaje.socketCli);
 	//JUGADOR
@@ -536,8 +540,6 @@ void* Servidor::recibirMensajesCliente(void* arguments){
 		   if (args->context->contenedor->cerrarSesion(socketCli)){
 			   args->context->colaPrincipalMensajes.push(mensaje);
 			   args->context->cantCon--;
-			   args->context->cantidadJugadoresConectados--;
-			   cout << "ENTRO A DESCONEXION " << endl;
 		   }
 		   finish = 1;
 	   /*}else if (mensaje.tipo == ENVIAR_CHAT_SIGUE){

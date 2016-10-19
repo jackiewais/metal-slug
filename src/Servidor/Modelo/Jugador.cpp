@@ -159,7 +159,7 @@ string Jugador::getStringMensaje() {
     stringstream x,y,estado;
     x << (this->posX);
     y << (this->posY);
-    estado << this->estado;
+    estado << (this->usuario->isConectado())?this->estado:PARADO;
     string conectado = (this->usuario->isConectado())?"C":"D";
 	return (x.str() + ";" + y.str() + ";" + estado.str() + ";" + conectado);
 }
