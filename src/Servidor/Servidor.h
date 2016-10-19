@@ -11,6 +11,8 @@
 #include <queue>
 #include "./Modelo/EscenarioS.h"
 #include "Contenedor.h"
+#include "../Parser/Parser.h"
+#define XML_PATH "Parser/game.xml"
 
 //using namespace std;
 
@@ -64,6 +66,8 @@ private:
 	static void* manejarTimer (void *data);
 	int idJugadores = 0;
 	string convertirAString(int i);
+	Parser *parser;
+
 public:
 	Servidor();
 	virtual ~Servidor();

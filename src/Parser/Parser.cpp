@@ -31,6 +31,10 @@ bool Parser::parsearArchivoXML(const std::string& nameFileXML)
 	getxmlFondos(&doc);
 	getxmlObjetos(&doc);
 	getxmlEstadosSprites(&doc);
+	setAnchoJugador(&doc);
+	setAltoJugador(&doc);
+	setAnchoEscenario(&doc);
+	setAltoEscenario(&doc);
 	return true;
 }
 void Parser::getxmlSprites(const pugi::xml_document* doc)
@@ -231,4 +235,42 @@ bool Parser::validar(std::string numero)
 	 return true;
 }
 
+void Parser::setAnchoJugador(const pugi::xml_document* doc) {
 
+	pugi::xml_node fisicoJugadorNode = doc->child("fisicoJugador");
+	this->anchoJugador = fisicoJugadorNode.child("ancho").first_child().value();
+}
+
+void Parser::setAltoJugador(const pugi::xml_document* doc) {
+
+	pugi::xml_node fisicoJugadorNode = doc->child("fisicoJugador");
+	this->altoJugador = fisicoJugadorNode.child("alto").first_child().value();
+}
+
+void Parser::setAnchoEscenario(const pugi::xml_document* doc) {
+
+	pugi::xml_node ventanaNode = doc->child("ventana");
+	this->anchoEscenario = ventanaNode.child("ancho").first_child().value();
+}
+
+void Parser::setAltoEscenario(const pugi::xml_document* doc) {
+
+	pugi::xml_node ventanaNode = doc->child("ventana");
+	this->altoEscenario = ventanaNode.child("alto").first_child().value();
+}
+
+int Parser::getAnchoJugador() {
+	return atoi(this->anchoJugador.c_str());
+}
+
+int Parser::getAltoJugador() {
+	return atoi(this->altoJugador.c_str());
+}
+
+int Parser::getAnchoEscenario() {
+	return atoi(this->anchoEscenario.c_str());
+}
+
+int Parser::getAltoEscenario() {
+	return atoi(this->altoEscenario.c_str());
+}

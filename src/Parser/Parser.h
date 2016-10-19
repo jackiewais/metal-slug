@@ -39,6 +39,11 @@ public:
 		return listaEstadosSprites;
 	}
 
+	int getAnchoJugador();
+	int getAltoJugador();
+	int getAnchoEscenario();
+	int getAltoEscenario();
+
 private:
 
 	struct fondo {
@@ -52,12 +57,21 @@ private:
 	std::vector<mensajeStruct> listaObjetos;
 	std::vector<mensajeStruct> listaEstadosSprites;
 
+	string anchoJugador;
+	string altoJugador;
+	string anchoEscenario;
+	string altoEscenario;
+
 	void getxmlSprites(const pugi::xml_document* doc);
 	void getxmlVentana(const pugi::xml_document* doc);
 	void getxmlObjetos(const pugi::xml_document* doc);
 	void getxmlFondos(const pugi::xml_document* doc);
 	void getxmlEstadosSprites(const pugi::xml_document* doc);
 	bool validar(std::string numero);
+	void setAnchoJugador(const pugi::xml_document* doc);
+	void setAltoJugador(const pugi::xml_document* doc);
+	void setAnchoEscenario(const pugi::xml_document* doc);
+	void setAltoEscenario(const pugi::xml_document* doc);
 };
 
 #endif /* PARSER_H_ */

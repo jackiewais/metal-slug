@@ -18,9 +18,7 @@
 #include "../Common/Log.h"
 #include "../Common/MensajeStruct.h"
 #include "./Modelo/EscenarioS.h"
-#include "../Parser/Parser.h"
 #include "Usuario.h"
-#define XML_PATH "Parser/game.xml"
 
 using namespace std;
 
@@ -69,7 +67,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 			if (idJugadores < cantJugadores){
 				this->idJugadores++;
 				usuario->setIdJugador(this->idJugadores);
-				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,74,98, usuario, 450 );
+				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), usuario, this->parser->getAltoEscenario() );
 				this->escenario->addJugador(jugador);
 				this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
 
@@ -209,7 +207,7 @@ void Servidor::handshake(mensajeStruct msg){
 			colaCliente->push(*i4);
 		}
 	}
-	parser->~Parser();
+	delete parser;
 
 
 /*	//comienzo a mandar info
@@ -822,13 +820,13 @@ void* Servidor::manejarTimer (void *data) {
 }
 
 
-
 Servidor::Servidor() {
 	this->contenedor = new Contenedor();
 	this->arguments = new argsForThread();
-	this->escenario = new EscenarioS(800,600);
+	this->escenario = new EscenarioS(this->parser->getAnchoEscenario(),this->parser->getAltoEscenario());
 	this->cerrarPrograma=false;
 }
+
 Servidor::~Servidor() {
 	delete this->contenedor;
 	delete this->arguments;
@@ -839,4 +837,5 @@ Servidor::~Servidor() {
 		delete it->second;
 	}
 
+	delete this->parser;
 }

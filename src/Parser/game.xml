@@ -4,6 +4,10 @@
 	<ancho>800</ancho>
 	<alto>600</alto>
 </ventana>
+<fisicoJugador>
+	<ancho>74</ancho>
+	<alto>98</alto>
+</fisicoJugador>
 <sprites>
 		<sprite>
 		    <objectId>fondoUnoPrueba</objectId>
