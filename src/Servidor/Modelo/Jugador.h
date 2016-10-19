@@ -14,8 +14,8 @@ private:
 	string nombre;
 	int puntaje;
 	int factorSalto = -1;
-	int piso = 450;
-	int topeSalto = piso-75;
+	int piso;
+	int topeSalto;
 	int posX;
 	int posY;
 	Usuario* usuario;
@@ -32,7 +32,7 @@ public:
 
 
 
-	Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario);
+	Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, int piso);
 	virtual ~Jugador();
 	int getId();
 	void mover(int anchoEscenario, int vecesX, string accion);
