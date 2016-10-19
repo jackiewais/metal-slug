@@ -67,7 +67,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 			if (idJugadores < cantJugadores){
 				this->idJugadores++;
 				usuario->setIdJugador(this->idJugadores);
-				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), usuario, this->parser->getAltoEscenario() );
+				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), usuario, this->parser->getAltoEscenario());
 				this->escenario->addJugador(jugador);
 				this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
 
@@ -80,6 +80,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 		}else{
 			this->contenedor->addIdSocketIdJugador(msg.socketCli, usuario->getIdJugador());
 			//if (idJugadores=cantJugadores) comienzaJuego = true;
+			comienzaJuego =true;
 		}
 	}else{
 		std::cout << "DENEGADO" <<endl;
@@ -727,6 +728,9 @@ void Servidor::runServer(){
 	string pathCSV = getCSVPath();
 	this->contenedor->inicializarContenedor(pathCSV);
 
+	this->parser->parsearArchivoXML(XML_PATH);
+	this->escenario = new EscenarioS(this->parser->getAnchoEscenario(),this->parser->getAltoEscenario());
+
 	createExitThread();
 	createMainProcessorThread();
 
@@ -823,8 +827,8 @@ void* Servidor::manejarTimer (void *data) {
 Servidor::Servidor() {
 	this->contenedor = new Contenedor();
 	this->arguments = new argsForThread();
-	this->escenario = new EscenarioS(this->parser->getAnchoEscenario(),this->parser->getAltoEscenario());
 	this->cerrarPrograma=false;
+	this->parser = new Parser();
 }
 
 Servidor::~Servidor() {

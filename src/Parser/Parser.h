@@ -20,6 +20,7 @@ public:
 
 	bool parsearArchivoXML(const std::string& nameFileXML);
 
+	Parser();
 	Parser(int cli);
 	~Parser();
 

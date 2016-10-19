@@ -32,7 +32,7 @@ public:
 
 
 
-	Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, int piso);
+	Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, int altoEscenario);
 	virtual ~Jugador();
 	int getId();
 	void mover(int anchoEscenario, int vecesX, string accion);
