@@ -729,6 +729,10 @@ void Servidor::runServer(){
 	this->contenedor->inicializarContenedor(CSV_PATH);
 
 	if (this->parser->parsearArchivoXML(XML_PATH)){
+
+		//CANTIDAD DE JUGADORES
+		cantJugadores = parser->getCantJugadores();
+
 		this->escenario = new EscenarioS(this->parser->getAnchoEscenario(),this->parser->getAltoEscenario());
 
 		createExitThread();
