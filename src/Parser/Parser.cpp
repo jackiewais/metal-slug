@@ -212,7 +212,7 @@ void Parser::getxmlEstadosSprites(const pugi::xml_document* doc)
 						}
 
 			   esSprite.tipo = HANDSHAKE_ESTADO_SPRITE;
-			   esSprite.objectId = "jugador"+objetId;
+			   esSprite.objectId = objetId;
 			   esSprite.message = estado+ ";"+ancho+";"+alto+";"+cantidad+";"+orden;
 			   esSprite.socketCli = cliente;
 			   listaSprites.push_back(esSprite);

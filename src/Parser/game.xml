@@ -81,7 +81,7 @@
 		</fondo>
 </fondos>
 <estadosSprites>
-    <jugador objetId="1">
+    <jugador objetId="jugador1">
 		<sprite>
 		    <estado>1</estado>
 			<ancho>37</ancho>
@@ -118,7 +118,7 @@
 			<orden>5</orden>
 		</sprite>
 	</jugador>
-	<jugador objetId="2">
+	<jugador objetId="jugador2">
 		<sprite>
 		    <estado>1</estado>
 			<ancho>37</ancho>
@@ -155,7 +155,7 @@
 			<orden>5</orden>
 		</sprite>
 	</jugador>
-    <jugador objetId="3">
+    <jugador objetId="jugador3">
 		<sprite>
 		    <estado>1</estado>
 			<ancho>37</ancho>
@@ -192,7 +192,7 @@
 			<orden>5</orden>
 		</sprite>
 	</jugador>
-	<jugador objetId="4">
+	<jugador objetId="jugador4">
 		<sprite>
 		    <estado>1</estado>
 			<ancho>37</ancho>

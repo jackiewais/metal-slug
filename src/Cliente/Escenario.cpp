@@ -93,7 +93,10 @@ LTexture* Escenario::addSprite(std::string idSprite, int ancho, int alto) {
 }
 
 void Escenario::agregarEstado(string idSprite, estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado) {
-	this->mapTexturas[idSprite]->agregarEstado(estado, anchoFrame, altoFrame, cantFrames,ordenEstado);
+	// Si el objeto esta en el map
+	if ( this->mapTexturas.find(idSprite) != this->mapTexturas.end() ) {
+		this->mapTexturas[idSprite]->agregarEstado(estado, anchoFrame, altoFrame, cantFrames,ordenEstado);
+	}
 }
 
 void Escenario::crearJugadorPrincipal(mensajeStruct msg){
