@@ -44,6 +44,7 @@ public:
 	int getAltoJugador();
 	int getAnchoEscenario();
 	int getAltoEscenario();
+	int getCantJugadores();
 
 private:
 
@@ -62,7 +63,9 @@ private:
 	string altoJugador;
 	string anchoEscenario;
 	string altoEscenario;
+	int cantJugadores;
 
+	void getxmlCantJugadores(const pugi::xml_document* doc);
 	void getxmlSprites(const pugi::xml_document* doc);
 	void getxmlVentana(const pugi::xml_document* doc);
 	void getxmlObjetos(const pugi::xml_document* doc);

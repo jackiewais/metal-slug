@@ -33,7 +33,7 @@ bool Parser::parsearArchivoXML(const std::string& nameFileXML)
 			return false;
 		}
 	}
-
+	getxmlCantJugadores(&doc);
 	getxmlSprites(&doc);
 	getxmlVentana(&doc);
 	getxmlFondos(&doc);
@@ -242,6 +242,9 @@ bool Parser::validar(std::string numero)
 	     }
 	 return true;
 }
+void Parser::getxmlCantJugadores(const pugi::xml_document* doc) {
+	this->cantJugadores = atoi(doc->child_value("cantidadJugadores"));
+}
 
 void Parser::setAnchoJugador(const pugi::xml_document* doc) {
 
@@ -265,6 +268,9 @@ void Parser::setAltoEscenario(const pugi::xml_document* doc) {
 
 	pugi::xml_node ventanaNode = doc->child("ventana");
 	this->altoEscenario = ventanaNode.child("alto").first_child().value();
+}
+int Parser::getCantJugadores() {
+	return this->cantJugadores;
 }
 
 int Parser::getAnchoJugador() {
