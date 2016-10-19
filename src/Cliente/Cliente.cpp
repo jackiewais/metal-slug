@@ -112,7 +112,7 @@ bool Cliente::handleKeyEvents(){
 		//User presses a key
 		else{
 
-
+			if (this->escenario.esperandoJugadores){
 			 if ( e.type == SDL_KEYUP && e.key.repeat == 0 ){
 				 switch( e.key.keysym.sym ){
 					case SDLK_LEFT:
@@ -141,10 +141,16 @@ bool Cliente::handleKeyEvents(){
 						break;
 				}
 			}
+
+		}
 		}
 
 	}
+	if (this->escenario.esperandoJugadores){
 	evento.message=convertirAString(vecesX) + ";" + accion;
+	}else{
+		evento.message="0;NADA";
+	}
 	//SDL_Delay(1);
 
 	while(!timer){
@@ -354,9 +360,9 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 		 context->escenario.calcularParallax();
 		 while(context->jugando){
 
-			 if(context->escenario.esperandoJugadores){
+			// if(context->escenario.esperandoJugadores){
 				 salir=context->handleKeyEvents();
-				 }
+			//	 }
 			 if(context->jugando) {
 				 context->escenario.renderizarObjetos();
 
