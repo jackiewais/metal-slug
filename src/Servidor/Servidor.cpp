@@ -69,7 +69,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 			if (idJugadores < cantJugadores){
 				this->idJugadores++;
 				usuario->setIdJugador(this->idJugadores);
-				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,74,98, usuario );
+				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,74,98, usuario, 450 );
 				this->escenario->addJugador(jugador);
 				this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
 
@@ -606,7 +606,7 @@ void *Servidor::sendMessage(void *arguments){
 
 void Servidor::nuevaConexion(int new_fd) {
 	struct timeval timeout;
-	timeout.tv_sec = 15;
+	timeout.tv_sec = 60;
 	timeout.tv_usec = 0;
 	pthread_t precvMessage;
 	pthread_t psendMessage;

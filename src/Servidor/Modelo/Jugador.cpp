@@ -1,7 +1,7 @@
 #include "Jugador.h"
 #include <sstream>
 
-Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario) {
+Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, int piso) {
 
 	this->id = id;
 	this->velocidad = velocidad;
@@ -10,6 +10,8 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario) {
 	this->alto = alto;
 	this->puntaje = 0;
 	this->usuario = usuario;
+	this->piso = piso;
+	this->topeSalto = piso-75;
 
 	moverAPosicionInicial();
 
