@@ -161,6 +161,7 @@ bool Cliente::handleKeyEvents(){
 	}
 	SDL_FlushEvent(SDL_KEYDOWN);
 	SDL_FlushEvent(SDL_KEYUP);
+
 	if (enviarEvento(&evento)==1){
 		//hubo error en el send
 		cout << "SERVIDOR DESCONECTADO" << endl;
@@ -358,6 +359,9 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 			 return NULL;
 		 }
 		 context->escenario.calcularParallax();
+
+		SDL_FlushEvent(SDL_KEYDOWN);
+		SDL_FlushEvent(SDL_KEYUP);
 		 while(context->jugando){
 
 			// if(context->escenario.esperandoJugadores){
