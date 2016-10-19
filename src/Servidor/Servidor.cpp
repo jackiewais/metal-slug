@@ -703,13 +703,13 @@ short getPuerto(){
 string getCSVPath(){
 	string path;
 
-	cout << "Ingrese el nombre del archivo CSV ('d' para default):" << endl;
+	cout << "Ingrese el nombre del archivo XML ('d' para default):" << endl;
 	cin >> path;
 
 	if (path == "d"){
-		return "usuarios.csv";
+		return "Parser/game.xml";
 	}else{
-		return path;
+		return "Parser/"+path;
 	}
 }
 
@@ -725,19 +725,20 @@ void Servidor::runServer(){
 
 	short puerto = getPuerto();
 
-	string pathCSV = getCSVPath();
-	this->contenedor->inicializarContenedor(pathCSV);
+	XML_PATH = getCSVPath();
+	this->contenedor->inicializarContenedor(CSV_PATH);
 
-	this->parser->parsearArchivoXML(XML_PATH);
-	this->escenario = new EscenarioS(this->parser->getAnchoEscenario(),this->parser->getAltoEscenario());
+	if (this->parser->parsearArchivoXML(XML_PATH)){
+		this->escenario = new EscenarioS(this->parser->getAnchoEscenario(),this->parser->getAltoEscenario());
 
-	createExitThread();
-	createMainProcessorThread();
+		createExitThread();
+		createMainProcessorThread();
 
-	openSocket(puerto);
-	escuchar();
+		openSocket(puerto);
+		escuchar();
 
-	terminarThreads();
+		terminarThreads();
+	}
 };
 
 int Servidor::terminarThreads(){

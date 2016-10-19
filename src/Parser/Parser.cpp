@@ -25,7 +25,13 @@ bool Parser::parsearArchivoXML(const std::string& nameFileXML)
 
 	if (!result)
 	{
-		return false;
+		pugi::xml_parse_result result = doc.load_file("Parser/game.xml");
+		cout << "No se encontró el XML, se toma el de defecto" << endl;
+
+		if (!result){
+			cout << "ERROR abriendo XML" << endl;
+			return false;
+		}
 	}
 
 	getxmlSprites(&doc);
