@@ -46,7 +46,7 @@ map<int, string> ConexionCli::conectar(datosConexionStruct* datosConexion, std::
 	}
 
 	struct timeval timeout;
-	 timeout.tv_sec = 60;
+	 timeout.tv_sec = 40;
 
 	 timeout.tv_usec = 0;
 
