@@ -169,16 +169,17 @@ void Escenario::close()
 	for (it = this->mapTexturas.begin(); it != this->mapTexturas.end(); it++) {
 		it->second->free();
 	}
-
+	this->mapTexturas.clear();
 	std::map<std::string, ObjetoGraficable*>::iterator itOb;
 	for (itOb = this->mapObjetosGraficables.begin(); itOb != this->mapObjetosGraficables.end(); itOb++) {
 		delete itOb->second;
 	}
-
+	this->mapObjetosGraficables.clear();
 	/*std::map<std::string, ObjetoGraficable*>::iterator itObF;
 	for (itObF = this->mapFondos.begin(); itObF != this->mapFondos.end(); itObF++) {
 		delete itObF->second;
 	}*/
+	this->mapFondos.clear();
 
 	//Destroy window
 	SDL_DestroyRenderer( gRenderer );
