@@ -11,17 +11,17 @@
 </fisicoJugador>
 <sprites>
 		<sprite>
-		    <objectId>fondoUnoPrueba</objectId>
+		    <objectId>fondoCielo</objectId>
 			<ancho>0</ancho>
 			<alto>0</alto>
 		</sprite>
 		<sprite>
-		    <objectId>fondoDosPrueba</objectId>
+		    <objectId>fondoMedio</objectId>
 			<ancho>0</ancho>
 			<alto>0</alto>
 		</sprite>
 	    <sprite>
-		    <objectId>fondoTresPrueba</objectId>
+		    <objectId>fondoGrande</objectId>
 			<ancho>0</ancho>
 			<alto>0</alto>
 		</sprite>
@@ -67,21 +67,21 @@
 
 <fondos>
 		<fondo>
-		    <imagen>fondoUnoPrueba</imagen>
+		    <imagen>fondoCielo</imagen>
 			<ancho>0</ancho>
 			<alto>0</alto>
 			<zIndex>6</zIndex>
 		</fondo>
 		<fondo>
-		    <imagen>fondoDosPrueba</imagen>
+		    <imagen>fondoMedio</imagen>
 			<ancho>0</ancho>
-			<alto>50</alto>
+			<alto>0</alto>
 			<zIndex>6</zIndex>
 		</fondo>
 		<fondo>
-		    <imagen>fondoTresPrueba</imagen>
+		    <imagen>fondoGrande</imagen>
 			<ancho>0</ancho>
-			<alto>100</alto>
+			<alto>0</alto>
 			<zIndex>6</zIndex>
 		</fondo>
 </fondos>
