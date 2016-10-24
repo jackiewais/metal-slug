@@ -11,7 +11,7 @@
 </fisicoJugador>
 <sprites>
 		<sprite>
-		    <objectId>fondoCielo</objectId>
+		    <objectId>fondoGrande</objectId>
 			<ancho>0</ancho>
 			<alto>0</alto>
 		</sprite>
@@ -19,9 +19,9 @@
 		    <objectId>fondoMedio</objectId>
 			<ancho>0</ancho>
 			<alto>0</alto>
-		</sprite>
-	    <sprite>
-		    <objectId>fondoGrande</objectId>
+		</sprite>	
+  		<sprite>
+		    <objectId>fondoCielo</objectId>
 			<ancho>0</ancho>
 			<alto>0</alto>
 		</sprite>
@@ -65,14 +65,12 @@
 	</jugador>
  </jugadores>
 
-<fondos>
-		<fondo>
+<fondos><fondo>
 		    <imagen>fondoCielo</imagen>
 			<ancho>0</ancho>
 			<alto>0</alto>
 			<zIndex>6</zIndex>
-		</fondo>
-		<fondo>
+		</fondo><fondo>
 		    <imagen>fondoMedio</imagen>
 			<ancho>0</ancho>
 			<alto>0</alto>
