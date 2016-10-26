@@ -16,6 +16,7 @@ private:
 	int factorSalto = -1;
 	int piso;
 	int topeSalto;
+	int plataforma;
 	int posX;
 	int posY;
 	Usuario* usuario;

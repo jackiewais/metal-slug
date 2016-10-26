@@ -11,7 +11,8 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, i
 	this->puntaje = 0;
 	this->usuario = usuario;
 	this->piso = altoEscenario - 150;
-	this->topeSalto = piso-75;
+	this->topeSalto = piso-100;
+	this->plataforma = topeSalto + 40;
 
 	moverAPosicionInicial();
 
@@ -105,7 +106,7 @@ bool Jugador::estaSaltando(){
 void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 
 	if (this->aceptaCambios){
-		if (accion == "SALTA"){
+		if (accion=="SALTA"){
 			this->estado = (vecesX >= 0)?SALTA_DER:SALTA_IZQ;
 		}
 
@@ -151,6 +152,18 @@ void Jugador::manejarSalto(){
 			factorSalto = -1;
 			this-> posY = piso;
 			this->estado = PARADO;
+		}else if (this->posY ==plataforma && factorSalto == 1 && this->posX > 100 && this->posX < 200){
+			factorSalto = -1;
+			this-> posY = plataforma;
+			this->estado = PARADO;
+		}
+	}else{
+		if (this->posY ==plataforma && this->posX < 100) {
+			factorSalto = 1;
+			this->estado = SALTA_IZQ;
+		}else if(this->posY ==plataforma && this->posX > 200){
+			factorSalto = 1;
+			this->estado = SALTA_DER;
 		}
 	}
 
