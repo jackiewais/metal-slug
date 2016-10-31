@@ -238,10 +238,13 @@ void *Cliente::recvMessage(void * arg){
 				context->escenario.crearJugadorPrincipal(mensajeRta);
 				break;
 			case JUEGO_COMENZAR:
-			context->escenario.esperandoJugadores=true;
+				context->escenario.esperandoJugadores=true;
 				break;
 			case JUGADOR_UPD:
 				if (context->jugando) context->updateJugador(mensajeRta);
+				break;
+			case ENEMIGO_UPD:
+				if (context->jugando) context->updateEnemigo(mensajeRta);
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
@@ -283,6 +286,15 @@ void Cliente::objetoNuevo(mensajeStruct msg){
 
 }
 
+void Cliente::updateEnemigo(mensajeStruct msg){
+	vector<string> result = Util::Split(msg.message,';');
+
+	string spriteId = result[0];
+	int x=atoi(result[1].c_str());
+	int y=atoi(result[2].c_str());
+
+	escenario.crearOActualizarEnemigo(msg.objectId,spriteId,x,y);
+}
 
 void Cliente::updateJugador(mensajeStruct msg){
 	int x,y;
@@ -310,13 +322,6 @@ void Cliente::addSprite(mensajeStruct msg){
 	strAux = msg.message.substr(pos+1,msg.message.length());
 	alto = atoi(strAux.c_str());
 	textura = this->escenario.addSprite(msg.objectId, ancho, alto);
-	/*if (msg.objectId == "jugador1" || msg.objectId == "jugador2") {
-		textura->agregarEstado(PARADO, 37, 49, 3,1);
-		textura->agregarEstado(CAMINA_DER, 37, 49, 9,2);
-		textura->agregarEstado(SALTA_DER, 37, 49, 13,3);
-		textura->agregarEstado(SALTA_IZQ, 37, 49, 13,3);
-		textura->agregarEstado(CAMINA_IZQ, 37, 49, 9,4);
-	}*/
 }
 
 void Cliente::addEstadoSprite(mensajeStruct msg){

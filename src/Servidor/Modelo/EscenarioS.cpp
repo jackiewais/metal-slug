@@ -77,6 +77,10 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		moverEscenario(&returnList);
 		returnList.push_back(getMensajeJugador(jugador));
 		returnList.push_back(getMensajeEscenario());
+		// hardcodeado por el momento
+		if ((this->avance > 30) && (this->avance < 750) ) {
+			returnList.push_back(getMensajeEnemigo());
+		}
 	}
 
 	return returnList;
@@ -158,6 +162,19 @@ mensajeStruct EscenarioS::getMensajeEscenario(){
 	msjEscenario.objectId = "E00";
 
 	return msjEscenario;
+}
+
+mensajeStruct EscenarioS::getMensajeEnemigo(){
+	mensajeStruct msjEnemigo;
+	stringstream posXEnemigo;
+	// un movimiento cualquiera para probar
+	posXEnemigo << (800 - this->avance);
+
+	msjEnemigo.tipo = ENEMIGO_UPD;
+	msjEnemigo.objectId="T1";
+	msjEnemigo.message="foo;" + posXEnemigo.str() + ";450";
+
+	return msjEnemigo;
 }
 
 void EscenarioS::resetEscenario(){

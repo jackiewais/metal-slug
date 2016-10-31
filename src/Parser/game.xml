@@ -45,6 +45,11 @@
 			<ancho>74</ancho>
 			<alto>98</alto>
 		</sprite>
+		<sprite>
+		    <objectId>foo</objectId>
+			<ancho>74</ancho>
+			<alto>98</alto>
+		</sprite>
 </sprites>
  <jugadores>
 	<jugador>

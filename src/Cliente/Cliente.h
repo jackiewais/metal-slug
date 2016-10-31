@@ -36,6 +36,7 @@ private:
 	static void *crearEscenario(void *arg);
 	int printMenu();
 	void objetoNuevo(mensajeStruct msg);
+	void updateEnemigo(mensajeStruct msg);
 	void imprimirConsigna();
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
 	pthread_t threadRecv;
