@@ -20,6 +20,8 @@
 #include "./Modelo/EscenarioS.h"
 #include "Usuario.h"
 
+
+
 using namespace std;
 
 
@@ -601,6 +603,8 @@ void *Servidor::sendMessage(void *arguments){
 
 	return 0;
 }
+
+
 
 
 void Servidor::nuevaConexion(int new_fd) {

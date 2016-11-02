@@ -106,7 +106,6 @@ bool Cliente::handleKeyEvents(){
 			cout << "quit event"<< endl;
 			salir=true;
 			this->jugando = false;
-
 		    evento.tipo=DISCONNECTED;
 		}
 		//User presses a key
@@ -139,6 +138,9 @@ bool Cliente::handleKeyEvents(){
 						this->vecesX = 0;
 						accion = "RESET";
 						break;
+					case SDLK_a:
+						accion = "DISPARO";
+					    break;
 				}
 			}
 
@@ -246,6 +248,9 @@ void *Cliente::recvMessage(void * arg){
 			case ENEMIGO_UPD:
 				if (context->jugando) context->updateEnemigo(mensajeRta);
 				break;
+			case BALA_UPD:
+				if (context->jugando) context->updateBala(mensajeRta);
+				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
@@ -295,6 +300,17 @@ void Cliente::updateEnemigo(mensajeStruct msg){
 
 	escenario.crearOActualizarEnemigo(msg.objectId,spriteId,x,y);
 }
+
+void Cliente::updateBala(mensajeStruct msg){
+	vector<string> result = Util::Split(msg.message,';');
+
+	string spriteId = result[0];
+	int x=atoi(result[1].c_str());
+	int y=atoi(result[2].c_str());
+
+	escenario.crearOActualizarEnemigo(msg.objectId,spriteId,x,y);
+}
+
 
 void Cliente::updateJugador(mensajeStruct msg){
 	int x,y;

@@ -7,6 +7,7 @@
 #include "Jugador.h"
 #include "../../Common/MensajeStruct.h"
 #include "../../Common/Mensajeria.h"
+#include "Bala.h"
 
 class EscenarioS {
 
@@ -19,7 +20,11 @@ public:
 	int alto;
 	int margen;
 	map<int, Jugador*> mapJugadores;
-
+	//BALAS
+	//list<Bala> *balas;
+	Bala *balas = NULL;
+	void addBala(Bala* bala);
+	void moverBala();
 	EscenarioS(int ancho, int alto);
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
@@ -29,9 +34,11 @@ public:
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();
 	mensajeStruct getMensajeEnemigo();
+	mensajeStruct getMensajeBala();
 	void aceptarCambios();
 	mensajeStruct getMensajeDesconexion(int jugadorId);
 	void resetEscenario();
+
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ESCENARIOS_H_ */
