@@ -37,7 +37,7 @@ public:
 	bool running = false;
 	bool esperandoJugadores=false;
 	void renderPausa();
-	void crearOActualizarEnemigo(std::string idObj, std::string idSprite, int x, int y);
+	void actualizarEnemigo(std::string idObj, int x, int y);
 private:
 	void cargarMensajeEsperandoJugador();
 	ObjetoGraficable *esperandoJugador;

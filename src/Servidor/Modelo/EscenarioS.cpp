@@ -77,9 +77,10 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		moverEscenario(&returnList);
 		returnList.push_back(getMensajeJugador(jugador));
 		returnList.push_back(getMensajeEscenario());
+
 		// hardcodeado por el momento
-		if ((this->avance > 30) && (this->avance < 750) ) {
-			returnList.push_back(getMensajeEnemigo());
+		if ((this->avance >= 30) && (this->avance <= 700) ) {
+			returnList.push_back(getMensajeEnemigoUpdate());
 		}
 	}
 
@@ -137,6 +138,14 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 			mainList->push_back(getMensajeJugador(jugador->second));
 		}
 		this->avance += minPosX;
+
+		// hardcodeado por el momento
+		if (this->avance == 30) {
+			mainList->push_back(getMensajeEnemigoNuevo());
+		}
+		if (this->avance == 700) {
+			mainList->push_back(getMensajeEnemigoMuerto());
+		}
 	}
 }
 
@@ -164,15 +173,38 @@ mensajeStruct EscenarioS::getMensajeEscenario(){
 	return msjEscenario;
 }
 
-mensajeStruct EscenarioS::getMensajeEnemigo(){
+mensajeStruct EscenarioS::getMensajeEnemigoNuevo(){
+	mensajeStruct msjEnemigo;
+
+	cout<<"enemigo nuevo"<<endl;
+	msjEnemigo.tipo = ENEMIGO_NEW;
+	msjEnemigo.objectId="T1";
+	msjEnemigo.message="foo;800;450";
+
+	return msjEnemigo;
+}
+
+mensajeStruct EscenarioS::getMensajeEnemigoMuerto(){
+	mensajeStruct msjEnemigo;
+
+	cout<<"enemigo nuevo"<<endl;
+	msjEnemigo.tipo = ENEMIGO_DELETE;
+	msjEnemigo.objectId="T1";
+	msjEnemigo.message="";
+
+	return msjEnemigo;
+}
+
+mensajeStruct EscenarioS::getMensajeEnemigoUpdate(){
 	mensajeStruct msjEnemigo;
 	stringstream posXEnemigo;
 	// un movimiento cualquiera para probar
 	posXEnemigo << (800 - this->avance);
 
+	cout<<"enemigo muerto"<<endl;
 	msjEnemigo.tipo = ENEMIGO_UPD;
 	msjEnemigo.objectId="T1";
-	msjEnemigo.message="foo;" + posXEnemigo.str() + ";450";
+	msjEnemigo.message=posXEnemigo.str() + ";450";
 
 	return msjEnemigo;
 }

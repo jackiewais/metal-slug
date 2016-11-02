@@ -243,8 +243,14 @@ void *Cliente::recvMessage(void * arg){
 			case JUGADOR_UPD:
 				if (context->jugando) context->updateJugador(mensajeRta);
 				break;
+			case ENEMIGO_NEW:
+				context->objetoNuevo(mensajeRta);
+				break;
 			case ENEMIGO_UPD:
 				if (context->jugando) context->updateEnemigo(mensajeRta);
+				break;
+			case ENEMIGO_DELETE:
+				context->escenario.eliminarObjeto(mensajeRta.objectId);
 				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
@@ -289,11 +295,10 @@ void Cliente::objetoNuevo(mensajeStruct msg){
 void Cliente::updateEnemigo(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
 
-	string spriteId = result[0];
-	int x=atoi(result[1].c_str());
-	int y=atoi(result[2].c_str());
+	int x=atoi(result[0].c_str());
+	int y=atoi(result[1].c_str());
 
-	escenario.crearOActualizarEnemigo(msg.objectId,spriteId,x,y);
+	escenario.actualizarEnemigo(msg.objectId,x,y);
 }
 
 void Cliente::updateJugador(mensajeStruct msg){
