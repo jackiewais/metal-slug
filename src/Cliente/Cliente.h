@@ -37,6 +37,7 @@ private:
 	int printMenu();
 	void objetoNuevo(mensajeStruct msg);
 	void updateEnemigo(mensajeStruct msg);
+	void updateBala(mensajeStruct msg);
 	void imprimirConsigna();
 	int ingresarUsuarioYMensaje(int* idUsuario, string* mensaje);
 	pthread_t threadRecv;

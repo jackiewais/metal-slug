@@ -12,6 +12,8 @@
 #include "./Modelo/EscenarioS.h"
 #include "Contenedor.h"
 #include "../Parser/Parser.h"
+
+
 //#define XML_PATH "Parser/game.xml"
 
 //using namespace std;
@@ -70,7 +72,10 @@ private:
 	string CSV_PATH = "usuarios.csv";
 	string XML_PATH;
 
+
+
 public:
+
 	Servidor();
 	virtual ~Servidor();
 	void runServer();

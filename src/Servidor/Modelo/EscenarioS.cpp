@@ -57,6 +57,17 @@ mensajeStruct EscenarioS::getMensajeDesconexion(int jugadorId){
 	Jugador* jugador = this->mapJugadores[jugadorId];
 	return getMensajeJugador(jugador);
 }
+void EscenarioS::addBala(Bala *bala){
+cout << "crea bala " << endl;
+this->balas=bala;
+}
+
+void EscenarioS::moverBala(){
+this->balas->mover();
+
+	//mandarBalasaLosClientes
+}
+
 
 list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	Jugador* jugador = this->mapJugadores[jugadorId];
@@ -64,7 +75,10 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	int vecesX = atoi(result[0].c_str());
 	string estado = result[1];
 	list<mensajeStruct> returnList;
-
+	if(estado=="DISPARO"){
+		Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,1);
+		this->addBala(bala);
+	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;
 		msjReset.tipo = RESET;
@@ -81,6 +95,10 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		// hardcodeado por el momento
 		if ((this->avance >= 30) && (this->avance <= 700) ) {
 			returnList.push_back(getMensajeEnemigoUpdate());
+		}
+		if(balas!=NULL){
+			moverBala();
+			returnList.push_back(getMensajeBala());
 		}
 	}
 
@@ -178,6 +196,7 @@ mensajeStruct EscenarioS::getMensajeEnemigoNuevo(){
 
 	cout<<"enemigo nuevo"<<endl;
 	msjEnemigo.tipo = ENEMIGO_NEW;
+	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
 	msjEnemigo.message="foo;800;450";
 
@@ -189,6 +208,7 @@ mensajeStruct EscenarioS::getMensajeEnemigoMuerto(){
 
 	cout<<"enemigo nuevo"<<endl;
 	msjEnemigo.tipo = ENEMIGO_DELETE;
+	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
 	msjEnemigo.message="";
 
@@ -203,12 +223,25 @@ mensajeStruct EscenarioS::getMensajeEnemigoUpdate(){
 
 	cout<<"enemigo muerto"<<endl;
 	msjEnemigo.tipo = ENEMIGO_UPD;
+	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
 	msjEnemigo.message=posXEnemigo.str() + ";450";
 
 	return msjEnemigo;
 }
+mensajeStruct EscenarioS::getMensajeBala(){
+	mensajeStruct msjEnemigo;
+	stringstream posx;
+	stringstream posy;
+	posx<<this->balas->x;
+	posy<<this->balas->y;
+	msjEnemigo.tipo = BALA_UPD;
+	// id fruta, cambiar despues
+	msjEnemigo.objectId="V1";
+	msjEnemigo.message="bala;" + posx.str() + ";" + posy.str();
 
+	return msjEnemigo;
+}
 void EscenarioS::resetEscenario(){
 	this->avance = 0;
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
