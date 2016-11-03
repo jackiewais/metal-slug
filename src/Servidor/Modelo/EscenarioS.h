@@ -33,7 +33,9 @@ public:
 	void moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();
-	mensajeStruct getMensajeEnemigo();
+	mensajeStruct getMensajeEnemigoNuevo();
+	mensajeStruct getMensajeEnemigoUpdate();
+	mensajeStruct getMensajeEnemigoMuerto();
 	mensajeStruct getMensajeBala();
 	void aceptarCambios();
 	mensajeStruct getMensajeDesconexion(int jugadorId);

@@ -212,19 +212,12 @@ void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int 
 	}
 }
 
-void Escenario::crearOActualizarEnemigo(std::string idObj, std::string idSprite, int x, int y) {
-	// Se comprueba que el sprite haya sido cargado antes
-	if ( this->mapTexturas.find(idSprite) != this->mapTexturas.end() ) {
-		LTexture *textura = this->mapTexturas[idSprite];
-		// Si el objeto esta en el map
-		if ( this->mapObjetosGraficables.find(idObj) != this->mapObjetosGraficables.end() ) {
-			cout<<"actualiza pos enemigo, posX: "<<x<<endl;
-			ObjetoGraficable* objeto = this->mapObjetosGraficables[idObj];
-			objeto->actualizarPosicion(x, y);
-		} else {
-			cout<<"enemigo nuevo"<<endl;
-			this->mapObjetosGraficables[idObj] = new ObjetoGraficable(idObj, textura, x, y);
-		}
+void Escenario::actualizarEnemigo(std::string idObj, int x, int y) {
+	// Si el objeto esta en el map
+	if ( this->mapObjetosGraficables.find(idObj) != this->mapObjetosGraficables.end() ) {
+		cout<<"actualiza pos enemigo, posX: "<<x<<endl;
+		ObjetoGraficable* objeto = this->mapObjetosGraficables[idObj];
+		objeto->actualizarPosicion(x, y);
 	}
 }
 

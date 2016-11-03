@@ -86,6 +86,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 	Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,1);
 	this->addBala(bala);
+
 	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;
@@ -99,10 +100,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		moverEscenario(&returnList);
 		returnList.push_back(getMensajeJugador(jugador));
 		returnList.push_back(getMensajeEscenario());
+
 		// hardcodeado por el momento
-		if ((this->avance > 30) && (this->avance < 750) ) {
-			returnList.push_back(getMensajeEnemigo());
+		if ((this->avance >= 30) && (this->avance <= 700) ) {
+			returnList.push_back(getMensajeEnemigoUpdate());
 		}
+
 		if(!this->balas.empty()){
 		moverBala();
 		returnList.push_back(getMensajeBala());
@@ -163,6 +166,14 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 			mainList->push_back(getMensajeJugador(jugador->second));
 		}
 		this->avance += minPosX;
+
+		// hardcodeado por el momento
+		if (this->avance == 30) {
+			mainList->push_back(getMensajeEnemigoNuevo());
+		}
+		if (this->avance == 700) {
+			mainList->push_back(getMensajeEnemigoMuerto());
+		}
 	}
 }
 
@@ -190,15 +201,41 @@ mensajeStruct EscenarioS::getMensajeEscenario(){
 	return msjEscenario;
 }
 
-mensajeStruct EscenarioS::getMensajeEnemigo(){
+mensajeStruct EscenarioS::getMensajeEnemigoNuevo(){
+	mensajeStruct msjEnemigo;
+
+	cout<<"enemigo nuevo"<<endl;
+	msjEnemigo.tipo = ENEMIGO_NEW;
+	// id fruta, cambiar despues
+	msjEnemigo.objectId="T1";
+	msjEnemigo.message="foo;800;450";
+
+	return msjEnemigo;
+}
+
+mensajeStruct EscenarioS::getMensajeEnemigoMuerto(){
+	mensajeStruct msjEnemigo;
+
+	cout<<"enemigo nuevo"<<endl;
+	msjEnemigo.tipo = ENEMIGO_DELETE;
+	// id fruta, cambiar despues
+	msjEnemigo.objectId="T1";
+	msjEnemigo.message="";
+
+	return msjEnemigo;
+}
+
+mensajeStruct EscenarioS::getMensajeEnemigoUpdate(){
 	mensajeStruct msjEnemigo;
 	stringstream posXEnemigo;
 	// un movimiento cualquiera para probar
 	posXEnemigo << (800 - this->avance);
 
+	cout<<"enemigo muerto"<<endl;
 	msjEnemigo.tipo = ENEMIGO_UPD;
+	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
-	msjEnemigo.message="foo;" + posXEnemigo.str() + ";450";
+	msjEnemigo.message=posXEnemigo.str() + ";450";
 
 	return msjEnemigo;
 }
@@ -211,8 +248,9 @@ mensajeStruct msjEnemigo;
 	posx<<bala->x;
 	posy<<bala->y;
 	msjEnemigo.tipo = BALA_UPD;
-	msjEnemigo.objectId="T1";
-	msjEnemigo.message="foo;" + posx.str() + ";" + posy.str();
+	// id fruta, cambiar despues
+	msjEnemigo.objectId="V1";
+	msjEnemigo.message="bala;" + posx.str() + ";" + posy.str();
 
 	return msjEnemigo;
 }
