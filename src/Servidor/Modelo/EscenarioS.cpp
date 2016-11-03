@@ -68,7 +68,7 @@ void EscenarioS::moverBala(){
 
 	list<Bala*>::iterator it;
 	for (it=balas.begin(); it!=balas.end(); ++it){
-		cout << "esta noviebdi " << endl;
+
 		(*it)->mover();
 	}
 
