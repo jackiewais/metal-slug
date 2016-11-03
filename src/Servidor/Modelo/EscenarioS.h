@@ -22,7 +22,7 @@ public:
 	map<int, Jugador*> mapJugadores;
 	//BALAS
 	//list<Bala> *balas;
-	Bala *balas = NULL;
+	list<Bala*> balas;
 	void addBala(Bala* bala);
 	void moverBala();
 	EscenarioS(int ancho, int alto);

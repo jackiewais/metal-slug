@@ -58,14 +58,21 @@ mensajeStruct EscenarioS::getMensajeDesconexion(int jugadorId){
 	return getMensajeJugador(jugador);
 }
 void EscenarioS::addBala(Bala *bala){
-cout << "crea bala " << endl;
-this->balas=bala;
+cout << "agrega bala a lista" << endl;
+this->balas.push_front(bala);
 }
 
 void EscenarioS::moverBala(){
-this->balas->mover();
+//this->balas->mover();
 
-	//mandarBalasaLosClientes
+
+	list<Bala*>::iterator it;
+	for (it=balas.begin(); it!=balas.end(); ++it){
+		cout << "esta noviebdi " << endl;
+		(*it)->mover();
+	}
+
+
 }
 
 
@@ -76,6 +83,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	string estado = result[1];
 	list<mensajeStruct> returnList;
 	if(estado=="DISPARO"){
+
 	Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,1);
 	this->addBala(bala);
 	}
@@ -95,7 +103,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		if ((this->avance > 30) && (this->avance < 750) ) {
 			returnList.push_back(getMensajeEnemigo());
 		}
-		if(balas!=NULL){
+		if(!this->balas.empty()){
 		moverBala();
 		returnList.push_back(getMensajeBala());
 		}
@@ -195,11 +203,13 @@ mensajeStruct EscenarioS::getMensajeEnemigo(){
 	return msjEnemigo;
 }
 mensajeStruct EscenarioS::getMensajeBala(){
-	mensajeStruct msjEnemigo;
+mensajeStruct msjEnemigo;
 	stringstream posx;
 	stringstream posy;
-	posx<<this->balas->x;
-	posy<<this->balas->y;
+	//ACA TENDRIA QUE ARMAR EL MENSAJE DE TODAS LAS BALAS
+	Bala *bala= this->balas.front();
+	posx<<bala->x;
+	posy<<bala->y;
 	msjEnemigo.tipo = BALA_UPD;
 	msjEnemigo.objectId="T1";
 	msjEnemigo.message="foo;" + posx.str() + ";" + posy.str();
