@@ -9,6 +9,7 @@
 #include <map>
 #include <list>
 #include "Escenario.h"
+
 #include "../Common/Util.h"
 
 class Cliente:ConexionCli {
@@ -50,6 +51,9 @@ private:
 
 	void addEstadoSprite(mensajeStruct msg);
 	bool jugando = true;
+
+
+	void createNro(mensajeStruct msg);
 
 public:
 	bool escenarioOK =false;

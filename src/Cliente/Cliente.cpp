@@ -220,6 +220,10 @@ void *Cliente::recvMessage(void * arg){
 			case HANDSHAKE_SPRITES:
 				context->addSprite(mensajeRta);
 				break;
+			case HANDSHAKE_SPRITE_NRO:
+				context->createNro(mensajeRta);
+				context->escenario.crearContador("1");
+				break;
 			case HANDSHAKE_ESTADO_SPRITE:
 				context->addEstadoSprite(mensajeRta);
 				break;
@@ -329,6 +333,24 @@ void Cliente::updateJugador(mensajeStruct msg){
 	estado = static_cast<estadoJugador>(atoi(result[2].c_str()));
 	conectado =result[3] ;
 	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
+
+	escenario.contadores["1"]->actualizarPuntaje(1);
+}
+
+
+void Cliente::createNro(mensajeStruct msg){
+	int ancho, alto;
+	string separador = ";";
+	string strAux;
+	int pos = msg.message.find(separador);
+
+	strAux = msg.message.substr(0,pos);
+	ancho = atoi(strAux.c_str());
+	strAux = msg.message.substr(pos+1,msg.message.length());
+	alto = atoi(strAux.c_str());
+
+	this->escenario.crearNumero(msg.objectId, ancho, alto);
+
 }
 
 
@@ -345,6 +367,7 @@ void Cliente::addSprite(mensajeStruct msg){
 	alto = atoi(strAux.c_str());
 	textura = this->escenario.addSprite(msg.objectId, ancho, alto);
 }
+
 
 void Cliente::addEstadoSprite(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');

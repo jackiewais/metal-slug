@@ -11,6 +11,7 @@ Escenario::Escenario() {
 	this->screenWidth = 800;
 	this->screenHeight = 600;
 	cargarMensajeEsperandoJugador();
+	numero = new Numero();
 }
 
 void Escenario::cargarMensajeEsperandoJugador(){
@@ -92,6 +93,19 @@ LTexture* Escenario::addSprite(std::string idSprite, int ancho, int alto) {
 	return textura;
 }
 
+Numero* Escenario::crearNumero(std::string idSprite, int ancho, int alto  ) {
+
+	this->numero->initTexture("images/" + idSprite + ".png", ancho,alto);
+	return this->numero;
+}
+
+Contador* Escenario::crearContador(string id){
+	Contador* contador = new Contador(id,10,10,this->numero);
+	this->contadores[id]= contador;
+	return contador;
+
+
+}
 void Escenario::agregarEstado(string idSprite, estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado) {
 	// Si el objeto esta en el map
 	if ( this->mapTexturas.find(idSprite) != this->mapTexturas.end() ) {
@@ -122,6 +136,9 @@ bool Escenario::loadMedia()
 			}
 		}
 	}
+
+	this->numero->loadMedia(this->gRenderer);
+
 	return true;
 }
 void Escenario::moverFondo(mensajeStruct msg){
@@ -181,12 +198,18 @@ void Escenario::close()
 	}*/
 	this->mapFondos.clear();
 
+		for (map<string, Contador*>::iterator itCont = this->contadores.begin(); itCont != this->contadores.end(); itCont++) {
+			delete itCont->second;
+		}
+		this->contadores.clear();
+
 	//Destroy window
 	SDL_DestroyRenderer( gRenderer );
 
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 	gRenderer = NULL;
+	delete(numero);
 
 	//Quit SDL subsystems
 	IMG_Quit();
@@ -239,10 +262,16 @@ void Escenario::renderizarObjetos() {
 
 	}
 	this->jugadorPrincipal->render();
-	if(!this->esperandoJugadores){
 
-	this->renderPausa();
+	for (map<string, Contador*>::iterator itcont = this->contadores.begin(); itcont != this->contadores.end(); itcont++) {
+		itcont->second->renderizar();
 	}
+
+	if(!this->esperandoJugadores){
+		this->renderPausa();
+	}
+
+
 	SDL_RenderPresent( this->gRenderer );
 	}catch(...){
 		cout << "Problemas con el render" << endl;
