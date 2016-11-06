@@ -67,15 +67,25 @@ this->balas.push_front(bala);
 }
 
 void EscenarioS::moverBala(){
-//this->balas->mover();
-
 
 	list<Bala*>::iterator it;
+bool afuera = false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
-
 		(*it)->mover();
 	}
 
+		list<Bala*>::iterator itDelete;
+
+				for (it=balas.begin(); it!=balas.end(); ++it){
+						if((*it)->x>this->ancho || (*it)->y > this->alto){
+						afuera = true;
+							cout << "elimno una bala en pos " << (*it)->x << " " << (*it)->y <<endl;
+						itDelete = it;
+						}
+				     }
+				if(afuera){
+					balas.erase(itDelete);
+				}
 
 }
 
@@ -119,8 +129,16 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 		if(!this->balas.empty()){
 		moverBala();
-		returnList.push_back(getMensajeBala());
+		//itero para madar un mensaje por bala ( después seria un solo mensaje
+		//con todas las balas).
+		list<Bala*>::iterator it;
+			for (it=balas.begin(); it!=balas.end(); ++it){
+				returnList.push_back(getMensajeBala((*it)));
+			}
+
 		}
+
+		cout << "sale de armar mensaje de bala" << endl;
 	}
 
 	return returnList;
@@ -253,20 +271,17 @@ mensajeStruct EscenarioS::getMensajeEnemigoUpdate(Enemigo *enemigo){
 	 */
 	return msjEnemigo;
 }
-mensajeStruct EscenarioS::getMensajeBala(){
-mensajeStruct msjEnemigo;
+mensajeStruct EscenarioS::getMensajeBala(Bala* bala){
+	mensajeStruct msjBala;
 	stringstream posx;
 	stringstream posy;
 	//ACA TENDRIA QUE ARMAR EL MENSAJE DE TODAS LAS BALAS
-	Bala *bala= this->balas.front();
 	posx<<bala->x;
 	posy<<bala->y;
-	msjEnemigo.tipo = BALA_UPD;
-	// id fruta, cambiar despues
-	msjEnemigo.objectId="Z1";
-	msjEnemigo.message="bala;" + posx.str() + ";" + posy.str();
+	msjBala.tipo = BALA_UPD;
+	msjBala.message="bala;" + posx.str() + ";" + posy.str();
 
-	return msjEnemigo;
+	return msjBala;
 }
 
 void EscenarioS::resetEscenario(){

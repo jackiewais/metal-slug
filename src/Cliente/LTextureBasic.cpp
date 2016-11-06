@@ -60,7 +60,7 @@ bool LTextureBasic::loadFromFile( std::string path )
 	return mTexture != NULL;
 }
 
-/*
+
 #ifdef _SDL_TTF_H
 bool LTextureBasic::loadFromRenderedText( std::string textureText, SDL_Color textColor )
 {
@@ -97,7 +97,7 @@ bool LTextureBasic::loadFromRenderedText( std::string textureText, SDL_Color tex
 	return mTexture != NULL;
 }
 #endif
-*/
+
 void LTextureBasic::free()
 {
 	//Free texture if it exists

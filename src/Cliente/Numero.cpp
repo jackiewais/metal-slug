@@ -36,13 +36,30 @@ bool Numero::loadMedia(SDL_Renderer* gRend)
 		gSpriteClips[ i ].h =  altoFrame;
 	}
 
+	gInfinitoTexture.gRenderer = gRend;
+
+	if( !gInfinitoTexture.loadFromFile  ( "images/infinity.png" ) )
+	{
+		printf( "Failed to load texture!\n" );
+		success = false;
+	}
+
 	return success;
 }
 
 void Numero::render(int id, int posX, int posY)
 {
-	SDL_Rect* currentClip = &gSpriteClips[ id ];
-	gNumeroTexture.render( posX, posY, currentClip );
+	if (id==-1){
+		SDL_Rect currentClip;
+		currentClip.x = 0;
+		currentClip.y = 0;
+		currentClip.h = 25;
+		currentClip.w = 61;
+		gInfinitoTexture.render( posX+4, posY+2, &currentClip );
+	}else{
+		SDL_Rect* currentClip = &gSpriteClips[ id ];
+		gNumeroTexture.render( posX, posY, currentClip );
+	}
 }
 
 Numero::~Numero()

@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include <string>
 #include <SDL2/SDL_image.h>
-//#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
+
 //Texture wrapper class
 class LTextureBasic
 {
@@ -21,11 +22,11 @@ class LTextureBasic
 		//Loads image at specified path
 		bool loadFromFile( std::string path );
 
-		/*#ifdef _SDL_TTF_H
+		#ifdef _SDL_TTF_H
 		//Creates image from font string
 		bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
 		#endif
-		 */
+
 		//Deallocates texture
 		void free();
 
@@ -46,7 +47,7 @@ class LTextureBasic
 		int getHeight();
 		SDL_Renderer* gRenderer = NULL;
 		//Globally used font
-		//TTF_Font *gFont = NULL;
+		TTF_Font *gFont = NULL;
 
 	private:
 		//The actual hardware texture
