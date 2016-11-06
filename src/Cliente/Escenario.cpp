@@ -146,7 +146,7 @@ bool Escenario::loadMedia()
 
 	this->numero->loadMedia(this->gRenderer);
 	this->progreso->loadMedia(this->gRenderer);
-
+	this->balas.loadMedia(this->gRenderer);
 	return true;
 }
 void Escenario::moverFondo(mensajeStruct msg){
@@ -271,7 +271,10 @@ void Escenario::renderizarObjetos() {
 
 	}
 	this->jugadorPrincipal->render();
-
+	if(!(this->balas.balas.empty())){
+	this->balas.render();
+	this->balas.balas.clear();
+	}
 	for (map<string, Contador*>::iterator itcont = this->contadores.begin(); itcont != this->contadores.end(); itcont++) {
 		itcont->second->renderizar();
 	}

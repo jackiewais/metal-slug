@@ -221,6 +221,7 @@ void *Cliente::recvMessage(void * arg){
 				context->addSprite(mensajeRta);
 				break;
 			case HANDSHAKE_SPRITE_NRO:
+				context->escenario.balas.initTexture("images/bala.png",10,10);
 				context->createNro(mensajeRta);
 				context->escenario.crearProgreso("loadbar",100,30);
 				context->escenario.crearContador("1");
@@ -260,7 +261,7 @@ void *Cliente::recvMessage(void * arg){
 				context->escenario.eliminarObjeto(mensajeRta.objectId);
 				break;
 			case BALA_NEW:
-				context->objetoNuevo(mensajeRta);
+			//	context->objetoNuevo(mensajeRta);
 				break;
 			case BALA_UPD:
 				if (context->jugando) context->updateBala(mensajeRta);
@@ -322,7 +323,9 @@ void Cliente::updateBala(mensajeStruct msg){
 	int y=atoi(result[2].c_str());
 
 	//escenario.crearOActualizarEnemigo(msg.objectId,spriteId,x,y);
-	escenario.actualizarEnemigo(msg.objectId,x,y);
+	//escenario.actualizarEnemigo(msg.objectId,x,y);
+
+	escenario.balas.addBalas(x,y);
 }
 
 
