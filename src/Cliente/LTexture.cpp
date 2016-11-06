@@ -23,13 +23,11 @@ LTexture::LTexture(Escenario *escenario, std::string path)
 	this->path = path;
 	this->anchoFrame = 0;
 	this->altoFrame = 0;
-	this->iteradorDeItEstado = 0;
 
 	/*int anchoFrame = 37;
 	int altoFrame = 49;*/
 }
 
-// Los estados hay que irselos pasando en el orden en que estan en la imagen
 void LTexture::agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame, int cantFrames, int ordenEstado) {
 	list<SDL_Rect>* pList = new list<SDL_Rect>;
 	this->mapFrames[estado] = pList;
@@ -37,9 +35,9 @@ void LTexture::agregarEstado(estadoJugador estado, int anchoFrame, int altoFrame
 		pList->push_back(this->crearFrame(ordenEstado, i, anchoFrame, altoFrame));
 	}
 	if (this->mapFrames.size() == 1) {
-		this->itEstado = pList->begin();
+		/*this->itEstado = pList->begin();
 		this->iteradorDeItEstado = 0;
-		this->estadoActual = estado;
+		this->estadoActual = estado;*/
 		this->anchoFrame = anchoFrame;
 		this->altoFrame = altoFrame;
 	}
@@ -108,13 +106,15 @@ void LTexture::free()
 	}
 }
 
-void LTexture::render( int x, int y )
+void LTexture::render( int x, int y, SDL_Rect *frame)
 {
 	int anchoRender = this->getWidth();
 	int altoRender = this->getHeight();
-	SDL_Rect frame = this->getFrameActual();
 
-	if (this->mapFrames.size() != 0) {
+	if (frame == NULL) {
+		SDL_Rect frameDefault = { 0, 0, this->mWidth, this->mHeight };
+		frame = &frameDefault;
+	} else {
 		if (this->widthScaled == 0) {
 			anchoRender = this->anchoFrame;
 		}
@@ -124,35 +124,7 @@ void LTexture::render( int x, int y )
 	}
 
 	SDL_Rect renderQuad = { x, y, anchoRender, altoRender };
-	SDL_RenderCopy( this->escenario->getGRenderer(), mTexture, &frame, &renderQuad );
-}
-
-SDL_Rect LTexture::getFrameActual() {
-	SDL_Rect frame;
-	if (this->mapFrames.size() == 0) {
-		frame = { 0, 0, this->mWidth, this->mHeight };
-	} else {
-		frame = *(this->itEstado);
-	}
-	return frame;
-}
-
-void LTexture::actualizarEstado(estadoJugador estado)
-{
-	if (this->estadoActual == estado) {
-		this->iteradorDeItEstado++;
-		if (this->iteradorDeItEstado >= 2) {
-			this->iteradorDeItEstado = 0;
-			this->itEstado++;
-			if (this->itEstado == this->mapFrames[estado]->end()) {
-				this->itEstado = this->mapFrames[estado]->begin();
-			}
-		}
-	} else {
-		this->estadoActual = estado;
-		this->itEstado = this->mapFrames[estado]->begin();
-		this->iteradorDeItEstado = 0;
-	}
+	SDL_RenderCopy( this->escenario->getGRenderer(), mTexture, frame, &renderQuad );
 }
 
 int LTexture::getWidth()

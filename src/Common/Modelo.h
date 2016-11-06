@@ -8,7 +8,9 @@ enum estadoJugador{
 	CAMINA_IZQ = 03,
 	//SALTA = 04,
 	SALTA_DER = 04,
-	SALTA_IZQ = 05
+	SALTA_IZQ = 05,
+
+	SIN_ESTADO = 50
 };
 
 #endif

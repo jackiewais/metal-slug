@@ -253,7 +253,7 @@ void *Cliente::recvMessage(void * arg){
 				context->objetoNuevo(mensajeRta);
 				break;
 			case ENEMIGO_UPD:
-				if (context->jugando) context->updateEnemigo(mensajeRta);
+				if (context->jugando) context->updateJugador(mensajeRta);
 				break;
 			case ENEMIGO_DELETE:
 				context->escenario.eliminarObjeto(mensajeRta.objectId);
