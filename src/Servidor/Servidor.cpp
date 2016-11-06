@@ -227,7 +227,7 @@ void Servidor::handshake(mensajeStruct msg){
  	 msg.objectId="PAUSA";
  	 msg.message="esperandoJugadores;100;100;PARADO;C";
  	 colaCliente->push(msg);
-<<<<<<< HEAD
+
  	 //CREO BALA
  	mensajeStruct msjBala;
  	cout<<"bala nueva"<<endl;
@@ -235,8 +235,7 @@ void Servidor::handshake(mensajeStruct msg){
  	msjBala.objectId="Z1";
  	msjBala.message="bala;20;20";
  	colaCliente->push(msjBala);
-=======
->>>>>>> 34fd3c5bf12db2c698c0372e39d5c9f61c889c43
+
 
 	msg.tipo = JUGADOR_SO_VO;
 	msg.objectId = "J"+ convertirAString(this->contenedor->getIdJugadorByIdSocket(msg.socketCli));
