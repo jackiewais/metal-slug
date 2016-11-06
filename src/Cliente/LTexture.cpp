@@ -114,7 +114,9 @@ void LTexture::render( int x, int y, SDL_Rect *frame)
 	if (frame == NULL) {
 		SDL_Rect frameDefault = { 0, 0, this->mWidth, this->mHeight };
 		frame = &frameDefault;
-	} else {
+	}
+
+	if (this->mapFrames.size() != 0) {
 		if (this->widthScaled == 0) {
 			anchoRender = this->anchoFrame;
 		}
