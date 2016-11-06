@@ -249,6 +249,9 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.message="termino el handshake";
 	colaCliente->push(msg);
 
+	Enemigo *enemigo = new Enemigo(1,5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
+	this->escenario->addEnemigo(enemigo);
+
 	createTimerThread();
 }
 

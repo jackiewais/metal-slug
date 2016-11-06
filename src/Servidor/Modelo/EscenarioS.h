@@ -5,6 +5,7 @@
 #include <map>
 #include <list>
 #include "Jugador.h"
+#include "Enemigo.h"
 #include "../../Common/MensajeStruct.h"
 #include "../../Common/Mensajeria.h"
 #include "Bala.h"
@@ -14,6 +15,7 @@ class EscenarioS {
 private:
 	int distancia;
 	int avance;
+	Enemigo *enemigo;
 
 public:
 	int ancho;
@@ -29,12 +31,13 @@ public:
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
+	void addEnemigo(Enemigo* enemigo);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
 	void moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();
 	mensajeStruct getMensajeEnemigoNuevo();
-	mensajeStruct getMensajeEnemigoUpdate();
+	mensajeStruct getMensajeEnemigoUpdate(Enemigo *enemigo);
 	mensajeStruct getMensajeEnemigoMuerto();
 	mensajeStruct getMensajeBala();
 	void aceptarCambios();

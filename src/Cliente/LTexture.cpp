@@ -111,10 +111,10 @@ void LTexture::render( int x, int y, SDL_Rect *frame)
 	int anchoRender = this->getWidth();
 	int altoRender = this->getHeight();
 
-	if (frame == NULL) {
+	/*if (frame == NULL) {
 		SDL_Rect frameDefault = { 0, 0, this->mWidth, this->mHeight };
 		frame = &frameDefault;
-	}
+	}*/
 
 	if (this->mapFrames.size() != 0) {
 		if (this->widthScaled == 0) {
