@@ -12,6 +12,7 @@ Escenario::Escenario() {
 	this->screenHeight = 600;
 	cargarMensajeEsperandoJugador();
 	numero = new Numero();
+	progreso = new Progreso ();
 }
 
 void Escenario::cargarMensajeEsperandoJugador(){
@@ -99,8 +100,14 @@ Numero* Escenario::crearNumero(std::string idSprite, int ancho, int alto  ) {
 	return this->numero;
 }
 
+Progreso* Escenario::crearProgreso(std::string idSprite, int ancho, int alto  ) {
+
+	this->progreso->initTexture("images/" + idSprite + ".png", ancho,alto);
+	return this->progreso;
+}
+
 Contador* Escenario::crearContador(string id){
-	Contador* contador = new Contador(id,10,10,this->numero);
+	Contador* contador = new Contador(id,10,10,this->numero,this->progreso);
 	this->contadores[id]= contador;
 	return contador;
 
@@ -138,6 +145,7 @@ bool Escenario::loadMedia()
 	}
 
 	this->numero->loadMedia(this->gRenderer);
+	this->progreso->loadMedia(this->gRenderer);
 
 	return true;
 }
@@ -210,6 +218,7 @@ void Escenario::close()
 	gWindow = NULL;
 	gRenderer = NULL;
 	delete(numero);
+	delete(progreso);
 
 	//Quit SDL subsystems
 	IMG_Quit();

@@ -12,6 +12,7 @@
 #include "ObjetoGraficable.h"
 #include "Numero.h"
 #include "Contador.h"
+#include "Progreso.h"
 
 class LTexture;
 class ObjetoGraficable;
@@ -41,8 +42,10 @@ public:
 	void renderPausa();
 	void actualizarEnemigo(std::string idObj, int x, int y);
 	Numero* numero;
+	Progreso* progreso;
 	std::map<std::string,Contador*> contadores;
 	Numero* crearNumero(std::string idSprite, int ancho, int alto  );
+	Progreso* crearProgreso(std::string idSprite, int ancho, int alto  );
 	Contador* crearContador(std::string id);
 
 private:

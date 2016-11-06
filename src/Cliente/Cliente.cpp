@@ -222,6 +222,7 @@ void *Cliente::recvMessage(void * arg){
 				break;
 			case HANDSHAKE_SPRITE_NRO:
 				context->createNro(mensajeRta);
+				context->escenario.crearProgreso("loadbar",100,30);
 				context->escenario.crearContador("1");
 				break;
 			case HANDSHAKE_ESTADO_SPRITE:
@@ -335,6 +336,8 @@ void Cliente::updateJugador(mensajeStruct msg){
 	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
 
 	escenario.contadores["1"]->actualizarPuntaje(1);
+
+	escenario.contadores["1"]->actualizarVida(-1);
 }
 
 
@@ -517,9 +520,6 @@ int Cliente::ingresarUsuarioYMensaje(int* idUsuario, string* mensaje){
 	cout << "----------------------" << endl;
 	cout << "ID - Nombre Usuario" << endl;
 	cout << "----------------------" << endl;
-	for(auto const &user : mapIdNombreUsuario) {
-		cout << user.first << " - " << user.second << endl;
-	}
 	cout << "99 - Enviar a todos" << endl;
 	cout << "----------------------" << endl;
 	cout << endl;
