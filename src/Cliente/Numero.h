@@ -15,6 +15,7 @@ class Numero
 	~Numero();
 
 	LTextureBasic gNumeroTexture;
+	LTextureBasic gInfinitoTexture;
 
 	std::string spritePath;
 

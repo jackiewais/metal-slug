@@ -43,6 +43,7 @@ public:
 	void actualizarEnemigo(std::string idObj, int x, int y);
 	Numero* numero;
 	Progreso* progreso;
+	Label* lbalas;
 	std::map<std::string,Contador*> contadores;
 	Numero* crearNumero(std::string idSprite, int ancho, int alto  );
 	Progreso* crearProgreso(std::string idSprite, int ancho, int alto  );
