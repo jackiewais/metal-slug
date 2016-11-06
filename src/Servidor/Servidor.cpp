@@ -213,155 +213,10 @@ void Servidor::handshake(mensajeStruct msg){
 	delete parser;
 
 
-/*	//comienzo a mandar info
-	cout << "Handshake" << endl;
-	//MANDO DIMENSIONES DE VENTANA.
-	msg.tipo=HANDSHAKE_DIMENSIONES_VENTANA;
-	msg.objectId="X0";
-	msg.message="800x600";
-	colaCliente->push(msg);
-	//---------------------------------------------
-
-	//MANDAR SPRITES
-	//DEBE DE ITERAR ENTRE TODOS LOS SPRITES
-	msg.tipo=HANDSHAKE_SPRITES;
-//	msg.objectId="primerFondo";
-	// RESOLUCION DEL OBJETO, PARA ESCALAR LA IMAGEN SI ES NECASARIO
-	// VER SI ES NECESARIO PASARLE LA CANT DE FOTOGRAMAS TMB
-	// ANCHO;ALTO
-	//msg.message="0;0";
-	//colaCliente->push(msg);
-
-	msg.objectId="fondoUnoPrueba";
-	msg.message="0;0";
-	colaCliente->push(msg);
-
-	msg.objectId="fondoDosPrueba";
-	msg.message="0;0";
-	colaCliente->push(msg);
-
-
-		msg.objectId="fondoTresPrueba";
-			msg.message="0;0";
-			colaCliente->push(msg);
-
-
-			msg.objectId="jugador1";
-			msg.message="74;98";
-			colaCliente->push(msg);
-
-
-			msg.objectId="jugador2";
-			msg.message="74;98";
-
-			colaCliente->push(msg);
-
-			msg.objectId="jugador3";
-			msg.message="74;98";
-
-			colaCliente->push(msg);
-
-			msg.objectId="jugador4";
-			msg.message="74;98";
-
-			colaCliente->push(msg);*/
-/*
-			msg.tipo=HANDSHAKE_ESTADO_SPRITE;
-			msg.objectId="jugador1";
-			msg.message="1;37;49;3;1"; //PARADO
-			colaCliente->push(msg);
-			msg.message="2;37;49;9;2"; //CAMINA_DER
-			colaCliente->push(msg);
-			msg.message="3;37;49;9;4"; //CAMINA_IZQ
-			colaCliente->push(msg);
-			msg.message="4;37;49;13;3"; //SALTA_DER
-			colaCliente->push(msg);
-			msg.message="5;37;49;13;5"; //SALTA_IZQ
-			colaCliente->push(msg);
-
-			msg.objectId="jugador2";
-			msg.message="1;37;49;3;1"; //PARADO
-			colaCliente->push(msg);
-			msg.message="2;37;49;9;2"; //CAMINA_DER
-			colaCliente->push(msg);
-			msg.message="3;37;49;9;4"; //CAMINA_IZQ
-			colaCliente->push(msg);
-			msg.message="4;37;49;13;3"; //SALTA_DER
-			colaCliente->push(msg);
-			msg.message="5;37;49;13;5"; //SALTA_IZQ
-			colaCliente->push(msg);
-
-			msg.tipo=HANDSHAKE_ESTADO_SPRITE;
-						msg.objectId="jugador3";
-						msg.message="1;37;49;3;1"; //PARADO
-						colaCliente->push(msg);
-						msg.message="2;37;49;9;2"; //CAMINA_DER
-						colaCliente->push(msg);
-						msg.message="3;37;49;9;4"; //CAMINA_IZQ
-						colaCliente->push(msg);
-						msg.message="4;37;49;13;3"; //SALTA_DER
-						colaCliente->push(msg);
-						msg.message="5;37;49;13;5"; //SALTA_IZQ
-						colaCliente->push(msg);
-
-						msg.tipo=HANDSHAKE_ESTADO_SPRITE;
-									msg.objectId="jugador4";
-									msg.message="1;37;49;3;1"; //PARADO
-									colaCliente->push(msg);
-									msg.message="2;37;49;9;2"; //CAMINA_DER
-									colaCliente->push(msg);
-									msg.message="3;37;49;9;4"; //CAMINA_IZQ
-									colaCliente->push(msg);
-									msg.message="4;37;49;13;3"; //SALTA_DER
-									colaCliente->push(msg);
-									msg.message="5;37;49;13;5"; //SALTA_IZQ
-									colaCliente->push(msg);
-*/
-
-	// -------------------------------
-
-	//MANDAR OBJETOS NUEVOS
-	//INVENTAR ID
-		/*msg.tipo=HANDSHAKE_OBJETO_NUEVO;
-		msg.objectId="F01";
-		msg.message="primerFondo;0;0";
-		colaCliente->push(msg);*/
-
-/*		msg.tipo=HANDSHAKE_FONDO_NUEVO;
-		msg.objectId="F02";
-		msg.message="fondoUnoPrueba;0;0";
-		colaCliente->push(msg);
-
-		msg.tipo=HANDSHAKE_FONDO_NUEVO;
-		msg.objectId="F03";
-		msg.message="fondoDosPrueba;0;50";
-		colaCliente->push(msg);
-
-		msg.tipo=HANDSHAKE_FONDO_NUEVO;
-		msg.objectId="F04";
-		msg.message="fondoTresPrueba;0;100";
-		colaCliente->push(msg);*/
-
-
-/*	for(int i = 1; i <= this->cantJugadores; i++)
-	{
-		msg.tipo=HANDSHAKE_OBJETO_NUEVO;
-		msg.objectId="J"+convertirAString(i);
-		Jugador* jugador = this->escenario->getJugadorById(i);
-
-		string pos;
-		if(jugador != NULL){
-			pos = jugador->getStringMensaje();
-	//	}else{
-	//		pos = convertirAString(getPosXInicial(i))+";400;01;D";
-	//		cout << "2" << endl;
-	//	}
-	//	msg.message="jugador" + convertirAString(i) + ";"+pos;
-		cout << msg.objectId << endl;
-		cout << msg.message  << endl;
-		colaCliente->push(msg);}
-	}*/
-
+	 msg.tipo = HANDSHAKE_SPRITE_NRO;
+	 msg.objectId="numbers";
+	 msg.message="250;35";
+	 colaCliente->push(msg);
 
 	 msg.tipo = HANDSHAKE_SPRITES;
 	 msg.objectId="esperandoJugadores";
@@ -372,6 +227,7 @@ void Servidor::handshake(mensajeStruct msg){
  	 msg.objectId="PAUSA";
  	 msg.message="esperandoJugadores;100;100;PARADO;C";
  	 colaCliente->push(msg);
+<<<<<<< HEAD
  	 //CREO BALA
  	mensajeStruct msjBala;
  	cout<<"bala nueva"<<endl;
@@ -379,6 +235,8 @@ void Servidor::handshake(mensajeStruct msg){
  	msjBala.objectId="Z1";
  	msjBala.message="bala;20;20";
  	colaCliente->push(msjBala);
+=======
+>>>>>>> 34fd3c5bf12db2c698c0372e39d5c9f61c889c43
 
 	msg.tipo = JUGADOR_SO_VO;
 	msg.objectId = "J"+ convertirAString(this->contenedor->getIdJugadorByIdSocket(msg.socketCli));

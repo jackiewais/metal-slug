@@ -204,11 +204,10 @@ mensajeStruct EscenarioS::getMensajeEscenario(){
 mensajeStruct EscenarioS::getMensajeEnemigoNuevo(){
 	mensajeStruct msjEnemigo;
 
-	cout<<"enemigo nuevo"<<endl;
 	msjEnemigo.tipo = ENEMIGO_NEW;
 	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
-	msjEnemigo.message="foo;800;450";
+	msjEnemigo.message="jugador1;800;450";
 
 	return msjEnemigo;
 }
@@ -216,7 +215,6 @@ mensajeStruct EscenarioS::getMensajeEnemigoNuevo(){
 mensajeStruct EscenarioS::getMensajeEnemigoMuerto(){
 	mensajeStruct msjEnemigo;
 
-	cout<<"enemigo nuevo"<<endl;
 	msjEnemigo.tipo = ENEMIGO_DELETE;
 	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
@@ -231,11 +229,10 @@ mensajeStruct EscenarioS::getMensajeEnemigoUpdate(){
 	// un movimiento cualquiera para probar
 	posXEnemigo << (800 - this->avance);
 
-	cout<<"enemigo muerto"<<endl;
 	msjEnemigo.tipo = ENEMIGO_UPD;
 	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
-	msjEnemigo.message=posXEnemigo.str() + ";450";
+	msjEnemigo.message=posXEnemigo.str() + ";450;03;C";
 
 	return msjEnemigo;
 }

@@ -4,6 +4,9 @@
 #include <string>
 #include "Escenario.h"
 #include "LTexture.h"
+#include <list>
+
+using namespace std;
 
 class LTexture;
 
@@ -32,6 +35,9 @@ private:
 	int posMozaico = 0;
 	bool flagGrisado = false;
 
+	list<SDL_Rect>::iterator itEstado;
+	int iteradorDeItEstado;
+	estadoJugador estadoActual;
 };
 
 #endif /* SRC_CLIENTE_OBJETOGRAFICABLE_H_ */

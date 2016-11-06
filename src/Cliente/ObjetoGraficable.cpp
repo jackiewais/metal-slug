@@ -7,6 +7,8 @@ ObjetoGraficable::ObjetoGraficable(std::string id, LTexture *textura, int x, int
 	this->y = y;
 	this->factorParallax = 0;
 	this->grisado = false;
+	this->estadoActual = SIN_ESTADO;
+	this->iteradorDeItEstado = 0;
 	//this->posMozaico = this->getAncho();
 }
 
@@ -22,7 +24,11 @@ void ObjetoGraficable::actualizarPosicion(int x, int y) {
 void ObjetoGraficable::render(){
 
 	if ( (this->factorParallax == 0) ) {
-		this->textura->render(this->x, this->y);
+		if (this->estadoActual == SIN_ESTADO) {
+			this->textura->render(this->x, this->y);
+		} else {
+			this->textura->render(this->x, this->y, &*(this->itEstado));
+		}
 	}else{
 		if(this->x + posMozaico <-this->textura->getWidth()){
 			posMozaico+=this->textura->getWidth();
@@ -71,5 +77,18 @@ void ObjetoGraficable::setGrisado(bool grisa){
 }
 
 void ObjetoGraficable::actualizarEstado(estadoJugador estado) {
-	this->textura->actualizarEstado(estado);
+	if (this->estadoActual == estado) {
+		this->iteradorDeItEstado++;
+		if (this->iteradorDeItEstado >= 2) {
+			this->iteradorDeItEstado = 0;
+			this->itEstado++;
+			if (this->itEstado == this->textura->mapFrames[estado]->end()) {
+				this->itEstado = this->textura->mapFrames[estado]->begin();
+			}
+		}
+	} else {
+		this->estadoActual = estado;
+		this->itEstado = this->textura->mapFrames[estado]->begin();
+		this->iteradorDeItEstado = 0;
+	}
 }
