@@ -215,7 +215,7 @@ void Servidor::handshake(mensajeStruct msg){
 
 	 msg.tipo = HANDSHAKE_SPRITE_NRO;
 	 msg.objectId="numbers";
-	 msg.message="250;35";
+	 msg.message="250;30";
 	 colaCliente->push(msg);
 
 	 msg.tipo = HANDSHAKE_SPRITES;

@@ -13,6 +13,7 @@ Escenario::Escenario() {
 	cargarMensajeEsperandoJugador();
 	numero = new Numero();
 	progreso = new Progreso ();
+	lbalas = new Label();
 }
 
 void Escenario::cargarMensajeEsperandoJugador(){
@@ -107,7 +108,7 @@ Progreso* Escenario::crearProgreso(std::string idSprite, int ancho, int alto  ) 
 }
 
 Contador* Escenario::crearContador(string id){
-	Contador* contador = new Contador(id,10,10,this->numero,this->progreso);
+	Contador* contador = new Contador(id,10,10,this->numero,this->progreso,this->lbalas);
 	this->contadores[id]= contador;
 	return contador;
 
@@ -146,7 +147,12 @@ bool Escenario::loadMedia()
 
 	this->numero->loadMedia(this->gRenderer);
 	this->progreso->loadMedia(this->gRenderer);
+
 	this->balas.loadMedia(this->gRenderer);
+
+	this->lbalas->setData(this->gRenderer,"ARMS",36);
+
+
 	return true;
 }
 void Escenario::moverFondo(mensajeStruct msg){
