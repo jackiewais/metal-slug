@@ -222,7 +222,7 @@ void *Cliente::recvMessage(void * arg){
 				break;
 			case HANDSHAKE_SPRITE_NRO:
 				context->createNro(mensajeRta);
-				context->escenario.crearProgreso("loadbar",100,20);
+				context->escenario.crearProgreso("loadbar",100,30);
 				context->escenario.crearContador("1");
 				break;
 			case HANDSHAKE_ESTADO_SPRITE:
