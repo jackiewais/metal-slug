@@ -36,7 +36,8 @@ enum tipoMensaje {
 	ENEMIGO_UPD = 42,
 	ENEMIGO_DELETE = 43,
 	NEW_DISPARO = 70,
-	BALA_UPD = 71
+	BALA_NEW = 71,
+	BALA_UPD = 72
 };
 
 

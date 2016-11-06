@@ -254,6 +254,9 @@ void *Cliente::recvMessage(void * arg){
 			case ENEMIGO_DELETE:
 				context->escenario.eliminarObjeto(mensajeRta.objectId);
 				break;
+			case BALA_NEW:
+				context->objetoNuevo(mensajeRta);
+				break;
 			case BALA_UPD:
 				if (context->jugando) context->updateBala(mensajeRta);
 				break;

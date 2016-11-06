@@ -87,6 +87,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,1);
 	this->addBala(bala);
 
+
 	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;
@@ -168,6 +169,7 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 		this->avance += minPosX;
 
 		// hardcodeado por el momento
+
 		if (this->avance == 30) {
 			mainList->push_back(getMensajeEnemigoNuevo());
 		}
@@ -192,10 +194,8 @@ mensajeStruct EscenarioS::getMensajeEscenario(){
 	stringstream avanceFondo;
 	avanceFondo << this->avance;
 
-
 	msjEscenario.tipo = ESCENARIO_UPD;
 	msjEscenario.message = ("-"+ avanceFondo.str());
-
 	msjEscenario.objectId = "E00";
 
 	return msjEscenario;
@@ -249,11 +249,12 @@ mensajeStruct msjEnemigo;
 	posy<<bala->y;
 	msjEnemigo.tipo = BALA_UPD;
 	// id fruta, cambiar despues
-	msjEnemigo.objectId="V1";
+	msjEnemigo.objectId="Z1";
 	msjEnemigo.message="bala;" + posx.str() + ";" + posy.str();
 
 	return msjEnemigo;
 }
+
 void EscenarioS::resetEscenario(){
 	this->avance = 0;
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
