@@ -196,6 +196,8 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 		}
 		this->avance += minPosX;
 
+		this->enemigo->retrocederSegunAvanceEscenario(minPosX);
+
 		// hardcodeado por el momento
 
 		/*
@@ -262,8 +264,6 @@ mensajeStruct EscenarioS::getMensajeEnemigoUpdate(Enemigo *enemigo){
 
 	msjEnemigo.message = enemigo->getStringMensaje();
 	msjEnemigo.objectId = enemigo->getCodEnemigo();
-	cout<<msjEnemigo.message<<" - "<<msjEnemigo.objectId<<endl;
-
 	/*
 	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";

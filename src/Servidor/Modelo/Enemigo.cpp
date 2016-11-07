@@ -35,9 +35,14 @@ void Enemigo::mover(int anchoEscenario) {
 	if ( it != this->mapJugadores->end() ) {
 		unJugador = it->second;
 
+		if ( (this->posX - unJugador->getPosX()) > 100 ) {
+			this->mover(anchoEscenario, -1, "CAMINA_IZQ");
+		} else if ( (this->posX - unJugador->getPosX()) < -100 ) {
+			this->mover(anchoEscenario, 1, "CAMINA_DER");
+		} else {
+			this->mover(anchoEscenario, 0, "PARADO");
+		}
 
-
-		this->mover(anchoEscenario, -1, "CAMINA_IZQ");
 	}
 }
 
@@ -106,4 +111,8 @@ string Enemigo::getCodEnemigo() {
 	stringstream idS;
 	idS << (this->id);
 	return "T" + idS.str();
+}
+
+void Enemigo::retrocederSegunAvanceEscenario(int avance) {
+	this->posX -= avance;
 }

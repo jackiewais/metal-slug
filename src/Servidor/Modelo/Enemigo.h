@@ -16,6 +16,7 @@ public:
 	void mover(int anchoEscenario);
 	string getStringMensaje();
 	string getCodEnemigo();
+	void retrocederSegunAvanceEscenario(int avance);
 
 	int alto;
 	int ancho;
