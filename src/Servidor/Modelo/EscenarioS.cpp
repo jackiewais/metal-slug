@@ -36,6 +36,10 @@ void EscenarioS::addJugador(Jugador* jugador) {
 	}
 }
 
+void EscenarioS::addEnemigo(Enemigo* enemigo) {
+	this->enemigo = enemigo;
+}
+
 
 void splitE(const string &s, char delim, vector<string> &elems) {
     stringstream ss;
@@ -108,9 +112,15 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		returnList.push_back(getMensajeJugador(jugador));
 		returnList.push_back(getMensajeEscenario());
 
-		// hardcodeado por el momento
+		/*
 		if ((this->avance >= 30) && (this->avance <= 700) ) {
 			returnList.push_back(getMensajeEnemigoUpdate());
+		}*/
+		if (this->avance == 0) {
+			returnList.push_back(getMensajeEnemigoNuevo());
+		} else {
+			this->enemigo->mover(this->ancho);
+			returnList.push_back(getMensajeEnemigoUpdate(this->enemigo));
 		}
 		if(!this->balas.empty()){
 		moverBala();
@@ -172,14 +182,17 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 		}
 		this->avance += minPosX;
 
+		this->enemigo->retrocederSegunAvanceEscenario(minPosX);
+
 		// hardcodeado por el momento
 
+		/*
 		if (this->avance == 30) {
 			mainList->push_back(getMensajeEnemigoNuevo());
 		}
 		if (this->avance == 700) {
 			mainList->push_back(getMensajeEnemigoMuerto());
-		}
+		}*/
 	}
 }
 
@@ -211,7 +224,7 @@ mensajeStruct EscenarioS::getMensajeEnemigoNuevo(){
 	msjEnemigo.tipo = ENEMIGO_NEW;
 	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
-	msjEnemigo.message="jugador1;800;450";
+	msjEnemigo.message="jugador4;800;450";
 
 	return msjEnemigo;
 }
@@ -227,17 +240,21 @@ mensajeStruct EscenarioS::getMensajeEnemigoMuerto(){
 	return msjEnemigo;
 }
 
-mensajeStruct EscenarioS::getMensajeEnemigoUpdate(){
+mensajeStruct EscenarioS::getMensajeEnemigoUpdate(Enemigo *enemigo){
 	mensajeStruct msjEnemigo;
 	stringstream posXEnemigo;
 	// un movimiento cualquiera para probar
 	posXEnemigo << (800 - this->avance);
 
 	msjEnemigo.tipo = ENEMIGO_UPD;
+
+	msjEnemigo.message = enemigo->getStringMensaje();
+	msjEnemigo.objectId = enemigo->getCodEnemigo();
+	/*
 	// id fruta, cambiar despues
 	msjEnemigo.objectId="T1";
 	msjEnemigo.message=posXEnemigo.str() + ";450;03;C";
-
+	 */
 	return msjEnemigo;
 }
 mensajeStruct EscenarioS::getMensajeBala(){
