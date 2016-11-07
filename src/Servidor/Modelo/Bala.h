@@ -7,6 +7,7 @@
 
 #ifndef BALA_H_
 #define BALA_H_
+#include "../Modelo/Jugador.h"
 
 class Bala {
 private:
@@ -15,9 +16,10 @@ private:
 
 
 public:
+	Jugador* jugador;
 	int x,y;
 	void mover();
-	Bala(int x,int y, int dir);
+	Bala(int x,int y, int dir, Jugador * jugador);
 	virtual ~Bala();
 };
 

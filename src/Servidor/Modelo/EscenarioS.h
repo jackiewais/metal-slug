@@ -36,7 +36,7 @@ public:
 	mensajeStruct getMensajeEnemigoNuevo();
 	mensajeStruct getMensajeEnemigoUpdate();
 	mensajeStruct getMensajeEnemigoMuerto();
-	mensajeStruct getMensajeBala(Bala* bala);
+	mensajeStruct getMensajeBala();
 	void aceptarCambios();
 	mensajeStruct getMensajeDesconexion(int jugadorId);
 	void resetEscenario();

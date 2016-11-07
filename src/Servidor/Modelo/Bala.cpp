@@ -7,18 +7,18 @@
 
 #include "Bala.h"
 
-
-Bala::Bala(int x, int y, int dir) {
+Bala::Bala(int x, int y, int dir,Jugador* jugador) {
 
 this->x = x;
 this->y = y;
 this->direccion = dir;
+this->jugador = jugador;
 
 }
 
 void Bala::mover(){
 
-	this->x++;
+	this->x+=2;
 	//this->y++;
 
 }

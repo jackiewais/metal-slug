@@ -58,30 +58,28 @@ mensajeStruct EscenarioS::getMensajeDesconexion(int jugadorId){
 	return getMensajeJugador(jugador);
 }
 void EscenarioS::addBala(Bala *bala){
-cout << "agrega bala a lista" << endl;
 this->balas.push_front(bala);
 }
 
 void EscenarioS::moverBala(){
 
 	list<Bala*>::iterator it;
-bool afuera = false;
+	list<Bala*>::iterator itDelete;
+
+	bool afuera = false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
-		(*it)->mover();
+	(*it)->mover();
 	}
 
-		list<Bala*>::iterator itDelete;
-
-				for (it=balas.begin(); it!=balas.end(); ++it){
-						if((*it)->x>this->ancho || (*it)->y > this->alto){
-						afuera = true;
-							cout << "elimno una bala en pos " << (*it)->x << " " << (*it)->y <<endl;
-						itDelete = it;
-						}
-				     }
-				if(afuera){
-					balas.erase(itDelete);
-				}
+	for (it=balas.begin(); it!=balas.end(); ++it){
+		if((*it)->x>this->ancho || (*it)->y > this->alto){
+		afuera = true;
+		itDelete = it;
+		}
+    }
+	if(afuera){
+	balas.erase(itDelete);
+	}
 
 }
 
@@ -93,11 +91,9 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	string estado = result[1];
 	list<mensajeStruct> returnList;
 	if(estado=="DISPARO"){
+	Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,1,jugador);
 
-	Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,1);
 	this->addBala(bala);
-
-
 	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;
@@ -116,21 +112,11 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		if ((this->avance >= 30) && (this->avance <= 700) ) {
 			returnList.push_back(getMensajeEnemigoUpdate());
 		}
-
 		if(!this->balas.empty()){
 		moverBala();
-		//itero para madar un mensaje por bala ( después seria un solo mensaje
-		//con todas las balas).
-		list<Bala*>::iterator it;
-			for (it=balas.begin(); it!=balas.end(); ++it){
-				returnList.push_back(getMensajeBala((*it)));
-			}
-
+		returnList.push_back(getMensajeBala());
 		}
-
-		cout << "sale de armar mensaje de bala" << endl;
 	}
-
 	return returnList;
 }
 
@@ -254,16 +240,22 @@ mensajeStruct EscenarioS::getMensajeEnemigoUpdate(){
 
 	return msjEnemigo;
 }
-mensajeStruct EscenarioS::getMensajeBala(Bala* bala){
+mensajeStruct EscenarioS::getMensajeBala(){
 	mensajeStruct msjBala;
+	stringstream cantidadBalas;
+	msjBala.tipo = BALA_UPD;
+	cantidadBalas << balas.size();
+	msjBala.message = cantidadBalas.str() + ";";
+	list<Bala*>::iterator it;
+
+	for (it=balas.begin(); it!=balas.end(); ++it){
 	stringstream posx;
 	stringstream posy;
-	//ACA TENDRIA QUE ARMAR EL MENSAJE DE TODAS LAS BALAS
-	posx<<bala->x;
-	posy<<bala->y;
-	msjBala.tipo = BALA_UPD;
-	msjBala.message="bala;" + posx.str() + ";" + posy.str();
+	posx<<(*it)->x;
+	posy<<(*it)->y;
+	msjBala.message+=posx.str()+";"+posy.str()+";";
 
+	}
 	return msjBala;
 }
 

@@ -23,7 +23,7 @@ void ContenedorBalas::addBalas(int x, int y){
 	pos posicion;
 	posicion.x = x;
 	posicion.y = y;
-	cout << "AGREGA BALA POS " << posicion.x << " " << posicion.y << endl;
+
 	this->balas.push_front(posicion);
 
 }
@@ -62,10 +62,6 @@ void ContenedorBalas::render()
 void ContenedorBalas::deleteBalas(){
 	list<pos>::iterator it;
 		for (it=balas.begin(); it!=balas.end(); ++it){
-
 			balas.pop_front();
-
 		}
-
-
 }

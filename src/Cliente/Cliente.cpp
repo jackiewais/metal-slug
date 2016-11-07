@@ -317,15 +317,16 @@ void Cliente::updateEnemigo(mensajeStruct msg){
 
 void Cliente::updateBala(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
-
-	string spriteId = result[0];
-	int x=atoi(result[1].c_str());
-	int y=atoi(result[2].c_str());
-
-	//escenario.crearOActualizarEnemigo(msg.objectId,spriteId,x,y);
-	//escenario.actualizarEnemigo(msg.objectId,x,y);
-
-	escenario.balas.addBalas(x,y);
+	int x;
+	int y;
+	int pos=1;
+	int cantidadDeBalas = atoi(result[0].c_str());
+	for (int i=0; i<cantidadDeBalas ; i++){
+		x=atoi(result[pos].c_str());
+		y=atoi(result[pos+1].c_str());
+		escenario.balas.addBalas(x,y);
+		pos+=2;
+	}
 }
 
 
@@ -340,9 +341,7 @@ void Cliente::updateJugador(mensajeStruct msg){
 	estado = static_cast<estadoJugador>(atoi(result[2].c_str()));
 	conectado =result[3] ;
 	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
-
 	escenario.contadores["1"]->actualizarPuntaje(1);
-
 	escenario.contadores["1"]->actualizarVida(-1);
 }
 
