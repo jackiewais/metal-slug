@@ -116,9 +116,20 @@ bool Cliente::handleKeyEvents(){
 				 switch( e.key.keysym.sym ){
 					case SDLK_LEFT:
 						this->vecesX += 1;
+						if(dirDisparo==UP){
+						dirDisparo = DIAGLEFT;
+						}
 						break;
 					case SDLK_RIGHT:
 						this->vecesX -= 1;
+						if(dirDisparo==UP){
+						dirDisparo = DIAGRIGHT;
+						}else{
+						dirDisparo=RIGHT;
+						}
+						break;
+					case SDLK_UP:
+						dirDisparo=RIGHT;
 						break;
 				}
 			}
@@ -127,11 +138,24 @@ bool Cliente::handleKeyEvents(){
 				switch( e.key.keysym.sym ){
 					case SDLK_LEFT:
 						this->vecesX -= 1;
+						if(dirDisparo==UP){
+						dirDisparo = DIAGLEFT;
+						}else{
+						dirDisparo=LEFT;
+						}
 						break;
 					case SDLK_RIGHT:
 						this->vecesX += 1;
+						if(dirDisparo==UP){
+						dirDisparo = DIAGRIGHT;
+						}else{
+						dirDisparo=RIGHT;
+						}
 						break;
 					case SDLK_UP:
+						dirDisparo=UP;
+						break;
+					case SDLK_s:
 						accion = "SALTA";
 						break;
 					case SDLK_r:
@@ -139,7 +163,7 @@ bool Cliente::handleKeyEvents(){
 						accion = "RESET";
 						break;
 					case SDLK_a:
-						accion = "DISPARO";
+						accion = "DISPARO;"+convertirAString(dirDisparo);
 					    break;
 				}
 			}
@@ -170,7 +194,6 @@ bool Cliente::handleKeyEvents(){
 		salir = true;
 		this->jugando = false;
 	}
-
 	return salir;
 }
 

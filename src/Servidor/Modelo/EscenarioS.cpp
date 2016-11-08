@@ -76,7 +76,7 @@ void EscenarioS::moverBala(){
 	}
 
 	for (it=balas.begin(); it!=balas.end(); ++it){
-		if((*it)->x>this->ancho || (*it)->y > this->alto){
+		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0){
 		afuera = true;
 		itDelete = it;
 		}
@@ -93,9 +93,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	vector<string> result = splitE(mensaje, ';');
 	int vecesX = atoi(result[0].c_str());
 	string estado = result[1];
+
 	list<mensajeStruct> returnList;
+
 	if(estado=="DISPARO"){
-	Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,1,jugador);
+	int direccion = atoi(result[2].c_str());
+	Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,direccion,jugador);
 
 	this->addBala(bala);
 	}

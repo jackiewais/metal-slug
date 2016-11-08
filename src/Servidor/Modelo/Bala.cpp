@@ -18,7 +18,26 @@ this->jugador = jugador;
 
 void Bala::mover(){
 
-	this->x+=2;
+	switch(this->direccion){
+		case RIGHT:
+			this->x+=2;
+		break;
+		case LEFT:
+			this->x-=2;
+		break;
+		case UP:
+			this->y-=2;
+		break;
+		case DIAGRIGHT:
+			this->x+=2;
+			this->y-=2;
+		break;
+		case DIAGLEFT:
+			this->x-=2;
+			this->y-=2;
+		break;
+	}
+
 	//this->y++;
 
 }

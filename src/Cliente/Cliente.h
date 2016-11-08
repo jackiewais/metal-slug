@@ -56,6 +56,7 @@ private:
 	void createNro(mensajeStruct msg);
 
 public:
+	aimDirection dirDisparo= RIGHT;
 	bool escenarioOK =false;
 	Cliente();
 	virtual ~Cliente();

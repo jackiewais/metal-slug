@@ -13,4 +13,12 @@ enum estadoJugador{
 	SIN_ESTADO = 50
 };
 
+enum aimDirection {
+	RIGHT = 01,
+	LEFT = 02,
+	UP = 03,
+	DOWN = 04,
+	DIAGRIGHT = 05,
+	DIAGLEFT = 06
+};
 #endif

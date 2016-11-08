@@ -8,7 +8,7 @@
 #ifndef BALA_H_
 #define BALA_H_
 #include "../Modelo/Jugador.h"
-
+#include "../../Common/Modelo.h"
 class Bala {
 private:
 
