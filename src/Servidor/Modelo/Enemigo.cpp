@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -16,6 +17,7 @@ Enemigo::Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, 
 	this->topeSalto = piso-100;
 	this->plataforma = topeSalto + 40;
 	this->mapJugadores = mapJugadores;
+	this->distanciaHastaLaQueSeAcercaAJugador = 10 + rand() % (801 - 10);
 
 	moverAPosicionInicial();
 }
@@ -35,9 +37,9 @@ void Enemigo::mover(int anchoEscenario) {
 	if ( it != this->mapJugadores->end() ) {
 		unJugador = it->second;
 
-		if ( (this->posX - unJugador->getPosX()) > 100 ) {
+		if ( (this->posX - unJugador->getPosX()) > this->distanciaHastaLaQueSeAcercaAJugador ) {
 			this->mover(anchoEscenario, -1, "CAMINA_IZQ");
-		} else if ( (this->posX - unJugador->getPosX()) < -100 ) {
+		} else if ( (this->posX - unJugador->getPosX()) < -this->distanciaHastaLaQueSeAcercaAJugador ) {
 			this->mover(anchoEscenario, 1, "CAMINA_DER");
 		} else {
 			this->mover(anchoEscenario, 0, "PARADO");
@@ -99,12 +101,19 @@ void Enemigo::moverAPosicionInicial(){
 	this->estado=PARADO;
 }
 
-string Enemigo::getStringMensaje() {
+string Enemigo::getStringMensajeUpdate() {
     stringstream x,y,estado;
     x << (this->posX);
     y << (this->posY);
     estado << this->estado;
 	return (x.str() + ";" + y.str() + ";" + estado.str() + ";C");
+}
+
+string Enemigo::getStringMensajeNew() {
+    stringstream x,y,estado;
+    x << (this->posX);
+    y << (this->posY);
+	return ("jugador4;" + x.str() + ";" + y.str());
 }
 
 string Enemigo::getCodEnemigo() {

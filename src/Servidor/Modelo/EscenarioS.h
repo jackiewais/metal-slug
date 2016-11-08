@@ -2,6 +2,7 @@
 #define SRC_SERVIDOR_MODELO_ESCENARIOS_H_
 #include <stdio.h>
 #include <iostream>
+#include <queue>
 #include <map>
 #include <list>
 #include "Jugador.h"
@@ -15,7 +16,8 @@ class EscenarioS {
 private:
 	int distancia;
 	int avance;
-	Enemigo *enemigo;
+	queue<Enemigo*> enemigosInactivos;
+	list<Enemigo*> enemigosVivos;
 
 public:
 	int ancho;
@@ -31,12 +33,13 @@ public:
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
-	void addEnemigo(Enemigo* enemigo);
+	void addEnemigoInactivo(Enemigo* enemigo);
+	Enemigo* activarEnemigo();
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
 	void moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
 	mensajeStruct getMensajeEscenario();
-	mensajeStruct getMensajeEnemigoNuevo();
+	mensajeStruct getMensajeEnemigoNuevo(Enemigo *enemigo);
 	mensajeStruct getMensajeEnemigoUpdate(Enemigo *enemigo);
 	mensajeStruct getMensajeEnemigoMuerto();
 	mensajeStruct getMensajeBala();

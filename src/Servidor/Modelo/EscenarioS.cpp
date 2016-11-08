@@ -36,10 +36,20 @@ void EscenarioS::addJugador(Jugador* jugador) {
 	}
 }
 
-void EscenarioS::addEnemigo(Enemigo* enemigo) {
-	this->enemigo = enemigo;
+void EscenarioS::addEnemigoInactivo(Enemigo* enemigo) {
+	this->enemigosInactivos.push(enemigo);
 }
 
+// Si el enemigo no se puede activar devuelve NULL
+Enemigo* EscenarioS::activarEnemigo() {
+	Enemigo *enemigo = NULL;
+	if ( !this->enemigosInactivos.empty() ) {
+		enemigo = this->enemigosInactivos.front();
+		this->enemigosInactivos.pop();
+		this->enemigosVivos.push_front(enemigo);
+	}
+	return enemigo;
+}
 
 void splitE(const string &s, char delim, vector<string> &elems) {
     stringstream ss;
@@ -95,6 +105,8 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	string estado = result[1];
 
 	list<mensajeStruct> returnList;
+	list<Enemigo*>::iterator itEnemigos;
+	Enemigo *enemigo = NULL;
 
 	if(estado=="DISPARO"){
 	int direccion = atoi(result[2].c_str());
@@ -120,14 +132,20 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			returnList.push_back(getMensajeEnemigoUpdate());
 		}*/
 		if (this->avance == 0) {
-			returnList.push_back(getMensajeEnemigoNuevo());
-		} else {
-			this->enemigo->mover(this->ancho);
-			returnList.push_back(getMensajeEnemigoUpdate(this->enemigo));
+			enemigo = activarEnemigo();
+			if (enemigo != NULL) {
+				returnList.push_back(getMensajeEnemigoNuevo(enemigo));
+			}
+		}
+
+		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
+			enemigo = (*itEnemigos);
+			enemigo->mover(this->ancho);
+			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
 		}
 		if(!this->balas.empty()){
-		moverBala();
-		returnList.push_back(getMensajeBala());
+			moverBala();
+			returnList.push_back(getMensajeBala());
 		}
 	}
 	return returnList;
@@ -140,9 +158,10 @@ void EscenarioS::aceptarCambios(){
 }
 
 void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
-
 	bool cruzoMargen = false;
 	int minPosX = this->distancia;
+	list<Enemigo*>::iterator itEnemigos;
+	Enemigo *enemigo = NULL;
 
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		if (jugador->second->conectado()) {
@@ -185,8 +204,10 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 		}
 		this->avance += minPosX;
 
-		this->enemigo->retrocederSegunAvanceEscenario(minPosX);
-
+		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
+			enemigo = (*itEnemigos);
+			enemigo->retrocederSegunAvanceEscenario(minPosX);
+		}
 		// hardcodeado por el momento
 
 		/*
@@ -221,13 +242,12 @@ mensajeStruct EscenarioS::getMensajeEscenario(){
 	return msjEscenario;
 }
 
-mensajeStruct EscenarioS::getMensajeEnemigoNuevo(){
+mensajeStruct EscenarioS::getMensajeEnemigoNuevo(Enemigo *enemigo){
 	mensajeStruct msjEnemigo;
 
 	msjEnemigo.tipo = ENEMIGO_NEW;
-	// id fruta, cambiar despues
-	msjEnemigo.objectId="T1";
-	msjEnemigo.message="jugador4;800;450";
+	msjEnemigo.objectId = enemigo->getCodEnemigo();
+	msjEnemigo.message = enemigo->getStringMensajeNew();
 
 	return msjEnemigo;
 }
@@ -245,19 +265,11 @@ mensajeStruct EscenarioS::getMensajeEnemigoMuerto(){
 
 mensajeStruct EscenarioS::getMensajeEnemigoUpdate(Enemigo *enemigo){
 	mensajeStruct msjEnemigo;
-	stringstream posXEnemigo;
-	// un movimiento cualquiera para probar
-	posXEnemigo << (800 - this->avance);
 
 	msjEnemigo.tipo = ENEMIGO_UPD;
-
-	msjEnemigo.message = enemigo->getStringMensaje();
 	msjEnemigo.objectId = enemigo->getCodEnemigo();
-	/*
-	// id fruta, cambiar despues
-	msjEnemigo.objectId="T1";
-	msjEnemigo.message=posXEnemigo.str() + ";450;03;C";
-	 */
+	msjEnemigo.message = enemigo->getStringMensajeUpdate();
+
 	return msjEnemigo;
 }
 mensajeStruct EscenarioS::getMensajeBala(){

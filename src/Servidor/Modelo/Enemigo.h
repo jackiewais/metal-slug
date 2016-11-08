@@ -14,7 +14,8 @@ public:
 	virtual ~Enemigo();
 	void mover(int anchoEscenario, int vecesX, string accion);
 	void mover(int anchoEscenario);
-	string getStringMensaje();
+	string getStringMensajeNew();
+	string getStringMensajeUpdate();
 	string getCodEnemigo();
 	void retrocederSegunAvanceEscenario(int avance);
 
@@ -38,6 +39,7 @@ private:
 	int posX;
 	int posY;
 	map<int, Jugador*> *mapJugadores;
+	int distanciaHastaLaQueSeAcercaAJugador;
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ENEMIGO_H_ */

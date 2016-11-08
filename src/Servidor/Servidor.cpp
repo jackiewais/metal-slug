@@ -19,6 +19,8 @@
 #include "../Common/MensajeStruct.h"
 #include "./Modelo/EscenarioS.h"
 #include "Usuario.h"
+#include <stdlib.h>
+#include <time.h>
 
 
 
@@ -250,7 +252,9 @@ void Servidor::handshake(mensajeStruct msg){
 	colaCliente->push(msg);
 
 	Enemigo *enemigo = new Enemigo(1,5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
-	this->escenario->addEnemigo(enemigo);
+	this->escenario->addEnemigoInactivo(enemigo);
+	enemigo = new Enemigo(2,5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
+	this->escenario->addEnemigoInactivo(enemigo);
 
 	createTimerThread();
 }
@@ -704,6 +708,7 @@ Servidor::Servidor() {
 	this->arguments = new argsForThread();
 	this->cerrarPrograma=false;
 	this->parser = new Parser();
+	srand(time(NULL));
 }
 
 Servidor::~Servidor() {
