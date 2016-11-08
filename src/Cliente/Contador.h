@@ -9,12 +9,12 @@
 class Contador {
 
 public:
-	Contador(std::string id, int posX, int posY, Numero* numero, Progreso* progreso, Label* lbalas);
+	Contador(std::string id, int posX, int posY, Numero* numero, Progreso* progreso, Label* lbalas, int puntaje,int vida,int municion);
 	virtual ~Contador();
 	void renderizar();
-	int puntaje=234;
-	int vida=100;
-	int balas=-1;
+	int puntaje;
+	int vida;
+	int balas;
 	int posX;
 	int posY;
 	std::string id;
@@ -22,8 +22,11 @@ public:
 	Progreso* progreso;
 	Label* lbalas;
 
-	void actualizarPuntaje(int dif);
-	void actualizarVida(int dif);
+	void actualizarPuntaje(int nuevo_valor);
+	void actualizarVida(int nuevo_valor);
+	void actualizarMunicion(int nuevo_valor);
+
+	void actualizarDatos(int puntaje, int vida, int municiones);
 
 	void renderizarCantBalas();
 };

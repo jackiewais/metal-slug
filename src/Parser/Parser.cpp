@@ -136,7 +136,7 @@ void Parser::getxmlObjetos(const pugi::xml_document* doc)
 	   std::string objectId = j.child("objectId").first_child().value();
 	   std::string imagen = j.child("imagen").first_child().value();
 
-	   objeto.tipo = HANDSHAKE_OBJETO_NUEVO;
+	   objeto.tipo = HANDSHAKE_JUGADOR_NUEVO;
 	   objeto.objectId = objectId;
 		objeto.message = imagen;
 		objeto.socketCli = cliente;

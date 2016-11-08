@@ -37,6 +37,7 @@ private:
 	static void *crearEscenario(void *arg);
 	int printMenu();
 	void objetoNuevo(mensajeStruct msg);
+	void jugadorNuevo(mensajeStruct msg);
 	void updateEnemigo(mensajeStruct msg);
 	void updateBala(mensajeStruct msg);
 	void imprimirConsigna();

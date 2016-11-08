@@ -13,6 +13,7 @@ class Progreso
 	bool loadMedia(SDL_Renderer* gRend);
 	bool loadMediaBase();
 
+	void close();
 	~Progreso();
 
 	LTextureBasic gTexture;

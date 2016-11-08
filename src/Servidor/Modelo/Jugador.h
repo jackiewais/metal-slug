@@ -12,7 +12,6 @@ class Jugador{
 private:
 	int id;
 	string nombre;
-	int puntaje;
 	int factorSalto = -1;
 	int piso;
 	int topeSalto;
@@ -27,6 +26,10 @@ public:
 	int ancho;
 	int velocidad;
 	int velSalto;
+
+	int puntaje;
+	int vida;
+	int municiones;
 
 	estadoJugador estado;
 

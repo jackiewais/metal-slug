@@ -190,6 +190,12 @@ void Servidor::handshake(mensajeStruct msg){
     	colaCliente->push(*i3);
     }
 
+    //ESTO TIENE QUE IR PRIMERO PORQUE CARGA TODAS LAS COSAS DEL CONTADOR
+	 msg.tipo = HANDSHAKE_SPRITE_NRO;
+	 msg.objectId="numbers";
+	 msg.message="250;30";
+	 colaCliente->push(msg);
+
 	//MANDAR JUGADORES
 	std::vector<mensajeStruct> v4 = parser->getListaObjetos();
 	std::vector<mensajeStruct>::iterator i4;
@@ -205,7 +211,7 @@ void Servidor::handshake(mensajeStruct msg){
 			if(jugador != NULL){
 				datosJug = jugador->getStringMensaje();
 			}else{
-				datosJug = "0;"+ convertirAString(this->escenario->alto + 10) +";01;D";
+				datosJug = "0;"+ convertirAString(this->escenario->alto + 10) +";01;D;0;100;-1";
 			}
 			i4->message = i4->message + ";" + datosJug;
 
@@ -214,11 +220,6 @@ void Servidor::handshake(mensajeStruct msg){
 	}
 	delete parser;
 
-
-	 msg.tipo = HANDSHAKE_SPRITE_NRO;
-	 msg.objectId="numbers";
-	 msg.message="250;30";
-	 colaCliente->push(msg);
 
 	 msg.tipo = HANDSHAKE_SPRITES;
 	 msg.objectId="esperandoJugadores";

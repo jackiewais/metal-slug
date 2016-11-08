@@ -107,8 +107,11 @@ Progreso* Escenario::crearProgreso(std::string idSprite, int ancho, int alto  ) 
 	return this->progreso;
 }
 
-Contador* Escenario::crearContador(string id){
-	Contador* contador = new Contador(id,10,10,this->numero,this->progreso,this->lbalas);
+Contador* Escenario::crearContador(string id, int puntaje, int vida, int municiones){
+	string idCopy = id;
+	idCopy.erase(0,1);
+	int x = 10 + (atoi(idCopy.c_str())-1) * 220;
+	Contador* contador = new Contador(id,x,10,this->numero,this->progreso,this->lbalas,puntaje,vida,municiones);
 	this->contadores[id]= contador;
 	return contador;
 
@@ -223,8 +226,9 @@ void Escenario::close()
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 	gRenderer = NULL;
-	delete(numero);
-	delete(progreso);
+	numero->close();
+	progreso->close();
+	lbalas->close();
 
 	//Quit SDL subsystems
 	IMG_Quit();

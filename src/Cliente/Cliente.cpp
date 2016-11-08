@@ -247,13 +247,15 @@ void *Cliente::recvMessage(void * arg){
 				context->escenario.balas.initTexture("images/bala.png",10,10);
 				context->createNro(mensajeRta);
 				context->escenario.crearProgreso("loadbar",100,30);
-				context->escenario.crearContador("1");
 				break;
 			case HANDSHAKE_ESTADO_SPRITE:
 				context->addEstadoSprite(mensajeRta);
 				break;
 			case HANDSHAKE_OBJETO_NUEVO:
 				context->objetoNuevo(mensajeRta);
+				break;
+			case HANDSHAKE_JUGADOR_NUEVO:
+				context->jugadorNuevo(mensajeRta);
 				break;
 			case HANDSHAKE_FONDO_NUEVO:
 				context->objetoNuevo(mensajeRta);
@@ -278,7 +280,7 @@ void *Cliente::recvMessage(void * arg){
 				context->objetoNuevo(mensajeRta);
 				break;
 			case ENEMIGO_UPD:
-				if (context->jugando) context->updateJugador(mensajeRta);
+				if (context->jugando) context->updateEnemigo(mensajeRta);
 				break;
 			case ENEMIGO_DELETE:
 				context->escenario.eliminarObjeto(mensajeRta.objectId);
@@ -329,13 +331,34 @@ void Cliente::objetoNuevo(mensajeStruct msg){
 
 }
 
-void Cliente::updateEnemigo(mensajeStruct msg){
+void Cliente::jugadorNuevo(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
+	estadoJugador estado = PARADO;
+	string conectado = "C";
 
-	int x=atoi(result[0].c_str());
-	int y=atoi(result[1].c_str());
+	string spriteId = result[0];
+	int x=atoi(result[1].c_str());
+	int y=atoi(result[2].c_str());
+	estado = static_cast<estadoJugador>(atoi(result[3].c_str()));
+	conectado = result[4];
 
-	escenario.actualizarEnemigo(msg.objectId,x,y);
+	int puntaje=atoi(result[5].c_str());
+	int vida=atoi(result[6].c_str());
+	int municiones=atoi(result[7].c_str());
+	escenario.crearObjeto(msg.objectId,spriteId,x,y,estado,conectado);
+	escenario.crearContador(msg.objectId,puntaje,vida, municiones);
+}
+void Cliente::updateEnemigo(mensajeStruct msg){
+	int x,y;
+	string conectado;
+	estadoJugador estado;
+	vector<string> result = Util::Split(msg.message, ';');
+	x=atoi(result[0].c_str());
+	y=atoi(result[1].c_str());
+	//estado jugador
+	estado = static_cast<estadoJugador>(atoi(result[2].c_str()));
+	conectado =result[3] ;
+	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
 }
 
 void Cliente::updateBala(mensajeStruct msg){
@@ -354,7 +377,7 @@ void Cliente::updateBala(mensajeStruct msg){
 
 
 void Cliente::updateJugador(mensajeStruct msg){
-	int x,y;
+	int x,y, puntaje,vida,municiones;
 	string conectado;
 	estadoJugador estado;
 	vector<string> result = Util::Split(msg.message, ';');
@@ -363,9 +386,12 @@ void Cliente::updateJugador(mensajeStruct msg){
 	//estado jugador
 	estado = static_cast<estadoJugador>(atoi(result[2].c_str()));
 	conectado =result[3] ;
+	puntaje=atoi(result[4].c_str());
+	vida=atoi(result[5].c_str());
+	municiones=atoi(result[6].c_str());
 	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
-	escenario.contadores["1"]->actualizarPuntaje(1);
-	escenario.contadores["1"]->actualizarVida(-1);
+	escenario.contadores[msg.objectId]->actualizarDatos(puntaje,vida,municiones);
+
 }
 
 

@@ -9,6 +9,8 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, i
 	this->ancho = ancho;
 	this->alto = alto;
 	this->puntaje = 0;
+	this->municiones = -1;
+	this->vida=100;
 	this->usuario = usuario;
 	this->piso = altoEscenario - 150;
 	this->topeSalto = piso-100;
@@ -171,12 +173,15 @@ void Jugador::manejarSalto(){
 
 
 string Jugador::getStringMensaje() {
-    stringstream x,y,estado;
+    stringstream x,y,estado,puntos,vida,munic;
     x << (this->posX);
     y << (this->posY);
     estado << this->estado;
+    puntos<< this->puntaje;
+    vida<<this->vida;
+    munic<<this->municiones;
     string conectado = (this->usuario->isConectado())?"C":"D";
-	return (x.str() + ";" + y.str() + ";" + estado.str() + ";" + conectado);
+	return (x.str() + ";" + y.str() + ";" + estado.str() + ";" + conectado + ";" + puntos.str() + ";" + vida.str() + ";" + munic.str());
 }
 
 

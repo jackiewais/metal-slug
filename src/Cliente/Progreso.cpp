@@ -66,7 +66,11 @@ void Progreso::render(int porcentaje, int posX, int posY)
 
 }
 
+void Progreso::close(){
+
+	gTexture.free();
+}
+
 Progreso::~Progreso()
 {
-	gTexture.free();
 }

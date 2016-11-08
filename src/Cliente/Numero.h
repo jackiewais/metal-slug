@@ -10,6 +10,7 @@ class Numero
 	void initTexture(std::string spritePath, int anchoTot, int altoTot);
 	void render(int id, int posX, int posY);
 
+	void close();
 	bool loadMedia(SDL_Renderer* gRend);
 
 	~Numero();

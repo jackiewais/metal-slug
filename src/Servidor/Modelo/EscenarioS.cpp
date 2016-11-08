@@ -123,6 +123,15 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		this->resetEscenario();
 	}else{
 		jugador->mover(this->ancho,vecesX, estado);
+
+		//ESTO ES PARA PROBAR
+		jugador->puntaje += 1;
+		jugador->vida -= 1;
+		if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
+
+		if (jugador->vida >80 ) jugador->municiones=-1;
+		if (jugador->vida ==80 ) jugador->municiones=300;
+		if (jugador->vida <80 ) jugador->municiones-=2;
 		moverEscenario(&returnList);
 		returnList.push_back(getMensajeJugador(jugador));
 		returnList.push_back(getMensajeEscenario());

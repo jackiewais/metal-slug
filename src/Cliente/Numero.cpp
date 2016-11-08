@@ -62,7 +62,11 @@ void Numero::render(int id, int posX, int posY)
 	}
 }
 
+void Numero::close(){
+	gNumeroTexture.free();
+
+}
+
 Numero::~Numero()
 {
-	gNumeroTexture.free();
 }
