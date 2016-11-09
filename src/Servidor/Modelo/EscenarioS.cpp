@@ -36,16 +36,27 @@ void EscenarioS::addJugador(Jugador* jugador) {
 	}
 }
 
-void EscenarioS::addEnemigoInactivo(Enemigo* enemigo) {
-	this->enemigosInactivos.push(enemigo);
+void EscenarioS::addEnemigoInactivo(Enemigo* enemigo, int posXAbsolutaDeJugadorParaAparicion) {
+	if ( this->mapEnemigosInactivos.find(posXAbsolutaDeJugadorParaAparicion) != this->mapEnemigosInactivos.end() ) {
+		this->mapEnemigosInactivos[posXAbsolutaDeJugadorParaAparicion].push(enemigo);
+	} else {
+		queue<Enemigo*> cola;
+		cola.push(enemigo);
+		this->mapEnemigosInactivos[posXAbsolutaDeJugadorParaAparicion] = cola;
+	}
 }
 
 // Si el enemigo no se puede activar devuelve NULL
-Enemigo* EscenarioS::activarEnemigo() {
+Enemigo* EscenarioS::activarEnemigo(int posXAbsolutaJugador) {
 	Enemigo *enemigo = NULL;
-	if ( !this->enemigosInactivos.empty() ) {
-		enemigo = this->enemigosInactivos.front();
-		this->enemigosInactivos.pop();
+	queue<Enemigo*> enemigosEnEsaPosicion;
+	if ( this->mapEnemigosInactivos.find(posXAbsolutaJugador) != this->mapEnemigosInactivos.end() ) {
+		enemigosEnEsaPosicion = this->mapEnemigosInactivos[posXAbsolutaJugador];
+		enemigo = enemigosEnEsaPosicion.front();
+		enemigosEnEsaPosicion.pop();
+		if ( enemigosEnEsaPosicion.empty() ) {
+			this->mapEnemigosInactivos.erase(posXAbsolutaJugador);
+		}
 		this->enemigosVivos.push_front(enemigo);
 	}
 	return enemigo;
@@ -136,15 +147,10 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		returnList.push_back(getMensajeJugador(jugador));
 		returnList.push_back(getMensajeEscenario());
 
-		/*
-		if ((this->avance >= 30) && (this->avance <= 700) ) {
-			returnList.push_back(getMensajeEnemigoUpdate());
-		}*/
-		if (this->avance == 0) {
-			enemigo = activarEnemigo();
-			if (enemigo != NULL) {
-				returnList.push_back(getMensajeEnemigoNuevo(enemigo));
-			}
+
+		enemigo = activarEnemigo(this->avance + jugador->getPosX());
+		if (enemigo != NULL) {
+			returnList.push_back(getMensajeEnemigoNuevo(enemigo));
 		}
 
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {

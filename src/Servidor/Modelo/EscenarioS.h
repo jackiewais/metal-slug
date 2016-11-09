@@ -16,7 +16,7 @@ class EscenarioS {
 private:
 	int distancia;
 	int avance;
-	queue<Enemigo*> enemigosInactivos;
+	map<int, queue<Enemigo*>> mapEnemigosInactivos;
 	list<Enemigo*> enemigosVivos;
 
 public:
@@ -33,8 +33,8 @@ public:
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
-	void addEnemigoInactivo(Enemigo* enemigo);
-	Enemigo* activarEnemigo();
+	void addEnemigoInactivo(Enemigo* enemigo, int posXAbsolutaDeJugadorParaAparicion);
+	Enemigo* activarEnemigo(int posXAbsolutaJugador);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
 	void moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);
