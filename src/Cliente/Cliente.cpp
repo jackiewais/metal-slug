@@ -172,7 +172,7 @@ bool Cliente::handleKeyEvents(){
 		}
 
 	}
-	if (this->escenario.esperandoJugadores){
+	if (this->escenario.esperandoJugadores && !this->escenario.gameOver){
 	evento.message=convertirAString(vecesX) + ";" + accion;
 	}else{
 		evento.message="0;NADA";
@@ -269,6 +269,7 @@ void *Cliente::recvMessage(void * arg){
 				break;
 			case JUGADOR_SO_VO:
 				context->escenario.crearJugadorPrincipal(mensajeRta);
+				context->jugadorPrincipalId = mensajeRta.objectId;
 				break;
 			case JUEGO_COMENZAR:
 				context->escenario.esperandoJugadores=true;
@@ -304,6 +305,11 @@ void *Cliente::recvMessage(void * arg){
 				while(context->escenario.running){}
 				context->handshake(&context->datosConexion);
 				break;
+
+			case GAME_OVER_PLAYER:
+				if (mensajeRta.objectId == context->jugadorPrincipalId){
+					context->escenario.setGameOverMe();
+				}
 		}
     }
 	return 0;

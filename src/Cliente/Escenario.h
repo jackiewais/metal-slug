@@ -50,6 +50,10 @@ public:
 	Progreso* crearProgreso(std::string idSprite, int ancho, int alto  );
 	Contador* crearContador(std::string id, int puntaje, int vida, int municiones);
 
+	bool gameOver=false;
+	Label* lGameOver;
+	void setGameOverMe();
+
 private:
 	void cargarMensajeEsperandoJugador();
 	ObjetoGraficable *esperandoJugador;

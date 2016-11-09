@@ -187,7 +187,7 @@ string Jugador::getStringMensaje() {
     puntos<< this->puntaje;
     vida<<this->vida;
     munic<<this->municiones;
-    string conectado = (this->usuario->isConectado())?"C":"D";
+    string conectado = (this->activo())?"C":"D";
 	return (x.str() + ";" + y.str() + ";" + estado.str() + ";" + conectado + ";" + puntos.str() + ";" + vida.str() + ";" + munic.str());
 }
 
@@ -221,6 +221,10 @@ bool Jugador::conectado() {
 	return this->usuario->isConectado();
 }
 
+
+bool Jugador::activo() {
+	return this->usuario->isConectado() && !this->gameOver;
+}
 
 int Jugador::getIdSocket() {
 

@@ -14,6 +14,8 @@ Escenario::Escenario() {
 	numero = new Numero();
 	progreso = new Progreso ();
 	lbalas = new Label();
+	lGameOver = new Label();
+	gameOver=false;
 }
 
 void Escenario::cargarMensajeEsperandoJugador(){
@@ -154,7 +156,7 @@ bool Escenario::loadMedia()
 	this->balas.loadMedia(this->gRenderer);
 
 	this->lbalas->setData(this->gRenderer,"ARMS",36);
-
+	this->lGameOver->setData(this->gRenderer,"GAME OVER",72);
 
 	return true;
 }
@@ -229,6 +231,7 @@ void Escenario::close()
 	numero->close();
 	progreso->close();
 	lbalas->close();
+	lGameOver->close();
 
 	//Quit SDL subsystems
 	IMG_Quit();
@@ -293,6 +296,9 @@ void Escenario::renderizarObjetos() {
 		this->renderPausa();
 	}
 
+	if (this->gameOver){
+		lGameOver->render(200,200);
+	}
 
 	SDL_RenderPresent( this->gRenderer );
 	}catch(...){
@@ -322,4 +328,8 @@ void Escenario::eliminarObjeto(std::string idObj) {
 		delete this->mapObjetosGraficables[idObj];
 		this->mapObjetosGraficables.erase(idObj);
 	}
+}
+
+void Escenario::setGameOverMe(){
+	this->gameOver = true;
 }

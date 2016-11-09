@@ -140,11 +140,22 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		//ESTO ES PARA PROBAR
 		jugador->puntaje += 1;
 		jugador->vida -= 1;
-		if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
 
+		//Siempre false para poder probar
+		if(jugador->vida == 0 && jugador->puntaje > 200 && false){
+			jugador->gameOver=true;
+			mensajeStruct msjReset;
+			msjReset.tipo = GAME_OVER_PLAYER;
+			msjReset.objectId = jugador->getCodJugador();
+			msjReset.message = "GAME OVER";
+			returnList.push_back(msjReset);
+		}
+
+		if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
 		if (jugador->vida >80 ) jugador->municiones=-1;
 		if (jugador->vida ==80 ) jugador->municiones=300;
 		if (jugador->vida <80 ) jugador->municiones-=2;
+
 		if (!this->avanceBloqueado) {
 			moverEscenario(&returnList);
 		}
@@ -167,6 +178,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			moverBala();
 			returnList.push_back(getMensajeBala());
 		}
+
 	}
 	return returnList;
 }
@@ -184,7 +196,7 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 	Enemigo *enemigo = NULL;
 
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
-		if (jugador->second->conectado()) {
+		if (jugador->second->activo()) {
 			if (jugador->second->getPosX() < minPosX) {
 				minPosX = jugador->second->getPosX();
 
@@ -214,7 +226,7 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 		int posActual;
 		for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador) {
 			posActual = jugador->second->getPosX() - minPosX;
-			if (!jugador->second->conectado() && posActual < 0) {
+			if (!jugador->second->activo() && posActual < 0) {
 				jugador->second->setPosX(0);
 			}
 			else {

@@ -52,8 +52,7 @@ private:
 
 	void addEstadoSprite(mensajeStruct msg);
 	bool jugando = true;
-
-
+	string jugadorPrincipalId;
 	void createNro(mensajeStruct msg);
 
 public:

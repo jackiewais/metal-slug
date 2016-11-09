@@ -32,6 +32,7 @@ public:
 	int puntaje;
 	int vida;
 	int municiones;
+	bool gameOver = false;
 
 	estadoJugador estado;
 
@@ -51,6 +52,7 @@ public:
 	//bool manejarSalto();
 	void manejarSalto();
 	bool conectado();
+	bool activo();
 	int getIdSocket();
 	bool estaSaltando();
 	void moverAPosicionInicial();
