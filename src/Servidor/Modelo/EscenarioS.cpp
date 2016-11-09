@@ -1,6 +1,6 @@
 #include "EscenarioS.h"
 #include <sstream>
-
+#include "SDL2/SDL.h"
 EscenarioS::EscenarioS(int ancho, int alto) {
 
 	this->ancho = ancho;
@@ -121,9 +121,11 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 	if(estado=="DISPARO"){
 	int direccion = atoi(result[2].c_str());
-	Bala *bala = new Bala(jugador->getPosX()+10,jugador->getPosY()+10,direccion,jugador);
 
-	this->addBala(bala);
+	this->addBala(jugador->disparar(direccion));
+
+
+
 	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;

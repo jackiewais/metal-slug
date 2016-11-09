@@ -4,6 +4,7 @@
 #include <iostream>
 #include "../../Common/Modelo.h"
 #include "../Usuario.h"
+#include "Bala.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ private:
 	Usuario* usuario;
 
 public:
+	Bala* disparar(int direccion);
 	bool aceptaCambios = true;
 	int alto;
 	int ancho;
@@ -52,6 +54,7 @@ public:
 	int getIdSocket();
 	bool estaSaltando();
 	void moverAPosicionInicial();
+
 	//estadoJugador resolverEstado(string accion, int vecesX);
 };
 

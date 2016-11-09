@@ -1,6 +1,7 @@
 #include "Jugador.h"
 #include <sstream>
 
+
 Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, int altoEscenario) {
 
 	this->id = id;
@@ -24,6 +25,12 @@ Jugador::~Jugador() {
 
 }
 
+Bala* Jugador::disparar(int direccion){
+
+	Bala *bala = new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
+	return bala;
+
+}
 
 int Jugador::getId() {
 

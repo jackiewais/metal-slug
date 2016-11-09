@@ -21,4 +21,10 @@ enum aimDirection {
 	DIAGRIGHT = 05,
 	DIAGLEFT = 06
 };
+
+enum arma {
+	GUN = 01,
+	MACHINEGUN = 02,
+	SHOOTGUN = 03,
+	};
 #endif
