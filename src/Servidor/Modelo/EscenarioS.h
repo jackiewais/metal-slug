@@ -18,6 +18,7 @@ private:
 	int avance;
 	map<int, queue<Enemigo*>> mapEnemigosInactivos;
 	list<Enemigo*> enemigosVivos;
+	bool avanceBloqueado;
 
 public:
 	int ancho;

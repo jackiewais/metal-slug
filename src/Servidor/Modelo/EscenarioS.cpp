@@ -8,6 +8,7 @@ EscenarioS::EscenarioS(int ancho, int alto) {
 	this->margen = ancho/2;
 	this->distancia = 5;
 	this->avance = 0;
+	this->avanceBloqueado = false;
 }
 
 EscenarioS::~EscenarioS() {
@@ -143,7 +144,9 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		if (jugador->vida >80 ) jugador->municiones=-1;
 		if (jugador->vida ==80 ) jugador->municiones=300;
 		if (jugador->vida <80 ) jugador->municiones-=2;
-		moverEscenario(&returnList);
+		if (!this->avanceBloqueado) {
+			moverEscenario(&returnList);
+		}
 		returnList.push_back(getMensajeJugador(jugador));
 		returnList.push_back(getMensajeEscenario());
 
@@ -153,9 +156,13 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			returnList.push_back(getMensajeEnemigoNuevo(enemigo));
 		}
 
+		this->avanceBloqueado = false;
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
 			enemigo = (*itEnemigos);
 			enemigo->mover(this->ancho);
+			if (enemigo->estaBloqueadoElAvanceDelEscenario(this->ancho)) {
+				this->avanceBloqueado = true;
+			}
 			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
 		}
 		if(!this->balas.empty()){

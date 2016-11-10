@@ -18,6 +18,8 @@ public:
 	string getStringMensajeUpdate();
 	string getCodEnemigo();
 	void retrocederSegunAvanceEscenario(int avance);
+	void bloquearAvanceEscenario();
+	bool estaBloqueadoElAvanceDelEscenario(int anchoEscenario);
 
 	int alto;
 	int ancho;
@@ -40,6 +42,7 @@ private:
 	int posY;
 	map<int, Jugador*> *mapJugadores;
 	int distanciaHastaLaQueSeAcercaAJugador;
+	bool avanceEscenarioBloqueado;
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ENEMIGO_H_ */

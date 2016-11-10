@@ -255,6 +255,7 @@ void Servidor::handshake(mensajeStruct msg){
 	Enemigo *enemigo = new Enemigo(1,5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
 	this->escenario->addEnemigoInactivo(enemigo, 500);
 	enemigo = new Enemigo(2,5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
+	enemigo->bloquearAvanceEscenario();
 	this->escenario->addEnemigoInactivo(enemigo, 1000);
 
 	createTimerThread();

@@ -18,6 +18,7 @@ Enemigo::Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, 
 	this->plataforma = topeSalto + 40;
 	this->mapJugadores = mapJugadores;
 	this->distanciaHastaLaQueSeAcercaAJugador = 10 + rand() % (801 - 10);
+	this->avanceEscenarioBloqueado = false;
 
 	moverAPosicionInicial();
 }
@@ -124,4 +125,15 @@ string Enemigo::getCodEnemigo() {
 
 void Enemigo::retrocederSegunAvanceEscenario(int avance) {
 	this->posX -= avance;
+}
+
+void Enemigo::bloquearAvanceEscenario() {
+	this->avanceEscenarioBloqueado = true;
+}
+
+bool Enemigo::estaBloqueadoElAvanceDelEscenario(int anchoEscenario) {
+	if ( this->avanceEscenarioBloqueado && (this->posX < (anchoEscenario - this->ancho)) ) {
+		return true;
+	}
+	return false;
 }
