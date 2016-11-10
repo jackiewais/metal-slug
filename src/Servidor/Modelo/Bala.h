@@ -7,19 +7,18 @@
 
 #ifndef BALA_H_
 #define BALA_H_
-#include "../Modelo/Jugador.h"
 #include "../../Common/Modelo.h"
 class Bala {
 private:
 
 	int direccion;
-
+	int velocidad;
 
 public:
-	Jugador* jugador;
+	int IdJugador;
 	int x,y;
 	void mover();
-	Bala(int x,int y, int dir, Jugador * jugador);
+	Bala(int x,int y, int dir,int jugador);
 	virtual ~Bala();
 };
 

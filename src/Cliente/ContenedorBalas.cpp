@@ -59,6 +59,7 @@ void ContenedorBalas::render()
 		}
 }
 
+//sin usar por ahora.
 void ContenedorBalas::deleteBalas(){
 	list<pos>::iterator it;
 		for (it=balas.begin(); it!=balas.end(); ++it){
