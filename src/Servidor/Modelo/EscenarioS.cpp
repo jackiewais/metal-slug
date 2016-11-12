@@ -38,29 +38,28 @@ void EscenarioS::addJugador(Jugador* jugador) {
 }
 
 void EscenarioS::addEnemigoInactivo(Enemigo* enemigo, int posXAbsolutaDeJugadorParaAparicion) {
-	if ( this->mapEnemigosInactivos.find(posXAbsolutaDeJugadorParaAparicion) != this->mapEnemigosInactivos.end() ) {
-		this->mapEnemigosInactivos[posXAbsolutaDeJugadorParaAparicion].push(enemigo);
-	} else {
-		queue<Enemigo*> cola;
-		cola.push(enemigo);
-		this->mapEnemigosInactivos[posXAbsolutaDeJugadorParaAparicion] = cola;
-	}
+	this->enemigosInactivos.insert(pair<int, Enemigo*>(posXAbsolutaDeJugadorParaAparicion,enemigo));
 }
 
-// Si el enemigo no se puede activar devuelve NULL
+// Si no se activa ningun enemigo devuelve NULL
 Enemigo* EscenarioS::activarEnemigo(int posXAbsolutaJugador) {
 	Enemigo *enemigo = NULL;
-	queue<Enemigo*> enemigosEnEsaPosicion;
-	if ( this->mapEnemigosInactivos.find(posXAbsolutaJugador) != this->mapEnemigosInactivos.end() ) {
-		enemigosEnEsaPosicion = this->mapEnemigosInactivos[posXAbsolutaJugador];
-		enemigo = enemigosEnEsaPosicion.front();
-		enemigosEnEsaPosicion.pop();
-		if ( enemigosEnEsaPosicion.empty() ) {
-			this->mapEnemigosInactivos.erase(posXAbsolutaJugador);
-		}
+	std::multimap<int,Enemigo*>::iterator it = this->enemigosInactivos.find(posXAbsolutaJugador);
+	if ( it != this->enemigosInactivos.end() ) {
+		enemigo = it->second;
+		this->enemigosInactivos.erase(it);
 		this->enemigosVivos.push_front(enemigo);
 	}
 	return enemigo;
+}
+
+void EscenarioS::activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList) {
+	Enemigo *enemigo = NULL;
+	enemigo = activarEnemigo(posXAbsolutaJugador);
+	while (enemigo != NULL) {
+		mainList->push_back(getMensajeEnemigoNuevo(enemigo));
+		enemigo = activarEnemigo(posXAbsolutaJugador);
+	}
 }
 
 void splitE(const string &s, char delim, vector<string> &elems) {
@@ -153,10 +152,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		returnList.push_back(getMensajeEscenario());
 
 
-		enemigo = activarEnemigo(this->avance + jugador->getPosX());
-		if (enemigo != NULL) {
-			returnList.push_back(getMensajeEnemigoNuevo(enemigo));
-		}
+		activarEnemigos(this->avance + jugador->getPosX(), &returnList);
 
 		this->avanceBloqueado = false;
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {

@@ -16,7 +16,7 @@ class EscenarioS {
 private:
 	int distancia;
 	int avance;
-	map<int, queue<Enemigo*>> mapEnemigosInactivos;
+	multimap<int, Enemigo*> enemigosInactivos;
 	list<Enemigo*> enemigosVivos;
 	bool avanceBloqueado;
 
@@ -36,6 +36,7 @@ public:
 	void addJugador(Jugador* jugador);
 	void addEnemigoInactivo(Enemigo* enemigo, int posXAbsolutaDeJugadorParaAparicion);
 	Enemigo* activarEnemigo(int posXAbsolutaJugador);
+	void activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
 	void moverEscenario(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeJugador(Jugador* jugador);

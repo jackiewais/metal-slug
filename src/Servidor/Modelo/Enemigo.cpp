@@ -38,10 +38,15 @@ void Enemigo::mover(int anchoEscenario) {
 	if ( it != this->mapJugadores->end() ) {
 		unJugador = it->second;
 
+
 		if ( (this->posX - unJugador->getPosX()) > this->distanciaHastaLaQueSeAcercaAJugador ) {
 			this->mover(anchoEscenario, -1, "CAMINA_IZQ");
 		} else if ( (this->posX - unJugador->getPosX()) < -this->distanciaHastaLaQueSeAcercaAJugador ) {
 			this->mover(anchoEscenario, 1, "CAMINA_DER");
+		} else if ( (this->posX < 0) && (this->posX < unJugador->getPosX()) ) {
+			this->mover(anchoEscenario, 1, "CAMINA_DER");
+		} else if ( (this->posX > (anchoEscenario - this->ancho)) && (this->posX > unJugador->getPosX()) ) {
+			this->mover(anchoEscenario, -1, "CAMINA_IZQ");
 		} else {
 			this->mover(anchoEscenario, 0, "PARADO");
 		}
@@ -132,8 +137,12 @@ void Enemigo::bloquearAvanceEscenario() {
 }
 
 bool Enemigo::estaBloqueadoElAvanceDelEscenario(int anchoEscenario) {
-	if ( this->avanceEscenarioBloqueado && (this->posX < (anchoEscenario - this->ancho)) ) {
+	if (this->avanceEscenarioBloqueado) {
 		return true;
 	}
 	return false;
+}
+
+void Enemigo::aparecerPorIzquierda() {
+	this->posX = 0;
 }

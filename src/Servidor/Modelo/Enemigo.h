@@ -20,6 +20,7 @@ public:
 	void retrocederSegunAvanceEscenario(int avance);
 	void bloquearAvanceEscenario();
 	bool estaBloqueadoElAvanceDelEscenario(int anchoEscenario);
+	void aparecerPorIzquierda();
 
 	int alto;
 	int ancho;
