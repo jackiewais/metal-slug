@@ -16,6 +16,7 @@ Escenario::Escenario() {
 	lbalas = new Label();
 	lGameOver = new Label();
 	gameOver=false;
+	iGameOver=new GraficableBasic();
 }
 
 void Escenario::cargarMensajeEsperandoJugador(){
@@ -78,7 +79,8 @@ bool Escenario::init()
 			}
 		}
 	}
-
+	this->gameOver=false;
+	this->gameOverAll=false;
 	this->running=true;
 	return success;
 }
@@ -157,6 +159,7 @@ bool Escenario::loadMedia()
 
 	this->lbalas->setData(this->gRenderer,"ARMS",36);
 	this->lGameOver->setData(this->gRenderer,"GAME OVER",72);
+	this->iGameOver->initTexture(this->gRenderer,"game_over",800,600);
 
 	return true;
 }
@@ -270,36 +273,40 @@ void Escenario::renderizarObjetos() {
 	try{
 	SDL_SetRenderDrawColor( this->gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear( this->gRenderer );
-	std::map<std::string, ObjetoGraficable*>::iterator it;
-	for (it = this->mapObjetosGraficables.begin(); it != this->mapObjetosGraficables.end(); it++) {
-		it->second->actualizarGrisado();
 
-		if(this->jugadorPrincipal->id != it->second->id){
-			if(it->second->id != "PAUSA"){
-			it->second->render();
+	if (!this->gameOverAll){
+		std::map<std::string, ObjetoGraficable*>::iterator it;
+		for (it = this->mapObjetosGraficables.begin(); it != this->mapObjetosGraficables.end(); it++) {
+			it->second->actualizarGrisado();
+
+			if(this->jugadorPrincipal->id != it->second->id){
+				if(it->second->id != "PAUSA"){
+				it->second->render();
+				}
+
 			}
 
+
+		}
+		this->jugadorPrincipal->render();
+		if(!(this->balas.balas.empty())){
+		this->balas.render();
+		this->balas.balas.clear();
+		}
+		for (map<string, Contador*>::iterator itcont = this->contadores.begin(); itcont != this->contadores.end(); itcont++) {
+			itcont->second->renderizar();
 		}
 
+		if(!this->esperandoJugadores){
+			this->renderPausa();
+		}
 
+		if (this->gameOver){
+			lGameOver->render(200,200);
+		}
+	}else{
+		iGameOver->render(0,0);
 	}
-	this->jugadorPrincipal->render();
-	if(!(this->balas.balas.empty())){
-	this->balas.render();
-	this->balas.balas.clear();
-	}
-	for (map<string, Contador*>::iterator itcont = this->contadores.begin(); itcont != this->contadores.end(); itcont++) {
-		itcont->second->renderizar();
-	}
-
-	if(!this->esperandoJugadores){
-		this->renderPausa();
-	}
-
-	if (this->gameOver){
-		lGameOver->render(200,200);
-	}
-
 	SDL_RenderPresent( this->gRenderer );
 	}catch(...){
 		cout << "Problemas con el render" << endl;
@@ -330,6 +337,14 @@ void Escenario::eliminarObjeto(std::string idObj) {
 	}
 }
 
+void Escenario::setGameOverAll(){
+	this->gameOverAll = true;
+}
+
 void Escenario::setGameOverMe(){
 	this->gameOver = true;
+}
+
+bool Escenario::isGameOver(){
+	return this->gameOver || this->gameOverAll;
 }

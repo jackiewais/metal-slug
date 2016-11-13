@@ -142,10 +142,10 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		jugador->vida -= 1;
 
 		//Siempre false para poder probar
-		if(jugador->vida == 0 && jugador->puntaje > 200 && false){
+		if(jugador->vida == 0 && jugador->puntaje > 1 && false){
 			jugador->gameOver=true;
 			mensajeStruct msjReset;
-			msjReset.tipo = GAME_OVER_PLAYER;
+			msjReset.tipo = GAME_OVER_ALL;
 			msjReset.objectId = jugador->getCodJugador();
 			msjReset.message = "GAME OVER";
 			returnList.push_back(msjReset);

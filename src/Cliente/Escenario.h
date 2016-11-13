@@ -14,6 +14,8 @@
 #include "Contador.h"
 #include "Progreso.h"
 #include "ContenedorBalas.h"
+#include "GraficableBasic.h"
+
 class LTexture;
 class ObjetoGraficable;
 
@@ -45,14 +47,19 @@ public:
 	Numero* numero;
 	Progreso* progreso;
 	Label* lbalas;
+	GraficableBasic* iGameOver;
 	std::map<std::string,Contador*> contadores;
 	Numero* crearNumero(std::string idSprite, int ancho, int alto  );
 	Progreso* crearProgreso(std::string idSprite, int ancho, int alto  );
 	Contador* crearContador(std::string id, int puntaje, int vida, int municiones);
+	bool isGameOver();
 
 	bool gameOver=false;
+	bool gameOverAll=false;
 	Label* lGameOver;
 	void setGameOverMe();
+	void setGameOverAll();
+
 
 private:
 	void cargarMensajeEsperandoJugador();

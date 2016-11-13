@@ -235,6 +235,11 @@ void Jugador::moverAPosicionInicial(){
 	this->posX = 10+this->id*60;
 	this->posY = piso;
 	this->estado=PARADO;
+	this->gameOver=false;
+	this->puntaje = 0;
+	this->municiones = -1;
+	this->vida=100;
+
 }
 
 
