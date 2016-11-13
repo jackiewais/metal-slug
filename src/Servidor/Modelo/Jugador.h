@@ -5,6 +5,7 @@
 #include "../../Common/Modelo.h"
 #include "../Usuario.h"
 #include "Bala.h"
+#include <list>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ private:
 	Usuario* usuario;
 
 public:
-	Bala* disparar(int direccion);
+	list<Bala*> disparar(int direccion);
 	bool aceptaCambios = true;
 	int alto;
 	int ancho;

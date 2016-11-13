@@ -82,8 +82,8 @@ mensajeStruct EscenarioS::getMensajeDesconexion(int jugadorId){
 	Jugador* jugador = this->mapJugadores[jugadorId];
 	return getMensajeJugador(jugador);
 }
-void EscenarioS::addBala(Bala *bala){
-this->balas.push_front(bala);
+void EscenarioS::addBala(list<Bala*> bala){
+	this->balas.splice(this->balas.end(), bala);
 }
 
 void EscenarioS::moverBala(){
@@ -121,11 +121,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 	if(estado=="DISPARO"){
 	int direccion = atoi(result[2].c_str());
-
 	this->addBala(jugador->disparar(direccion));
-
-
-
 	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;

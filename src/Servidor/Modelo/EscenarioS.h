@@ -28,7 +28,7 @@ public:
 	//BALAS
 	//list<Bala> *balas;
 	list<Bala*> balas;
-	void addBala(Bala* bala);
+	void addBala(list<Bala*> bala);
 	void moverBala();
 	EscenarioS(int ancho, int alto);
 	virtual ~EscenarioS();

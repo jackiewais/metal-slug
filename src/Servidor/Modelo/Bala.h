@@ -14,7 +14,9 @@ private:
 	int direccion;
 	int velocidad;
 
+
 public:
+	weapon arma;
 	int IdJugador;
 	int x,y;
 	void mover();

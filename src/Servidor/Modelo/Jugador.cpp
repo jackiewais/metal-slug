@@ -25,10 +25,11 @@ Jugador::~Jugador() {
 
 }
 
-Bala* Jugador::disparar(int direccion){
-
+list<Bala*> Jugador::disparar(int direccion){
+	list<Bala*> balasDisparadas;
 	Bala *bala = new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
-	return bala;
+	balasDisparadas.push_front(bala);
+	return balasDisparadas;
 
 }
 

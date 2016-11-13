@@ -22,7 +22,7 @@ enum aimDirection {
 	DIAGLEFT = 06
 };
 
-enum arma {
+enum weapon {
 	GUN = 01,
 	MACHINEGUN = 02,
 	SHOOTGUN = 03,
