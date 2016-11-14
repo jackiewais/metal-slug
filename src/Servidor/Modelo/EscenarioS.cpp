@@ -122,7 +122,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 	if(estado=="DISPARO"){
 	int direccion = atoi(result[2].c_str());
-	this->addBala(jugador->disparar(direccion));
+	this->addBala(jugador->disparar(aimDirection(direccion)));
 	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;

@@ -18,6 +18,86 @@ this->IdJugador = jugador;
 
 void Bala::mover(){
 
+	if (this->tipoDeBala == MACHINEGUN){
+		switch(this->direccion){
+				case RIGHT:
+					switch(balaMachine){
+					case up:
+						this->x +=this->velocidad;
+						if(movimientos >=2){
+							this->y -=1;
+							movimientos = 0;
+							}
+					break;
+					case down :
+						this->x +=this->velocidad;
+						if(movimientos >=2){
+							this->y +=1;
+							movimientos = 0;
+							}
+					break;
+					case middle:
+					this->x +=this->velocidad;
+					break;
+					}
+		//fin RIgth
+				break;
+				case LEFT:
+					switch(balaMachine){
+					case up:
+						this->x-=this->velocidad;
+						if(movimientos >=2){
+							this->y -=1;
+							movimientos = 0;
+							}
+					break;
+					case down :
+						this->x-=this->velocidad;
+						if(movimientos >=2){
+							this->y +=1;
+							movimientos = 0;
+							}
+					break;
+					case middle:
+						this->x-=this->velocidad;
+					break;
+					}
+
+
+				break;
+				case UP:
+					switch(balaMachine){
+					case up:
+						this->y-=this->velocidad;
+						if(movimientos >=2){
+							this->x -=1;
+							movimientos = 0;
+							}
+					break;
+					case down :
+						this->y-=this->velocidad;
+						if(movimientos >=2){
+							this->x +=1;
+							movimientos = 0;
+							}
+					break;
+					case middle:
+						this->y-=this->velocidad;
+					break;
+					}
+
+				break;
+				case DIAGRIGHT:
+					this->x+=this->velocidad;
+					this->y-=this->velocidad;
+				break;
+				case DIAGLEFT:
+					this->x-=this->velocidad;
+					this->y-=this->velocidad;
+				break;
+			}
+
+	}else {
 	switch(this->direccion){
 		case RIGHT:
 			this->x+=this->velocidad;
@@ -36,6 +116,7 @@ void Bala::mover(){
 			this->x-=this->velocidad;
 			this->y-=this->velocidad;
 		break;
+	}
 	}
 
 	//this->y++;

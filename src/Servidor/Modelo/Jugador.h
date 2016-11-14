@@ -21,10 +21,10 @@ private:
 	int posX;
 	int posY;
 	Usuario* usuario;
-	weapon arma = SHOOTGUN;
+	weapon arma = MACHINEGUN;
 
 public:
-	list<Bala*> disparar(int direccion);
+	list<Bala*> disparar(aimDirection direccion);
 	bool aceptaCambios = true;
 	int alto;
 	int ancho;
