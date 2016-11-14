@@ -21,6 +21,7 @@ private:
 	int posX;
 	int posY;
 	Usuario* usuario;
+	weapon arma = SHOOTGUN;
 
 public:
 	list<Bala*> disparar(int direccion);

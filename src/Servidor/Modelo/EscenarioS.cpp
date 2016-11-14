@@ -94,10 +94,11 @@ void EscenarioS::moverBala(){
 	bool afuera = false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
 	(*it)->mover();
+	(*it)->movimientos +=1;
 	}
 
 	for (it=balas.begin(); it!=balas.end(); ++it){
-		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0){
+		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 10)){
 		afuera = true;
 		itDelete = it;
 		}

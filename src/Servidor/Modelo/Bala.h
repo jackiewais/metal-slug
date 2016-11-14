@@ -16,7 +16,8 @@ private:
 
 
 public:
-	weapon arma;
+	weapon tipoDeBala;
+	int movimientos = 0; //ORRIBLE (SIN H). LO USO PARA MATAR LA BALA DE SHOOTGUN. POR AHORA ES ASI
 	int IdJugador;
 	int x,y;
 	void mover();

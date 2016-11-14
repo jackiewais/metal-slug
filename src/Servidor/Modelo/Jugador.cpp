@@ -27,10 +27,41 @@ Jugador::~Jugador() {
 
 list<Bala*> Jugador::disparar(int direccion){
 	list<Bala*> balasDisparadas;
-	Bala *bala = new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
-	balasDisparadas.push_front(bala);
-	return balasDisparadas;
+	Bala *bala= new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
+	Bala *bala1 = new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
+	Bala *bala2 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
+	switch (this->arma){
+		case GUN:
+			bala->tipoDeBala = GUN;
+			bala->x = this->posX+3;
+			bala->y = this->getPosY()+20;
+			balasDisparadas.push_front(bala);
+		break;
+		case MACHINEGUN:
+			bala->tipoDeBala = MACHINEGUN;
+			bala->x = this->posX+3;
+			bala->y = this->getPosY()+20;
+			balasDisparadas.push_front(bala);
 
+			bala1->tipoDeBala = MACHINEGUN;
+			bala1->x = this->posX+3;
+			bala1->y = this->getPosY()+30;
+			balasDisparadas.push_front(bala1);
+
+			bala2->tipoDeBala = MACHINEGUN;
+			bala2->x = this->posX+3;
+			bala2->y = this->getPosY()+60;
+			balasDisparadas.push_front(bala2);
+		break;
+		case SHOOTGUN:
+			bala->tipoDeBala = SHOOTGUN;
+			bala->x = this->posX+3;
+			bala->y = this->getPosY()+20;
+			balasDisparadas.push_front(bala);
+		break;
+
+	}
+	return balasDisparadas;
 }
 
 int Jugador::getId() {
