@@ -19,6 +19,7 @@ private:
 	multimap<int, Enemigo*> enemigosInactivos;
 	list<Enemigo*> enemigosVivos;
 	bool avanceBloqueado;
+	void colisionar();
 
 public:
 	int ancho;

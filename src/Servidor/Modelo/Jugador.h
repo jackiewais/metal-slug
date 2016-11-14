@@ -18,14 +18,14 @@ private:
 	int piso;
 	int topeSalto;
 	int plataforma;
-	int posX;
-	int posY;
 	weapon arma = MACHINEGUN;
 
 public:
 	list<Bala*> disparar(aimDirection direccion);
 	Usuario* usuario;
 	bool aceptaCambios = true;
+	int posX;
+	int posY;
 	int alto;
 	int ancho;
 	int velocidad;

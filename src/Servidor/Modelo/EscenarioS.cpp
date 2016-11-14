@@ -1,6 +1,8 @@
 #include "EscenarioS.h"
 #include <sstream>
 #include "SDL2/SDL.h"
+#include "Colision.h"
+
 EscenarioS::EscenarioS(int ancho, int alto) {
 
 	this->ancho = ancho;
@@ -180,6 +182,9 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		if (this->avance > 20000){
 			returnList.push_back(getMensajeEndOfLevel());
 		}
+
+		//evaluar colisiones despues del movimiento
+		colisionar();
 
 	}
 	return returnList;
@@ -365,5 +370,59 @@ void EscenarioS::resetEscenario(){
 	this->avance = 0;
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		jugador->second->moverAPosicionInicial();
+	}
+}
+
+void EscenarioS::colisionar() {
+
+	list<Bala*>::iterator itBalas;
+	Bala *bala = NULL;
+
+	Jugador *jugador;
+
+	list<Enemigo*>::iterator itEnemigos;
+	Enemigo *enemigo;
+
+	for (itBalas = balas.begin(); itBalas != balas.end(); itBalas++) {
+		bala = (*itBalas);
+
+		for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); itJugador++){
+			jugador = itJugador->second;
+			if (jugador->conectado()) {
+
+				if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,bala->x,bala->y,bala->radio)) {
+					//si la bala es del enemigo
+					cout<<"Restar vida al jugador"<<endl;
+				}
+
+				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
+					enemigo = (*itEnemigos);
+					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho,bala->x,bala->y,bala->radio)) {
+						//si la bala es del jugador
+						cout<<"Restar vida al enemigo"<<endl;
+					}
+					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho)) {
+						//si siguen vivos, si en los pasos anteriores no los mato una bala
+						cout<<"cuchillazo del enemigo"<<endl;
+					}
+				}
+			}
+		}
+	}
+
+	if (bala == NULL) {
+		for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
+			enemigo = (*itEnemigos);
+
+			for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); ++itJugador){
+				jugador = itJugador->second;
+				if (jugador->conectado()) {
+
+					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho)) {
+						cout<<"cuchillazo del enemigo"<<endl;
+					}
+				}
+			}
+		}
 	}
 }
