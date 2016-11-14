@@ -176,6 +176,11 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			returnList.push_back(getMensajeBala());
 		}
 
+		//End of the level
+		if (this->avance > 20000){
+			returnList.push_back(getMensajeEndOfLevel());
+		}
+
 	}
 	return returnList;
 }
@@ -318,6 +323,42 @@ mensajeStruct EscenarioS::getMensajeBala(){
 
 	}
 	return msjBala;
+}
+mensajeStruct EscenarioS::getMensajeEndOfLevel(){
+	string mensaje="";
+	map<string,int> puntajeEquipos;
+	bool concat = false;
+
+	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+		if (concat){
+			mensaje += ";";
+		}else concat = true;
+		stringstream puntaje;
+		puntaje<<(jugador->second->puntaje);
+		mensaje+= jugador->second->usuario->getNombre()+"-"+puntaje.str();
+
+		if ( puntajeEquipos.find(jugador->second->equipo) == puntajeEquipos.end() ) {
+			puntajeEquipos[jugador->second->equipo] = 0;
+		}
+		puntajeEquipos[jugador->second->equipo] += jugador->second->puntaje;
+	}
+
+	//separador de puntos de jugador y de equipo
+	mensaje += "#";
+	concat = false;
+	for (map<string,int>::iterator equipo=puntajeEquipos.begin(); equipo!=puntajeEquipos.end(); ++equipo){
+		if (concat){
+			mensaje += ";";
+		}else concat = true;
+		stringstream puntaje;
+		puntaje<<(equipo->second);
+		mensaje+= equipo->first +"-"+puntaje.str();
+	}
+
+	mensajeStruct msjEOL;
+	msjEOL.tipo = END_OF_LEVEL;
+	msjEOL.message = mensaje;
+	return msjEOL;
 }
 
 void EscenarioS::resetEscenario(){

@@ -13,18 +13,18 @@ class Jugador{
 
 private:
 	int id;
-	string nombre;
+	//string nombre;
 	int factorSalto = -1;
 	int piso;
 	int topeSalto;
 	int plataforma;
 	int posX;
 	int posY;
-	Usuario* usuario;
 	weapon arma = MACHINEGUN;
 
 public:
 	list<Bala*> disparar(aimDirection direccion);
+	Usuario* usuario;
 	bool aceptaCambios = true;
 	int alto;
 	int ancho;
@@ -37,7 +37,7 @@ public:
 	bool gameOver = false;
 
 	estadoJugador estado;
-
+	string equipo = "1";
 
 
 

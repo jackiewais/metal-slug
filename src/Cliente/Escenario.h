@@ -48,6 +48,7 @@ public:
 	Progreso* progreso;
 	Label* lbalas;
 	GraficableBasic* iGameOver;
+	GraficableBasic* iFondoNegro;
 	std::map<std::string,Contador*> contadores;
 	Numero* crearNumero(std::string idSprite, int ancho, int alto  );
 	Progreso* crearProgreso(std::string idSprite, int ancho, int alto  );
@@ -56,11 +57,12 @@ public:
 
 	bool gameOver=false;
 	bool gameOverAll=false;
+	bool endOfLevel=false;
 	Label* lGameOver;
 	void setGameOverMe();
 	void setGameOverAll();
-
-
+	std::list<Label*> eoLevelLabels;
+	void addEOLevelLabel(string name, int posX, int posY);
 private:
 	void cargarMensajeEsperandoJugador();
 	ObjetoGraficable *esperandoJugador;

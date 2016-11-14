@@ -65,6 +65,19 @@ void Label::close()
 	IMG_Quit();
 }
 
+
+void Label::setDefaultPos(int x, int y){
+	this->defaultX = x;
+	this->defaultY = y;
+}
 void Label::render(int posX, int posY){
 	gTextTexture.render( posX,  posY);
+}
+
+void Label::renderDefault(){
+
+	SDL_Color textColor = { 255, 255, 255 };
+	gTextTexture.loadFromRenderedText( ltext, textColor );
+	gTextTexture.render( defaultX,  defaultY);
+
 }

@@ -54,6 +54,7 @@ private:
 	bool jugando = true;
 	string jugadorPrincipalId;
 	void createNro(mensajeStruct msg);
+	void processEndOfLevel(mensajeStruct msg);
 
 public:
 	aimDirection dirDisparo= RIGHT;

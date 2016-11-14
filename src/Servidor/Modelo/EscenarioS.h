@@ -45,6 +45,7 @@ public:
 	mensajeStruct getMensajeEnemigoUpdate(Enemigo *enemigo);
 	mensajeStruct getMensajeEnemigoMuerto();
 	mensajeStruct getMensajeBala();
+	mensajeStruct getMensajeEndOfLevel();
 	void aceptarCambios();
 	mensajeStruct getMensajeDesconexion(int jugadorId);
 	void resetEscenario();
