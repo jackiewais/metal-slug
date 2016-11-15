@@ -366,7 +366,7 @@ void Cliente::processEndOfLevel(mensajeStruct msg){
 
 void Cliente::objetoNuevo(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
-	estadoJugador estado = PARADO;
+	estadoJugador estado = PARADO_GUN;
 	string conectado = "C";
 
 	string spriteId = result[0];
@@ -387,7 +387,7 @@ void Cliente::objetoNuevo(mensajeStruct msg){
 
 void Cliente::jugadorNuevo(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
-	estadoJugador estado = PARADO;
+	estadoJugador estado = PARADO_GUN;
 	string conectado = "C";
 
 	string spriteId = result[0];

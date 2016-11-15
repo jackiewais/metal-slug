@@ -20,6 +20,12 @@ private:
 	int plataforma;
 	weapon arma = MACHINEGUN;
 
+	estadoJugador getEstadoParado();
+	estadoJugador getEstadoSaltarIzquierda();
+	estadoJugador getEstadoSaltarDerecha();
+	estadoJugador getEstadoCaminarIzquierda();
+	estadoJugador getEstadoCaminarDerecha();
+
 public:
 	list<Bala*> disparar(aimDirection direccion);
 	Usuario* usuario;

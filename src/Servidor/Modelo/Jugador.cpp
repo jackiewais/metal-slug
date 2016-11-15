@@ -207,24 +207,24 @@ bool Jugador::manejarSalto(){
 */
 
 bool Jugador::estaSaltando(){
-	return (this->estado == SALTA_DER || this->estado == SALTA_IZQ);
+	return (this->estado == getEstadoSaltarDerecha() || this->estado == getEstadoSaltarIzquierda());
 }
 void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 
 	if (this->aceptaCambios){
 		if (accion=="SALTA"){
-			this->estado = (vecesX >= 0)?SALTA_DER:SALTA_IZQ;
+			this->estado = (vecesX >= 0)?getEstadoSaltarDerecha():getEstadoSaltarIzquierda();
 		}
 
 		manejarSalto();
 
 		if (vecesX == 0){
 			if (!estaSaltando()){
-				this->estado = PARADO;
+				this->estado = getEstadoParado();
 			}
 		}else{
 			if (!estaSaltando()){
-				this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
+				this->estado =  (vecesX > 0)?getEstadoCaminarDerecha():getEstadoCaminarIzquierda();
 			}
 
 			this->posX += (vecesX * this->velocidad);
@@ -257,19 +257,19 @@ void Jugador::manejarSalto(){
 		}else if (this-> posY > piso){
 			factorSalto = -1;
 			this-> posY = piso;
-			this->estado = PARADO;
+			this->estado = getEstadoParado();
 		}else if (this->posY ==plataforma && factorSalto == 1 && this->posX > 100 && this->posX < 200){
 			factorSalto = -1;
 			this-> posY = plataforma;
-			this->estado = PARADO;
+			this->estado = getEstadoParado();
 		}
 	}else{
 		if (this->posY ==plataforma && this->posX < 100) {
 			factorSalto = 1;
-			this->estado = SALTA_IZQ;
+			this->estado = getEstadoSaltarIzquierda();
 		}else if(this->posY ==plataforma && this->posX > 200){
 			factorSalto = 1;
-			this->estado = SALTA_DER;
+			this->estado = getEstadoSaltarDerecha();
 		}
 	}
 
@@ -331,7 +331,7 @@ int Jugador::getIdSocket() {
 void Jugador::moverAPosicionInicial(){
 	this->posX = 10+this->id*60;
 	this->posY = piso;
-	this->estado=PARADO;
+	this->estado=getEstadoParado();
 	this->gameOver=false;
 	this->municiones = -1;
 	this->vida=100;
@@ -342,3 +342,69 @@ void Jugador::reiniciar(){
 	this->puntaje = 0;
 }
 
+estadoJugador Jugador::getEstadoParado(){
+	estadoJugador estado;
+
+	if(this->arma == GUN){
+		estado = PARADO_GUN;
+
+	}else {
+
+		estado = PARADO_MACHINE;
+	}
+	return estado;
+}
+estadoJugador Jugador::getEstadoSaltarIzquierda(){
+	estadoJugador estado;
+
+	if(this->arma == GUN){
+		estado = SALTA_IZQ_GUN;
+
+	}else {
+
+		estado = SALTA_IZQ_MACHINE;
+	}
+	return estado;
+}
+estadoJugador Jugador::getEstadoSaltarDerecha(){
+	estadoJugador estado;
+
+	if(this->arma == GUN){
+		estado = SALTA_DER_GUN;
+
+	}else {
+
+		estado = SALTA_DER_MACHINE;
+	}
+	return estado;
+}
+
+estadoJugador Jugador::getEstadoCaminarDerecha(){
+
+	estadoJugador estado;
+
+		if(this->arma == GUN){
+			estado = CAMINA_DER_GUN;
+
+		}else {
+
+			estado = CAMINA_DER_MACHINE;
+		}
+		return estado;
+
+}
+
+estadoJugador Jugador::getEstadoCaminarIzquierda(){
+
+	estadoJugador estado;
+
+		if(this->arma == GUN){
+			estado = CAMINA_IZQ_GUN;
+
+		}else {
+
+			estado = CAMINA_IZQ_MACHINE;
+		}
+		return estado;
+
+}

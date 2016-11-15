@@ -53,7 +53,7 @@ int Mensajeria::encodeAndSend(int socketCli, mensajeStruct* mensaje){
 		//	perror("ERROR enviando mensaje");
 		return 1;
 	}
-
+	cout << output << endl;
 	return 0;
 }
 /*

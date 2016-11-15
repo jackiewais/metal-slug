@@ -28,7 +28,7 @@ Enemigo::~Enemigo() {
 }
 
 bool Enemigo::estaSaltando() {
-	return (this->estado == SALTA_DER || this->estado == SALTA_IZQ);
+	return (this->estado == SALTA_DER_GUN|| this->estado == SALTA_IZQ_GUN);
 }
 
 void Enemigo::mover(int anchoEscenario) {
@@ -48,7 +48,7 @@ void Enemigo::mover(int anchoEscenario) {
 		} else if ( (this->posX > (anchoEscenario - this->ancho)) && (this->posX > unJugador->getPosX()) ) {
 			this->mover(anchoEscenario, -1, "CAMINA_IZQ");
 		} else {
-			this->mover(anchoEscenario, 0, "PARADO");
+			this->mover(anchoEscenario, 0, "PARADO_GUN");
 		}
 
 	}
@@ -57,18 +57,18 @@ void Enemigo::mover(int anchoEscenario) {
 void Enemigo::mover(int anchoEscenario, int vecesX, string accion) {
 
 	if (accion=="SALTA"){
-		this->estado = (vecesX >= 0)?SALTA_DER:SALTA_IZQ;
+		this->estado = (vecesX >= 0)?SALTA_DER_GUN:SALTA_IZQ_GUN;
 	}
 
 	manejarSalto();
 
 	if (vecesX == 0){
 		if (!estaSaltando()){
-			this->estado = PARADO;
+			this->estado = PARADO_GUN;
 		}
 	}else{
 		if (!estaSaltando()){
-			this->estado =  (vecesX > 0)?CAMINA_DER:CAMINA_IZQ;
+			this->estado =  (vecesX > 0)?CAMINA_DER_GUN:CAMINA_IZQ_GUN;
 		}
 
 		this->posX += (vecesX * this->velocidad);
@@ -83,19 +83,19 @@ void Enemigo::manejarSalto(){
 		}else if (this-> posY > piso){
 			factorSalto = -1;
 			this-> posY = piso;
-			this->estado = PARADO;
+			this->estado = PARADO_GUN;
 		}else if (this->posY ==plataforma && factorSalto == 1 && this->posX > 100 && this->posX < 200){
 			factorSalto = -1;
 			this-> posY = plataforma;
-			this->estado = PARADO;
+			this->estado = PARADO_GUN;
 		}
 	}else{
 		if (this->posY ==plataforma && this->posX < 100) {
 			factorSalto = 1;
-			this->estado = SALTA_IZQ;
+			this->estado = SALTA_IZQ_GUN;
 		}else if(this->posY ==plataforma && this->posX > 200){
 			factorSalto = 1;
-			this->estado = SALTA_DER;
+			this->estado = SALTA_DER_GUN;
 		}
 	}
 
@@ -104,7 +104,7 @@ void Enemigo::manejarSalto(){
 void Enemigo::moverAPosicionInicial(){
 	this->posX = 800;
 	this->posY = piso;
-	this->estado=PARADO;
+	this->estado=PARADO_GUN;
 }
 
 string Enemigo::getStringMensajeUpdate() {
