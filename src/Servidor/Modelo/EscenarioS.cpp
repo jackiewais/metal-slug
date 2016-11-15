@@ -133,6 +133,13 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		msjReset.message = "RESET";
 		returnList.push_back(msjReset);
 		this->resetEscenario();
+	}else if(estado=="NEXT_LEVEL"){
+		mensajeStruct msjReset;
+		msjReset.tipo = NEXT_LEVEL;
+		msjReset.objectId = "X0";
+		msjReset.message = "NEXT_LEVEL";
+		returnList.push_back(msjReset);
+		this->pasarDeNivel();
 	}else{
 		jugador->mover(this->ancho,vecesX, estado);
 
@@ -179,8 +186,9 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 
 		//End of the level
-		if (this->avance > 20000){
+		if (this->avance > 10 && !endOfLevel){
 			returnList.push_back(getMensajeEndOfLevel());
+			endOfLevel=true;
 		}
 
 		//evaluar colisiones despues del movimiento
@@ -331,16 +339,14 @@ mensajeStruct EscenarioS::getMensajeBala(){
 }
 mensajeStruct EscenarioS::getMensajeEndOfLevel(){
 	string mensaje="";
-	map<string,int> puntajeEquipos;
-	bool concat = false;
 
+	map<int,string> puntajesJugOrd;
+	map<string,int> puntajeEquipos;
+	map<int,string> puntajeEquiposOrd;
+
+	//Armo un mapa con los puntajes de los jugadores y acumulo en un mapa los equipos
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
-		if (concat){
-			mensaje += ";";
-		}else concat = true;
-		stringstream puntaje;
-		puntaje<<(jugador->second->puntaje);
-		mensaje+= jugador->second->usuario->getNombre()+"-"+puntaje.str();
+		puntajesJugOrd[jugador->second->puntaje] = jugador->second->usuario->getNombre();
 
 		if ( puntajeEquipos.find(jugador->second->equipo) == puntajeEquipos.end() ) {
 			puntajeEquipos[jugador->second->equipo] = 0;
@@ -348,16 +354,33 @@ mensajeStruct EscenarioS::getMensajeEndOfLevel(){
 		puntajeEquipos[jugador->second->equipo] += jugador->second->puntaje;
 	}
 
-	//separador de puntos de jugador y de equipo
-	mensaje += "#";
-	concat = false;
+	//paso los puntajes de los equipos a un mapa con key del puntaje para que ordene
 	for (map<string,int>::iterator equipo=puntajeEquipos.begin(); equipo!=puntajeEquipos.end(); ++equipo){
+		puntajeEquiposOrd[equipo->second] = equipo->first;
+	}
+
+
+
+	bool concat = false;
+	for (map<int,string>::reverse_iterator jugador=puntajesJugOrd.rbegin(); jugador!=puntajesJugOrd.rend(); ++jugador){
 		if (concat){
 			mensaje += ";";
 		}else concat = true;
 		stringstream puntaje;
-		puntaje<<(equipo->second);
-		mensaje+= equipo->first +"-"+puntaje.str();
+		puntaje<<(jugador->first);
+		mensaje+= jugador->second+"-"+puntaje.str();
+	}
+
+	//separador de puntos de jugador y de equipo
+	mensaje += "#";
+	concat = false;
+	for (map<int,string>::reverse_iterator equipo=puntajeEquiposOrd.rbegin(); equipo!=puntajeEquiposOrd.rend(); ++equipo){
+		if (concat){
+			mensaje += ";";
+		}else concat = true;
+		stringstream puntaje;
+		puntaje<<(equipo->first);
+		mensaje+= equipo->second +"-"+puntaje.str();
 	}
 
 	mensajeStruct msjEOL;
@@ -368,6 +391,19 @@ mensajeStruct EscenarioS::getMensajeEndOfLevel(){
 
 void EscenarioS::resetEscenario(){
 	this->avance = 0;
+	this->endOfLevel=false;
+	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+		jugador->second->reiniciar();
+	}
+}
+
+void EscenarioS::pasarDeNivel(){
+	this->nivel++;
+	if (this->nivel > this->cantNiveles){
+		this->nivel=1;
+	}
+	this->avance = 0;
+	this->endOfLevel=false;
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		jugador->second->moverAPosicionInicial();
 	}

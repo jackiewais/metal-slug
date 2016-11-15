@@ -162,6 +162,12 @@ bool Cliente::handleKeyEvents(){
 						this->vecesX = 0;
 						accion = "RESET";
 						break;
+					case SDLK_SPACE:
+						if (this->escenario.endOfLevel){
+							this->vecesX = 0;
+							accion = "NEXT_LEVEL";
+						}
+						break;
 					case SDLK_a:
 						accion = "DISPARO;"+convertirAString(dirDisparo);
 					    break;
@@ -172,7 +178,7 @@ bool Cliente::handleKeyEvents(){
 		}
 
 	}
-	if ((this->escenario.esperandoJugadores && !this->escenario.gameOver) || accion =="RESET"){
+	if ((this->escenario.esperandoJugadores && !this->escenario.gameOver && !this->escenario.endOfLevel) || accion =="RESET" || accion =="NEXT_LEVEL"){
 		evento.message=convertirAString(vecesX) + ";" + accion;
 	}else{
 		evento.message="0;NADA";
@@ -299,6 +305,7 @@ void *Cliente::recvMessage(void * arg){
 				context->imprimirConsigna();
 				break;
 			case RESET:
+			case NEXT_LEVEL:
 				context->vecesX=0;
 				context->jugando=false;
 				context->escenarioOK=false;
@@ -327,7 +334,7 @@ void *Cliente::recvMessage(void * arg){
 
 void Cliente::processEndOfLevel(mensajeStruct msg){
 	this->escenario.endOfLevel=true;
-	//en [0] estan los jugadores, en [1] están los equipos
+	//en [0] estan los jugadores, en [1] están los equipos a
 	vector<string> result = Util::Split(msg.message,'#');
 
 	this->escenario.addEOLevelLabel("LEVEL COMPLETE",280,50);

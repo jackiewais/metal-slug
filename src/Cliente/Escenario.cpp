@@ -32,6 +32,10 @@ Escenario::~Escenario() {
 
 bool Escenario::init()
 {
+	this->gameOver=false;
+	this->gameOverAll=false;
+	this->endOfLevel=false;
+
 	//Initialization flag
 	bool success = true;
 
@@ -80,9 +84,6 @@ bool Escenario::init()
 			}
 		}
 	}
-	this->gameOver=false;
-	this->gameOverAll=false;
-	this->endOfLevel=false;
 	this->running=true;
 	return success;
 }

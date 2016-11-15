@@ -167,7 +167,13 @@ void Servidor::handshake(mensajeStruct msg){
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
 
     Parser *parser = new Parser(msg.socketCli);
-    parser->parsearArchivoXML(XML_PATH);
+    if (this->escenario->nivel==1){
+    	parser->parsearArchivoXML(XML_PATH);
+    }else{
+    	string levelpath = XML_PATH.substr(0, XML_PATH.size()-4) +  "_" + convertirAString(this->escenario->nivel) + ".xml";
+
+    	parser->parsearArchivoXML(levelpath);
+    }
 
    //MANDO DIMENSIONES DE VENTANA.
     colaCliente->push(parser->getVentana());

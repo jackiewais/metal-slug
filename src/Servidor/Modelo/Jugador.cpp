@@ -332,10 +332,12 @@ void Jugador::moverAPosicionInicial(){
 	this->posY = piso;
 	this->estado=PARADO;
 	this->gameOver=false;
-	this->puntaje = 0;
 	this->municiones = -1;
 	this->vida=100;
-
 }
 
+void Jugador::reiniciar(){
+	this->moverAPosicionInicial();
+	this->puntaje = 0;
+}
 
