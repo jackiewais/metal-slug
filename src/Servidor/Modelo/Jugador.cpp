@@ -62,6 +62,7 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 
 			//SI ESTOY APUNTADO ARRIBA CAMBIA LA POSICION INICIAL DE LAS BALAS
 			if(direccion == UP){
+			//PRIMER RONDA
 			bala->x = this->posX+10;
 			bala->y = this->getPosY()+73;
 

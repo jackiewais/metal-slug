@@ -244,7 +244,7 @@ void *Cliente::recvMessage(void * arg){
 				context->addSprite(mensajeRta);
 				break;
 			case HANDSHAKE_SPRITE_NRO:
-				context->escenario.balas.initTexture("images/bala.png",10,10);
+				context->escenario.balas.initTexture("images/numbers_fondo.png",10,10);
 				context->createNro(mensajeRta);
 				context->escenario.crearProgreso("loadbar",100,30);
 				break;
