@@ -186,7 +186,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 
 		//End of the level
-		if (this->avance > 10 && !endOfLevel){
+		if (this->avance > 200000 && !endOfLevel){
 			returnList.push_back(getMensajeEndOfLevel());
 			endOfLevel=true;
 		}
