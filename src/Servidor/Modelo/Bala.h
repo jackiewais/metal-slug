@@ -16,6 +16,7 @@ private:
 
 
 public:
+	int radio;
 	balaMachineGun balaMachine;
 	weapon tipoDeBala;
 	int movimientos = 0; //ORRIBLE (SIN H). LO USO PARA MATAR LA BALA DE SHOOTGUN. POR AHORA ES ASI

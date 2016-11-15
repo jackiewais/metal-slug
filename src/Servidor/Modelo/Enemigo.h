@@ -22,6 +22,8 @@ public:
 	bool estaBloqueadoElAvanceDelEscenario(int anchoEscenario);
 	void aparecerPorIzquierda();
 
+	int posX;
+	int posY;
 	int alto;
 	int ancho;
 	int velocidad;
@@ -39,8 +41,6 @@ private:
 	int piso;
 	int topeSalto;
 	int plataforma;
-	int posX;
-	int posY;
 	map<int, Jugador*> *mapJugadores;
 	int distanciaHastaLaQueSeAcercaAJugador;
 	bool avanceEscenarioBloqueado;

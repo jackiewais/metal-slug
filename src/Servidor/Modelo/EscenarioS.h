@@ -19,6 +19,7 @@ private:
 	multimap<int, Enemigo*> enemigosInactivos;
 	list<Enemigo*> enemigosVivos;
 	bool avanceBloqueado;
+	void colisionar();
 
 public:
 	int ancho;
@@ -45,10 +46,14 @@ public:
 	mensajeStruct getMensajeEnemigoUpdate(Enemigo *enemigo);
 	mensajeStruct getMensajeEnemigoMuerto();
 	mensajeStruct getMensajeBala();
+	mensajeStruct getMensajeEndOfLevel();
 	void aceptarCambios();
 	mensajeStruct getMensajeDesconexion(int jugadorId);
 	void resetEscenario();
-
+	void pasarDeNivel();
+	bool endOfLevel=false;
+	int nivel=1;
+	int cantNiveles=3;
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ESCENARIOS_H_ */

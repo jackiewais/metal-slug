@@ -13,19 +13,19 @@ class Jugador{
 
 private:
 	int id;
-	string nombre;
+	//string nombre;
 	int factorSalto = -1;
 	int piso;
 	int topeSalto;
 	int plataforma;
-	int posX;
-	int posY;
-	Usuario* usuario;
 	weapon arma = MACHINEGUN;
 
 public:
 	list<Bala*> disparar(aimDirection direccion);
+	Usuario* usuario;
 	bool aceptaCambios = true;
+	int posX;
+	int posY;
 	int alto;
 	int ancho;
 	int velocidad;
@@ -37,7 +37,7 @@ public:
 	bool gameOver = false;
 
 	estadoJugador estado;
-
+	string equipo = "1";
 
 
 
@@ -58,7 +58,7 @@ public:
 	int getIdSocket();
 	bool estaSaltando();
 	void moverAPosicionInicial();
-
+	void reiniciar();
 	//estadoJugador resolverEstado(string accion, int vecesX);
 };
 

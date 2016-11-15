@@ -1,6 +1,8 @@
 #include "EscenarioS.h"
 #include <sstream>
 #include "SDL2/SDL.h"
+#include "Colision.h"
+
 EscenarioS::EscenarioS(int ancho, int alto) {
 
 	this->ancho = ancho;
@@ -131,6 +133,13 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		msjReset.message = "RESET";
 		returnList.push_back(msjReset);
 		this->resetEscenario();
+	}else if(estado=="NEXT_LEVEL"){
+		mensajeStruct msjReset;
+		msjReset.tipo = NEXT_LEVEL;
+		msjReset.objectId = "X0";
+		msjReset.message = "NEXT_LEVEL";
+		returnList.push_back(msjReset);
+		this->pasarDeNivel();
 	}else{
 		jugador->mover(this->ancho,vecesX, estado);
 
@@ -175,6 +184,15 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			moverBala();
 			returnList.push_back(getMensajeBala());
 		}
+
+		//End of the level
+		if (this->avance > 200000 && !endOfLevel){
+			returnList.push_back(getMensajeEndOfLevel());
+			endOfLevel=true;
+		}
+
+		//evaluar colisiones despues del movimiento
+		colisionar();
 
 	}
 	return returnList;
@@ -319,10 +337,128 @@ mensajeStruct EscenarioS::getMensajeBala(){
 	}
 	return msjBala;
 }
+mensajeStruct EscenarioS::getMensajeEndOfLevel(){
+	string mensaje="";
+
+	map<int,string> puntajesJugOrd;
+	map<string,int> puntajeEquipos;
+	map<int,string> puntajeEquiposOrd;
+
+	//Armo un mapa con los puntajes de los jugadores y acumulo en un mapa los equipos
+	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+		puntajesJugOrd[jugador->second->puntaje] = jugador->second->usuario->getNombre();
+
+		if ( puntajeEquipos.find(jugador->second->equipo) == puntajeEquipos.end() ) {
+			puntajeEquipos[jugador->second->equipo] = 0;
+		}
+		puntajeEquipos[jugador->second->equipo] += jugador->second->puntaje;
+	}
+
+	//paso los puntajes de los equipos a un mapa con key del puntaje para que ordene
+	for (map<string,int>::iterator equipo=puntajeEquipos.begin(); equipo!=puntajeEquipos.end(); ++equipo){
+		puntajeEquiposOrd[equipo->second] = equipo->first;
+	}
+
+
+
+	bool concat = false;
+	for (map<int,string>::reverse_iterator jugador=puntajesJugOrd.rbegin(); jugador!=puntajesJugOrd.rend(); ++jugador){
+		if (concat){
+			mensaje += ";";
+		}else concat = true;
+		stringstream puntaje;
+		puntaje<<(jugador->first);
+		mensaje+= jugador->second+"-"+puntaje.str();
+	}
+
+	//separador de puntos de jugador y de equipo
+	mensaje += "#";
+	concat = false;
+	for (map<int,string>::reverse_iterator equipo=puntajeEquiposOrd.rbegin(); equipo!=puntajeEquiposOrd.rend(); ++equipo){
+		if (concat){
+			mensaje += ";";
+		}else concat = true;
+		stringstream puntaje;
+		puntaje<<(equipo->first);
+		mensaje+= equipo->second +"-"+puntaje.str();
+	}
+
+	mensajeStruct msjEOL;
+	msjEOL.tipo = END_OF_LEVEL;
+	msjEOL.message = mensaje;
+	return msjEOL;
+}
 
 void EscenarioS::resetEscenario(){
 	this->avance = 0;
+	this->endOfLevel=false;
+	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+		jugador->second->reiniciar();
+	}
+}
+
+void EscenarioS::pasarDeNivel(){
+	this->nivel++;
+	if (this->nivel > this->cantNiveles){
+		this->nivel=1;
+	}
+	this->avance = 0;
+	this->endOfLevel=false;
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		jugador->second->moverAPosicionInicial();
+	}
+}
+
+void EscenarioS::colisionar() {
+
+	list<Bala*>::iterator itBalas;
+	Bala *bala = NULL;
+
+	Jugador *jugador;
+
+	list<Enemigo*>::iterator itEnemigos;
+	Enemigo *enemigo;
+
+	for (itBalas = balas.begin(); itBalas != balas.end(); itBalas++) {
+		bala = (*itBalas);
+
+		for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); itJugador++){
+			jugador = itJugador->second;
+			if (jugador->conectado()) {
+
+				if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,bala->x,bala->y,bala->radio)) {
+					//si la bala es del enemigo
+					cout<<"Restar vida al jugador"<<endl;
+				}
+
+				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
+					enemigo = (*itEnemigos);
+					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho,bala->x,bala->y,bala->radio)) {
+						//si la bala es del jugador
+						cout<<"Restar vida al enemigo"<<endl;
+					}
+					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho)) {
+						//si siguen vivos, si en los pasos anteriores no los mato una bala
+						cout<<"cuchillazo del enemigo"<<endl;
+					}
+				}
+			}
+		}
+	}
+
+	if (bala == NULL) {
+		for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
+			enemigo = (*itEnemigos);
+
+			for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); ++itJugador){
+				jugador = itJugador->second;
+				if (jugador->conectado()) {
+
+					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho)) {
+						cout<<"cuchillazo del enemigo"<<endl;
+					}
+				}
+			}
+		}
 	}
 }

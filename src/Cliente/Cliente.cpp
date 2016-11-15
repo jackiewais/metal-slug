@@ -162,6 +162,12 @@ bool Cliente::handleKeyEvents(){
 						this->vecesX = 0;
 						accion = "RESET";
 						break;
+					case SDLK_SPACE:
+						if (this->escenario.endOfLevel){
+							this->vecesX = 0;
+							accion = "NEXT_LEVEL";
+						}
+						break;
 					case SDLK_a:
 						accion = "DISPARO;"+convertirAString(dirDisparo);
 					    break;
@@ -172,7 +178,7 @@ bool Cliente::handleKeyEvents(){
 		}
 
 	}
-	if ((this->escenario.esperandoJugadores && !this->escenario.gameOver) || accion =="RESET"){
+	if ((this->escenario.esperandoJugadores && !this->escenario.gameOver && !this->escenario.endOfLevel) || accion =="RESET" || accion =="NEXT_LEVEL"){
 		evento.message=convertirAString(vecesX) + ";" + accion;
 	}else{
 		evento.message="0;NADA";
@@ -299,6 +305,7 @@ void *Cliente::recvMessage(void * arg){
 				context->imprimirConsigna();
 				break;
 			case RESET:
+			case NEXT_LEVEL:
 				context->vecesX=0;
 				context->jugando=false;
 				context->escenarioOK=false;
@@ -314,11 +321,48 @@ void *Cliente::recvMessage(void * arg){
 			case GAME_OVER_ALL:
 				context->escenario.setGameOverAll();
 				break;
+			case END_OF_LEVEL:
+				if (!context->escenario.endOfLevel){
+				context->processEndOfLevel(mensajeRta);
+				}
+				break;
 		}
     }
 	return 0;
 };
 
+
+void Cliente::processEndOfLevel(mensajeStruct msg){
+	this->escenario.endOfLevel=true;
+	//en [0] estan los jugadores, en [1] están los equipos a
+	vector<string> result = Util::Split(msg.message,'#');
+
+	this->escenario.addEOLevelLabel("LEVEL COMPLETE",280,50);
+
+	this->escenario.addEOLevelLabel("PLAYERS",130,150);
+	//vector con los jugadores
+	vector<string> resultJugadores = Util::Split(result[0],';');
+	for(std::vector<int>::size_type i = 0; i != resultJugadores.size(); i++) {
+		vector<string> resultJugador = Util::Split(resultJugadores[i],'-');
+		this->escenario.addEOLevelLabel(resultJugador[0],100,200 + 75*i);
+		int len = resultJugador[0].length();
+		this->escenario.addEOLevelLabel(" " + string(7-len, '-')+" ",100+len*20,200 + 75*i);
+		this->escenario.addEOLevelLabel(resultJugador[1],260,200 + 75*i);
+	}
+
+
+	this->escenario.addEOLevelLabel("TEAMS",530,150);
+	//vector con los equipos
+	vector<string> resultEquipos = Util::Split(result[1],';');
+	for(std::vector<int>::size_type i = 0; i != resultEquipos.size(); i++) {
+		vector<string> resultEquipo = Util::Split(resultEquipos[i],'-');
+		this->escenario.addEOLevelLabel(resultEquipo[0],500,200 + 75*i);
+		int len = resultEquipo[0].length();
+		this->escenario.addEOLevelLabel(" " + string(7-len, '-')+" ",500+len*20,200 + 75*i);
+		this->escenario.addEOLevelLabel(resultEquipo[1],660,200 + 75*i);
+	}
+
+}
 
 void Cliente::objetoNuevo(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
@@ -486,7 +530,6 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 			//	 }
 			 if(context->jugando) {
 				 context->escenario.renderizarObjetos();
-
 			 }
 
 			// if(!context->escenario.esperandoJugadores){

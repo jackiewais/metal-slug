@@ -12,7 +12,10 @@ class Label {
 		bool loadMedia();
 		void close();
 		void render(int posX, int posY);
-
+		void renderDefault();
+		int defaultX = 0;
+		int defaultY = 0;
+		void setDefaultPos(int x, int y);
 	private:
 		string ltext;
 		int lsize;
