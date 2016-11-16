@@ -85,23 +85,23 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 
 			}else{
 
-			bala->x = this->posX+73;
+			bala->x = this->posX+93;
 			bala->y = this->getPosY()+30;
 
-			bala1->x = this->posX+83;
+			bala1->x = this->posX+103;
 			bala1->y = this->getPosY()+30;
 
-			bala2->x = this->posX+93;
+			bala2->x = this->posX+113;
 			bala2->y = this->getPosY()+30;
 			// SEGUNDA RONDA
 
-			bala3->x = this->posX+23;
+			bala3->x = this->posX+13;
 			bala3->y = this->getPosY()+30;
 
-			bala4->x = this->posX+33;
+			bala4->x = this->posX+23;
 			bala4->y = this->getPosY()+30;
 
-			bala5->x = this->posX+43;
+			bala5->x = this->posX+33;
 			bala5->y = this->getPosY()+30;
 			}
 

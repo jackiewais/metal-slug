@@ -333,7 +333,7 @@ list<mensajeStruct> EscenarioS::getMensajeBala(){
 
 	while(it!=balas.end()){
 		int cantBalas = 0;
-		for(int j=0;(j<4 && it!=balas.end());j++){
+		for(int j=0;(j<8 && it!=balas.end());j++){
 			stringstream posx;
 			stringstream posy;
 			posx<<(*it)->x;
