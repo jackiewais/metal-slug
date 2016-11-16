@@ -53,10 +53,10 @@ void ContenedorBalas::render()
 	list<pos>::iterator it;
 		for (it=balas.begin(); it!=balas.end(); ++it){
 			SDL_Rect currentClip;
-					currentClip.x = 30;
-					currentClip.y = 30;
-					currentClip.h = 20;
-					currentClip.w = 20;
+					currentClip.x = 0;
+					currentClip.y = 0;
+					currentClip.h = 30;
+					currentClip.w = 30;
 			int posX=(*it).x;
 			int posY=(*it).y;
 			this->balasTexture.render( posX, posY, &currentClip );
