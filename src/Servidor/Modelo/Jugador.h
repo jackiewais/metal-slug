@@ -18,7 +18,7 @@ private:
 	int piso;
 	int topeSalto;
 	int plataforma;
-	weapon arma = MACHINEGUN;
+	weapon arma = GUN;
 
 	estadoJugador getEstadoParado();
 	estadoJugador getEstadoSaltarIzquierda();
