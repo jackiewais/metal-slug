@@ -182,7 +182,9 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 		if(!this->balas.empty()){
 			moverBala();
-			returnList.push_back(getMensajeBala());
+			list<mensajeStruct> balasUpdate = getMensajeBala();
+			returnList.splice(returnList.end(), balasUpdate);
+
 		}
 
 		//End of the level
@@ -319,23 +321,40 @@ mensajeStruct EscenarioS::getMensajeEnemigoUpdate(Enemigo *enemigo){
 
 	return msjEnemigo;
 }
-mensajeStruct EscenarioS::getMensajeBala(){
-	mensajeStruct msjBala;
-	stringstream cantidadBalas;
-	msjBala.tipo = BALA_UPD;
-	cantidadBalas << balas.size();
-	msjBala.message = cantidadBalas.str() + ";";
+list<mensajeStruct> EscenarioS::getMensajeBala(){
+
+
+	list<mensajeStruct> msjRespuesta;
+	string mensaje;
 	list<Bala*>::iterator it;
 
-	for (it=balas.begin(); it!=balas.end(); ++it){
-	stringstream posx;
-	stringstream posy;
-	posx<<(*it)->x;
-	posy<<(*it)->y;
-	msjBala.message+=posx.str()+";"+posy.str()+";";
+	it=balas.begin();
+
+	while(it!=balas.end()){
+		int cantBalas = 0;
+		for(int j=0;(j<4 && it!=balas.end());j++){
+			stringstream posx;
+			stringstream posy;
+			posx<<(*it)->x;
+			posy<<(*it)->y;
+			mensaje+=posx.str()+";"+posy.str()+";";
+			cantBalas= j+1;
+			++it;
+			cout << "ciclo de mensaje " << j  << endl;
+		}
+
+		stringstream cantidadBalas;
+		cantidadBalas  << cantBalas;
+		mensajeStruct msjBala;
+		msjBala.tipo = BALA_UPD;
+		msjBala.message = cantidadBalas.str() + ";" + mensaje;
+		mensaje="";
+		cout << msjBala.message << endl;
+		msjRespuesta.push_front(msjBala);
 
 	}
-	return msjBala;
+
+	return msjRespuesta;
 }
 mensajeStruct EscenarioS::getMensajeEndOfLevel(){
 	string mensaje="";
