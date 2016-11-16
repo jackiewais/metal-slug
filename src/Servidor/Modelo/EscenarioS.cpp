@@ -50,7 +50,7 @@ Enemigo* EscenarioS::activarEnemigo(int posXAbsolutaJugador) {
 	if ( it != this->enemigosInactivos.end() ) {
 		enemigo = it->second;
 		this->enemigosInactivos.erase(it);
-		this->enemigosVivos.push_front(enemigo);
+		this->enemigosVivos[enemigo->getCodEnemigo()] = enemigo;
 	}
 	return enemigo;
 }
@@ -119,12 +119,14 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	string estado = result[1];
 
 	list<mensajeStruct> returnList;
-	list<Enemigo*>::iterator itEnemigos;
+	map<string, Enemigo*>::iterator itEnemigos;
 	Enemigo *enemigo = NULL;
 
 	if(estado=="DISPARO"){
-	int direccion = atoi(result[2].c_str());
-	this->addBala(jugador->disparar(aimDirection(direccion)));
+		int direccion = atoi(result[2].c_str());
+		this->addBala(jugador->disparar(aimDirection(direccion)));
+		// PARA PROBAR
+		this->matarEnemigos(&returnList);
 	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;
@@ -173,7 +175,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 		this->avanceBloqueado = false;
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
-			enemigo = (*itEnemigos);
+			enemigo = itEnemigos->second;
 			enemigo->mover(this->ancho);
 			if (enemigo->estaBloqueadoElAvanceDelEscenario(this->ancho)) {
 				this->avanceBloqueado = true;
@@ -207,7 +209,7 @@ void EscenarioS::aceptarCambios(){
 void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 	bool cruzoMargen = false;
 	int minPosX = this->distancia;
-	list<Enemigo*>::iterator itEnemigos;
+	map<string, Enemigo*>::iterator itEnemigos;
 	Enemigo *enemigo = NULL;
 
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
@@ -252,7 +254,7 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 		this->avance += minPosX;
 
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
-			enemigo = (*itEnemigos);
+			enemigo = itEnemigos->second;
 			enemigo->retrocederSegunAvanceEscenario(minPosX);
 		}
 		// hardcodeado por el momento
@@ -299,12 +301,11 @@ mensajeStruct EscenarioS::getMensajeEnemigoNuevo(Enemigo *enemigo){
 	return msjEnemigo;
 }
 
-mensajeStruct EscenarioS::getMensajeEnemigoMuerto(){
+mensajeStruct EscenarioS::getMensajeEnemigoMuerto(Enemigo *enemigo){
 	mensajeStruct msjEnemigo;
 
 	msjEnemigo.tipo = ENEMIGO_DELETE;
-	// id fruta, cambiar despues
-	msjEnemigo.objectId="T1";
+	msjEnemigo.objectId = enemigo->getCodEnemigo();;
 	msjEnemigo.message="";
 
 	return msjEnemigo;
@@ -416,7 +417,7 @@ void EscenarioS::colisionar() {
 
 	Jugador *jugador;
 
-	list<Enemigo*>::iterator itEnemigos;
+	map<string, Enemigo*>::iterator itEnemigos;
 	Enemigo *enemigo;
 
 	for (itBalas = balas.begin(); itBalas != balas.end(); itBalas++) {
@@ -432,7 +433,7 @@ void EscenarioS::colisionar() {
 				}
 
 				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
-					enemigo = (*itEnemigos);
+					enemigo = itEnemigos->second;
 					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho,bala->x,bala->y,bala->radio)) {
 						//si la bala es del jugador
 						cout<<"Restar vida al enemigo"<<endl;
@@ -448,7 +449,7 @@ void EscenarioS::colisionar() {
 
 	if (bala == NULL) {
 		for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
-			enemigo = (*itEnemigos);
+			enemigo = itEnemigos->second;
 
 			for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); ++itJugador){
 				jugador = itJugador->second;
@@ -460,5 +461,27 @@ void EscenarioS::colisionar() {
 				}
 			}
 		}
+	}
+}
+
+void EscenarioS::matarEnemigo(string id) {
+	Enemigo *enemigo = NULL;
+	map<string, Enemigo*>::iterator itEnemigos = this->enemigosVivos.find(id);
+	// Si el objeto esta en el map
+	if ( itEnemigos != this->enemigosVivos.end() ) {
+		enemigo = itEnemigos->second;
+		delete enemigo;
+		this->enemigosVivos.erase(itEnemigos);
+	}
+}
+
+void EscenarioS::matarEnemigos(list<mensajeStruct>* mainList) {
+	Enemigo *enemigo = NULL;
+	// Si el objeto esta en el map
+	for (map<string, Enemigo*>::iterator it = this->enemigosVivos.begin(); it != this->enemigosVivos.end(); it++) {
+		enemigo = it->second;
+		mainList->push_back(getMensajeEnemigoMuerto(enemigo));
+		delete enemigo;
+		this->enemigosVivos.erase(it);
 	}
 }
