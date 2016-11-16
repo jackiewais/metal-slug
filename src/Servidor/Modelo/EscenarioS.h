@@ -17,7 +17,7 @@ private:
 	int distancia;
 	int avance;
 	multimap<int, Enemigo*> enemigosInactivos;
-	list<Enemigo*> enemigosVivos;
+	map<string, Enemigo*> enemigosVivos;
 	bool avanceBloqueado;
 	void colisionar();
 
@@ -36,6 +36,8 @@ public:
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	void addEnemigoInactivo(Enemigo* enemigo, int posXAbsolutaDeJugadorParaAparicion);
+	void matarEnemigo(string id);
+	void matarEnemigos(list<mensajeStruct>* mainList);
 	Enemigo* activarEnemigo(int posXAbsolutaJugador);
 	void activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
@@ -44,8 +46,8 @@ public:
 	mensajeStruct getMensajeEscenario();
 	mensajeStruct getMensajeEnemigoNuevo(Enemigo *enemigo);
 	mensajeStruct getMensajeEnemigoUpdate(Enemigo *enemigo);
-	mensajeStruct getMensajeEnemigoMuerto();
 	list<mensajeStruct> getMensajeBala();
+	mensajeStruct getMensajeEnemigoMuerto(Enemigo *enemigo);
 	mensajeStruct getMensajeEndOfLevel();
 	void aceptarCambios();
 	mensajeStruct getMensajeDesconexion(int jugadorId);
