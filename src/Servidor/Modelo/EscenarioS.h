@@ -19,7 +19,7 @@ private:
 	multimap<int, Enemigo*> enemigosInactivos;
 	map<string, Enemigo*> enemigosVivos;
 	bool avanceBloqueado;
-	void colisionar();
+	void colisionar(list<mensajeStruct>* mainList);
 
 public:
 	int ancho;
@@ -36,7 +36,7 @@ public:
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	void addEnemigoInactivo(Enemigo* enemigo, int posXAbsolutaDeJugadorParaAparicion);
-	void matarEnemigo(string id);
+	void matarEnemigo(list<mensajeStruct>* mainList, string id);
 	void matarEnemigos(list<mensajeStruct>* mainList);
 	Enemigo* activarEnemigo(int posXAbsolutaJugador);
 	void activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList);

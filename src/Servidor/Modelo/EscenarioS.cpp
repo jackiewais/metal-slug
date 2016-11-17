@@ -134,7 +134,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		int direccion = atoi(result[2].c_str());
 		this->addBala(jugador->disparar(aimDirection(direccion)));
 		// PARA PROBAR
-		this->matarEnemigos(&returnList);
+		//this->matarEnemigos(&returnList);
 	}
 	if(estado=="RESET"){
 		mensajeStruct msjReset;
@@ -204,7 +204,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 
 		//evaluar colisiones despues del movimiento
-		colisionar();
+		colisionar(&returnList);
 
 	}
 	return returnList;
@@ -436,7 +436,7 @@ void EscenarioS::pasarDeNivel(){
 	}
 }
 
-void EscenarioS::colisionar() {
+void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 
 	list<Bala*>::iterator itBalas;
 	Bala *bala = NULL;
@@ -463,6 +463,7 @@ void EscenarioS::colisionar() {
 					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho,bala->x,bala->y,bala->radio)) {
 						//si la bala es del jugador
 						cout<<"Restar vida al enemigo"<<endl;
+						matarEnemigo(mainList, enemigo->getCodEnemigo());
 					}
 					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho)) {
 						//si siguen vivos, si en los pasos anteriores no los mato una bala
@@ -490,12 +491,13 @@ void EscenarioS::colisionar() {
 	}
 }
 
-void EscenarioS::matarEnemigo(string id) {
+void EscenarioS::matarEnemigo(list<mensajeStruct>* mainList, string id) {
 	Enemigo *enemigo = NULL;
 	map<string, Enemigo*>::iterator itEnemigos = this->enemigosVivos.find(id);
 	// Si el objeto esta en el map
 	if ( itEnemigos != this->enemigosVivos.end() ) {
 		enemigo = itEnemigos->second;
+		mainList->push_back(getMensajeEnemigoMuerto(enemigo));
 		delete enemigo;
 		this->enemigosVivos.erase(itEnemigos);
 	}
