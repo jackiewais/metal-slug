@@ -117,6 +117,7 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 			balasDisparadas.push_front(bala4);
 
 			balasDisparadas.push_front(bala5);
+
 		break;
 		case SHOOTGUN:
 			bala->tipoDeBala = SHOOTGUN;
@@ -126,7 +127,9 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 		break;
 
 	}
-	return balasDisparadas;
+
+
+return balasDisparadas;
 }
 
 int Jugador::getId() {
