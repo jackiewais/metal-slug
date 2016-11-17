@@ -93,21 +93,29 @@ void EscenarioS::moverBala(){
 	list<Bala*>::iterator it;
 	list<Bala*>::iterator itDelete;
 
-	bool afuera = false;
+	bool afuera = true;
 	for (it=balas.begin(); it!=balas.end(); ++it){
 	(*it)->mover();
 	(*it)->movimientos +=1;
 	}
 
+	while(afuera){
+		afuera =false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
+
 		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 10)){
 		afuera = true;
 		itDelete = it;
 		}
+
     }
 	if(afuera){
+
 	balas.erase(itDelete);
+	delete (*itDelete);
 	}
+	}
+
 
 }
 
@@ -341,7 +349,7 @@ list<mensajeStruct> EscenarioS::getMensajeBala(){
 			mensaje+=posx.str()+";"+posy.str()+";";
 			cantBalas= j+1;
 			++it;
-			cout << "ciclo de mensaje " << j  << endl;
+
 		}
 
 		stringstream cantidadBalas;
@@ -350,7 +358,6 @@ list<mensajeStruct> EscenarioS::getMensajeBala(){
 		msjBala.tipo = BALA_UPD;
 		msjBala.message = cantidadBalas.str() + ";" + mensaje;
 		mensaje="";
-		cout << msjBala.message << endl;
 		msjRespuesta.push_front(msjBala);
 
 	}
