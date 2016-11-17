@@ -40,4 +40,14 @@ enum balaMachineGun{
 	middle = 02,
 	down = 03
 };
+
+struct enemigoStruct {
+	int ancho;
+	int alto;
+	int velocidad;
+	int posXAbsolutaDeJugadorParaAparicion;
+	int bloquearAvanceEscenario;
+	int aparecePorIzq;
+};
+
 #endif

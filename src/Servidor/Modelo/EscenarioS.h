@@ -35,10 +35,9 @@ public:
 	virtual ~EscenarioS();
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
-	void addEnemigoInactivo(Enemigo* enemigo, int posXAbsolutaDeJugadorParaAparicion);
+	void addEnemigoInactivo(enemigoStruct enemigoStruct);
 	void matarEnemigo(list<mensajeStruct>* mainList, string id);
 	void matarEnemigos(list<mensajeStruct>* mainList);
-	Enemigo* activarEnemigo(int posXAbsolutaJugador);
 	void activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);
 	void moverEscenario(list<mensajeStruct>* mainList);

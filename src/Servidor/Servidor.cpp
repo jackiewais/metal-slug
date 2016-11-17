@@ -224,6 +224,7 @@ void Servidor::handshake(mensajeStruct msg){
 			colaCliente->push(*i4);
 		}
 	}
+
 	delete parser;
 
 
@@ -257,15 +258,6 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.objectId="X0";
 	msg.message="termino el handshake";
 	colaCliente->push(msg);
-
-	Enemigo *enemigo = new Enemigo(1,5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
-	this->escenario->addEnemigoInactivo(enemigo, 500);
-	enemigo = new Enemigo(2,5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
-	enemigo->bloquearAvanceEscenario();
-	this->escenario->addEnemigoInactivo(enemigo, 1000);
-	enemigo = new Enemigo(3,5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
-	enemigo->aparecerPorIzquierda();
-	this->escenario->addEnemigoInactivo(enemigo, 1000);
 
 	createTimerThread();
 }
@@ -619,6 +611,12 @@ void Servidor::runServer(){
 		cantJugadores = parser->getCantJugadores();
 
 		this->escenario = new EscenarioS(this->parser->getAnchoEscenario(),this->parser->getAltoEscenario());
+
+		std::vector<enemigoStruct> enemigos = this->parser->getListaEnemigos();
+		std::vector<enemigoStruct>::iterator it;
+		for( it = enemigos.begin(); it != enemigos.end(); ++it) {
+			this->escenario->addEnemigoInactivo(*it);
+		}
 
 		createExitThread();
 		createMainProcessorThread();

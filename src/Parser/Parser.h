@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include "../Common/Modelo.h"
 
 
 
@@ -39,6 +40,9 @@ public:
 	std::vector<mensajeStruct> getListaEstadosSpritesObjetos()  {
 		return listaEstadosSprites;
 	}
+	std::vector<enemigoStruct> getListaEnemigos()  {
+		return listaEnemigos;
+	}
 
 	int getAnchoJugador();
 	int getAltoJugador();
@@ -58,6 +62,7 @@ private:
 	std::vector<mensajeStruct> listaSprites;
 	std::vector<mensajeStruct> listaObjetos;
 	std::vector<mensajeStruct> listaEstadosSprites;
+	std::vector<enemigoStruct> listaEnemigos;
 
 	string anchoJugador;
 	string altoJugador;
@@ -70,6 +75,7 @@ private:
 	void getxmlVentana(const pugi::xml_document* doc);
 	void getxmlObjetos(const pugi::xml_document* doc);
 	void getxmlFondos(const pugi::xml_document* doc);
+	void getxmlEnemigos(const pugi::xml_document* doc);
 	void getxmlEstadosSprites(const pugi::xml_document* doc);
 	bool validar(std::string numero);
 	void setAnchoJugador(const pugi::xml_document* doc);

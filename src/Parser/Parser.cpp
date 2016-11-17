@@ -43,6 +43,7 @@ bool Parser::parsearArchivoXML(const std::string& nameFileXML)
 	setAltoJugador(&doc);
 	setAnchoEscenario(&doc);
 	setAltoEscenario(&doc);
+	getxmlEnemigos(&doc);
 	return true;
 }
 void Parser::getxmlSprites(const pugi::xml_document* doc)
@@ -231,6 +232,49 @@ void Parser::getxmlEstadosSprites(const pugi::xml_document* doc)
 		}
 	}
 }
+
+void Parser::getxmlEnemigos(const pugi::xml_document* doc)
+{
+	pugi::xml_node enemigosNode = doc->child("enemigos");
+	for (pugi::xml_node i = enemigosNode.first_child(); i; i = i.next_sibling())
+	{
+	   enemigoStruct enemigo;
+	   std::string ancho = i.child("ancho").first_child().value();
+	   std::string alto = i.child("alto").first_child().value();
+	   std::string velocidad = i.child("velocidad").first_child().value();
+	   std::string posXAbsolutaDeJugadorParaAparicion = i.child("posXAbsolutaDeJugadorParaAparicion").first_child().value();
+	   std::string bloquearAvanceEscenario = i.child("bloquearAvanceEscenario").first_child().value();
+	   std::string aparecePorIzq = i.child("aparecePorIzq").first_child().value();
+
+	   if (!validar(ancho)){
+		   ancho = "0";
+	   }
+	   if (!validar(alto)){
+		   alto = "0";
+	   }
+	   if (!validar(velocidad)){
+		   velocidad = "1";
+	   }
+	   if (!validar(posXAbsolutaDeJugadorParaAparicion)){
+		   posXAbsolutaDeJugadorParaAparicion = "0";
+	   }
+	   if (!validar(bloquearAvanceEscenario)){
+		   bloquearAvanceEscenario = "0";
+	   }
+	   if (!validar(aparecePorIzq)){
+		   aparecePorIzq = "0";
+	   }
+
+	   enemigo.ancho = atoi(ancho.c_str());
+	   enemigo.alto = atoi(alto.c_str());
+	   enemigo.velocidad = atoi(velocidad.c_str());
+	   enemigo.posXAbsolutaDeJugadorParaAparicion = atoi(posXAbsolutaDeJugadorParaAparicion.c_str());
+	   enemigo.bloquearAvanceEscenario = atoi(bloquearAvanceEscenario.c_str());
+	   enemigo.aparecePorIzq = atoi(aparecePorIzq.c_str());
+	   listaEnemigos.push_back(enemigo);
+	}
+}
+
 bool Parser::validar(std::string numero)
 {
 	 if (numero.empty()) return false;

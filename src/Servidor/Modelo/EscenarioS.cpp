@@ -39,28 +39,32 @@ void EscenarioS::addJugador(Jugador* jugador) {
 	}
 }
 
-void EscenarioS::addEnemigoInactivo(Enemigo* enemigo, int posXAbsolutaDeJugadorParaAparicion) {
-	this->enemigosInactivos.insert(pair<int, Enemigo*>(posXAbsolutaDeJugadorParaAparicion,enemigo));
-}
-
-// Si no se activa ningun enemigo devuelve NULL
-Enemigo* EscenarioS::activarEnemigo(int posXAbsolutaJugador) {
-	Enemigo *enemigo = NULL;
-	std::multimap<int,Enemigo*>::iterator it = this->enemigosInactivos.find(posXAbsolutaJugador);
-	if ( it != this->enemigosInactivos.end() ) {
-		enemigo = it->second;
-		this->enemigosInactivos.erase(it);
-		this->enemigosVivos[enemigo->getCodEnemigo()] = enemigo;
+void EscenarioS::addEnemigoInactivo(enemigoStruct enemigoStruct) {
+	int id = this->enemigosInactivos.size() + 1;
+	int velocidad = enemigoStruct.velocidad;
+	int ancho = enemigoStruct.ancho;
+	int alto = enemigoStruct.alto;
+	Enemigo *enemigo = new Enemigo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores);
+	if (enemigoStruct.bloquearAvanceEscenario != 0) {
+		enemigo->bloquearAvanceEscenario();
 	}
-	return enemigo;
+	if (enemigoStruct.aparecePorIzq != 0) {
+		enemigo->aparecerPorIzquierda();
+	}
+	this->enemigosInactivos.insert(pair<int, Enemigo*>(enemigoStruct.posXAbsolutaDeJugadorParaAparicion,enemigo));
 }
 
 void EscenarioS::activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList) {
 	Enemigo *enemigo = NULL;
-	enemigo = activarEnemigo(posXAbsolutaJugador);
-	while (enemigo != NULL) {
+	std::multimap<int,Enemigo*>::iterator it, itLow, itUp;
+
+	itLow = this->enemigosInactivos.lower_bound(0);
+	itUp = this->enemigosInactivos.upper_bound(posXAbsolutaJugador);
+	for (it = itLow; it != itUp; it++) {
+		enemigo = it->second;
+		this->enemigosInactivos.erase(it);
+		this->enemigosVivos[enemigo->getCodEnemigo()] = enemigo;
 		mainList->push_back(getMensajeEnemigoNuevo(enemigo));
-		enemigo = activarEnemigo(posXAbsolutaJugador);
 	}
 }
 
