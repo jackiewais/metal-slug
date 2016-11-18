@@ -26,57 +26,49 @@ private:
 	static bool colisionRectanguloConCirculo(int puntoXs, int puntoYs, int ancho, int alto, int puntoXb, int puntoYb, int radio) {
 
 		bool hayColision = false;
-		// si la bala esta completamente adentro al ancho del soldado
-		if ((puntoXb + radio  >= puntoXs - ancho / 2) && (puntoXb - radio <= puntoXs + ancho / 2) && (abs(puntoYs - puntoYb) <= radio))
-		{
+		// si la bala esta completamente adentro del soldado
+		if ((puntoXb + radio  >= puntoXs) && (puntoXb - radio <= puntoXs + ancho) && (puntoYb + radio >= puntoYs) && (puntoYb - radio <= puntoYs + alto)) {
 			hayColision = true;
 		}
-		//Si no, si la bala esta completamente adentro al alto del soldado
-		else if ((puntoXb + radio >= puntoYs - alto / 2) && (puntoYb - radio <= puntoYs + alto / 2) && (abs(puntoXs - puntoXb) <= radio))
-			 {
+		//Si no, el punto del rectangulo mas cercano al centro del circulo
+		else {
+			// Esquina arriba-izquierda
+			int distX = puntoXs - puntoXb;
+			int distY = puntoYs - puntoYb;
+			int distMin = sqrt((distX * distX) + (distY * distY));
+
+			// Esquina arriba-derecha
+			distX = (puntoXs + ancho) - puntoXb;
+			distY = puntoYs - puntoYb;
+			int dist = sqrt((distX * distX) + (distY * distY));
+
+			if (dist < distMin) {
+				distMin = dist;
+			}
+
+			// Esquina abajo-derecha
+			distX = (puntoXs + ancho) - puntoXb;
+			distY = (puntoYs + alto) - puntoYb;
+			dist = sqrt((distX * distX) + (distY * distY));
+
+			if (dist < distMin) {
+				distMin = dist;
+			}
+
+			// Esquina abajo-izquierda
+			distX = puntoXs - puntoXb;
+			distY = (puntoYs + alto) - puntoYb;
+			dist = sqrt((distX * distX) + (distY * distY));
+
+			if (dist < distMin) {
+				distMin = dist;
+			}
+
+			//si distMin es menor al radio hay colision
+			if (distMin < radio) {
 				hayColision = true;
-			 }
-			 else {
-				// Esquina arriba-izquierda
-				int distX = (puntoXs - ancho / 2) - puntoXb;
-				int distY = (puntoYs - alto / 2) - puntoYb;
-				int distMin = sqrt((distX*distX) + (distY * distY));
-
-				// Esquina ariba-derecha
-				distX = (puntoXs + ancho / 2) - puntoXb;
-				distY = (puntoYs - alto / 2) - puntoYb;
-				int dist = sqrt((distX*distX) + (distY * distY));
-
-				if (dist < distMin)
-				{
-					distMin = dist;
-				}
-
-				// Esquina abajo-derecha
-				distX = (puntoXs + ancho / 2) - puntoXb;
-				distY = (puntoYs + alto / 2) - puntoYb;
-				dist = sqrt((distX*distX) + (distY * distY));
-
-				if (dist < distMin)
-				{
-					distMin = dist;
-				}
-
-				// Esquina abajo-izquierda
-				distX = (puntoXs - ancho / 2) - puntoXb;
-				distY = (puntoYs + alto / 2) - puntoYb;
-				dist = sqrt((distX*distX) + (distY * distY));
-
-				if (dist < distMin)
-				{
-					distMin = dist;
-				}
-
-				//si distMin es menor al radio hay colision
-				if (distMin < radio) {
-					hayColision = true;
-				}
-			 }
+			}
+		}
 		return hayColision;
 	}
 
@@ -84,8 +76,10 @@ private:
 	static bool colisionRectanguloConRectangulo(int puntoXs1, int puntoYs1, int ancho1, int alto1, int puntoXs2, int puntoYs2, int ancho2, int alto2) {
 
 		bool hayColision = false;
-	    if (((puntoXs1 + ancho1 / 2) >= (puntoXs2 -ancho2 / 2)) && ((puntoXs1 - ancho1 / 2) <= (puntoXs2 + ancho2 / 2)) && ((puntoYs1 + alto1 / 2) >= (puntoYs2 - alto2 / 2)) && ((puntoYs1 - alto1 / 2) <= (puntoYs2 + alto2 / 2)))
+		//Lado derecho de r1 es mayor que lado izquierdo de r2 && Lado izquierdo de r1 es menor que lado derecho de r2 && Lado superior de r1 es mayor que lado inferior de r2 && Lado inferior de r1 es menor que lado superior de r2
+	    if (((puntoXs1 + ancho1) >= puntoXs2) && (puntoXs1 <= (puntoXs2 + ancho2)) && ((puntoYs1 + alto1) >= puntoYs2) && (puntoYs1  <= (puntoYs2 + alto2))) {
 	        hayColision = true;
+	    }
 
 	    return hayColision;
 	}
@@ -97,11 +91,12 @@ private:
 
 		int distX = puntoXb1 - puntoXb2;
 		int distY = puntoYb1 - puntoYb2;
-		int dist = sqrt((distX*distX) + (distY * distY));
+		int dist = sqrt((distX * distX) + (distY * distY));
 
 		// si la suma de los radios es mayor a la distancia, hay colision
-		if (radio1 + radio2 > dist)
+		if ((radio1 + radio2) > dist) {
 			hayColision = true;
+		}
 
 		return hayColision;
 	}
