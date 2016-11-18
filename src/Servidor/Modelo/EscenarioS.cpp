@@ -457,19 +457,19 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 			jugador = itJugador->second;
 			if (jugador->conectado()) {
 
-				if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,bala->x,bala->y,bala->radio)) {
+				if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,bala->x,bala->y,bala->radio)) {
 					//si la bala es del enemigo
 					cout<<"Restar vida al jugador"<<endl;
 				}
 
 				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
 					enemigo = itEnemigos->second;
-					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho,bala->x,bala->y,bala->radio)) {
+					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto,bala->x,bala->y,bala->radio)) {
 						//si la bala es del jugador
 						cout<<"Restar vida al enemigo"<<endl;
 						matarEnemigo(mainList, enemigo->getCodEnemigo());
 					}
-					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho)) {
+					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
 						//si siguen vivos, si en los pasos anteriores no los mato una bala
 						cout<<"cuchillazo del enemigo"<<endl;
 					}
@@ -486,7 +486,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 				jugador = itJugador->second;
 				if (jugador->conectado()) {
 
-					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->ancho,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->ancho)) {
+					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
 						cout<<"cuchillazo del enemigo"<<endl;
 					}
 				}

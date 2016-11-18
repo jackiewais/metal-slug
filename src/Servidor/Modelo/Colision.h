@@ -11,8 +11,25 @@ class Colision {
 public:
 
 	static bool colisionSoldadoConBala(int puntoXs, int puntoYs, int ancho, int alto, int puntoXb, int puntoYb, int radio) {
+
+		bool hayColision = colisionRectanguloConCirculo(puntoXs, puntoYs, ancho, alto, puntoXb, puntoYb, radio);
+		/*
+		if (hayColision) {
 		//logica para transformar la cabeza del soldado en un circulo y colisionar circulo con circulo
-		return colisionRectanguloConCirculo(puntoXs, puntoYs, ancho, alto, puntoXb, puntoYb, radio);
+			int radioCabeza = 20;
+			int puntoYsCuerpo = puntoYs + (radioCabeza * 2);
+			int altoCuerpo = alto - (radioCabeza * 2);
+			//colision cuerpo soldado con bala
+			hayColision = colisionRectanguloConCirculo(puntoXs, puntoYsCuerpo, ancho, altoCuerpo, puntoXb, puntoYb, radio);
+			if (!hayColision) {
+				int puntoXsCabeza = (puntoXs / 2);
+				int puntoYsCabeza = (puntoYs + radioCabeza);
+				//si no, colision cabeza soldado con bala
+				hayColision = colisionCirculoConCirculo(puntoXsCabeza, puntoYsCabeza, radioCabeza, puntoXb, puntoYb, radio);
+			}
+		}
+		*/
+		return hayColision;
 	}
 
 	static bool colisionSoldadoConSoldado(int puntoXs1, int puntoYs1, int ancho1, int alto1, int puntoXs2, int puntoYs2, int ancho2, int alto2) {
