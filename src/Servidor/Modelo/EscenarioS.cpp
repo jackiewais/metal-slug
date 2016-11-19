@@ -158,8 +158,8 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		jugador->mover(this->ancho,vecesX, estado);
 
 		//ESTO ES PARA PROBAR
-		jugador->puntaje += 1;
-		jugador->vida -= 1;
+		//jugador->puntaje += 1;
+		//jugador->vida -= 1;
 
 		//Siempre false para poder probar
 		if(jugador->vida == 0 && jugador->puntaje > 1 && false){
@@ -171,10 +171,11 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			returnList.push_back(msjReset);
 		}
 
-		if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
-		if (jugador->vida >80 ) jugador->municiones=-1;
-		if (jugador->vida ==80 ) jugador->municiones=300;
-		if (jugador->vida <80 ) jugador->municiones-=2;
+		//if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
+		//if (jugador->vida >80 ) jugador->municiones=-1;
+		//if (jugador->vida ==80 ) jugador->municiones=300;
+		//if (jugador->vida <80 ) jugador->municiones-=2;
+
 
 		if (!this->avanceBloqueado) {
 			moverEscenario(&returnList);
@@ -456,22 +457,29 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 		for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); itJugador++){
 			jugador = itJugador->second;
 			if (jugador->conectado()) {
-
-				if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
-					//si la bala es del enemigo
-					cout<<"Restar vida al jugador"<<endl;
+				//si la bala es del enemigo
+				if (bala->IdJugador == NULL) {
+					if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+						cout<<"Restar vida al jugador"<<endl;
+						jugador->restarVida(10);
+					}
 				}
 
 				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
 					enemigo = itEnemigos->second;
-					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
-						//si la bala es del jugador
-						cout<<"Restar vida al enemigo"<<endl;
-						matarEnemigo(mainList, enemigo->getCodEnemigo());
+					//si la bala es del jugador
+					if (bala->IdJugador != NULL) {
+						if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+							cout<<"Restar vida al enemigo"<<endl;
+							matarEnemigo(mainList, enemigo->getCodEnemigo());
+							Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
+							jugadorDisparo->sumarPuntos();
+						}
 					}
 					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
 						//si siguen vivos, si en los pasos anteriores no los mato una bala
 						cout<<"cuchillazo del enemigo"<<endl;
+						jugador->restarVida(1);
 					}
 				}
 			}
@@ -488,6 +496,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 
 					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
 						cout<<"cuchillazo del enemigo"<<endl;
+						jugador->restarVida(1);
 					}
 				}
 			}
