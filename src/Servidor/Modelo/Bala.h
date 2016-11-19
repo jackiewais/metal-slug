@@ -11,9 +11,7 @@
 class Bala {
 private:
 
-	int direccion;
 	int velocidad;
-
 
 public:
 	int radio;
@@ -22,6 +20,7 @@ public:
 	int movimientos = 0; //ORRIBLE (SIN H). LO USO PARA MATAR LA BALA DE SHOOTGUN. POR AHORA ES ASI
 	int IdJugador;
 	int x,y;
+	int direccion;
 	void mover();
 	Bala(int x,int y, int dir,int jugador);
 	virtual ~Bala();

@@ -457,14 +457,14 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 			jugador = itJugador->second;
 			if (jugador->conectado()) {
 
-				if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,bala->x,bala->y,bala->radio)) {
+				if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
 					//si la bala es del enemigo
 					cout<<"Restar vida al jugador"<<endl;
 				}
 
 				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
 					enemigo = itEnemigos->second;
-					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto,bala->x,bala->y,bala->radio)) {
+					if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
 						//si la bala es del jugador
 						cout<<"Restar vida al enemigo"<<endl;
 						matarEnemigo(mainList, enemigo->getCodEnemigo());

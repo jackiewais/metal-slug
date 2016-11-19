@@ -10,25 +10,41 @@ class Colision {
 
 public:
 
-	static bool colisionSoldadoConBala(int puntoXs, int puntoYs, int ancho, int alto, int puntoXb, int puntoYb, int radio) {
+	static bool colisionSoldadoConBala(int puntoXs, int puntoYs, int ancho, int alto, int puntoXb, int puntoYb, int radio,int direccion) {
 
-		bool hayColision = colisionRectanguloConCirculo(puntoXs, puntoYs, ancho, alto, puntoXb, puntoYb, radio);
-		/*
-		if (hayColision) {
-		//logica para transformar la cabeza del soldado en un circulo y colisionar circulo con circulo
-			int radioCabeza = 20;
-			int puntoYsCuerpo = puntoYs + (radioCabeza * 2);
-			int altoCuerpo = alto - (radioCabeza * 2);
-			//colision cuerpo soldado con bala
-			hayColision = colisionRectanguloConCirculo(puntoXs, puntoYsCuerpo, ancho, altoCuerpo, puntoXb, puntoYb, radio);
-			if (!hayColision) {
-				int puntoXsCabeza = (puntoXs / 2);
-				int puntoYsCabeza = (puntoYs + radioCabeza);
-				//si no, colision cabeza soldado con bala
-				hayColision = colisionCirculoConCirculo(puntoXsCabeza, puntoYsCabeza, radioCabeza, puntoXb, puntoYb, radio);
-			}
+		bool hayColision = false;
+
+		if (direccion != DIAGRIGHT && direccion != DIAGLEFT) {
+
+			//transformo la bala en un rectangulo (cuadrado, ancho = alto)
+			int puntoXbRect = puntoXb - radio;
+			int puntoYbRect = puntoYb - radio;
+			int anchoAltobRect = 2 * radio;
+			hayColision = colisionRectanguloConRectangulo(puntoXs, puntoYs, ancho, alto, puntoXbRect, puntoYbRect, anchoAltobRect, anchoAltobRect);
 		}
-		*/
+
+		if (hayColision || direccion == DIAGRIGHT || direccion == DIAGLEFT) {
+
+			//Si la bala va en diagonal no puedo transformarla en un rectangulo
+			//ademas, si no va en diagonal y colisiono como rectangulo, vuelvo a colisionar con su forma real (circulo)
+			hayColision = colisionRectanguloConCirculo(puntoXs, puntoYs, ancho, alto, puntoXb, puntoYb, radio);
+			/*
+			if (hayColision) {
+			//logica para transformar la cabeza del soldado en un circulo y colisionar circulo con circulo
+				int radioCabeza = 20;
+				int puntoYsCuerpo = puntoYs + (radioCabeza * 2);
+				int altoCuerpo = alto - (radioCabeza * 2);
+				//colision cuerpo soldado con bala
+				hayColision = colisionRectanguloConCirculo(puntoXs, puntoYsCuerpo, ancho, altoCuerpo, puntoXb, puntoYb, radio);
+				if (!hayColision) {
+					int puntoXsCabeza = (puntoXs / 2);
+					int puntoYsCabeza = (puntoYs + radioCabeza);
+					//si no, colision cabeza soldado con bala
+					hayColision = colisionCirculoConCirculo(puntoXsCabeza, puntoYsCabeza, radioCabeza, puntoXb, puntoYb, radio);
+				}
+			}
+			*/
+		}
 		return hayColision;
 	}
 
