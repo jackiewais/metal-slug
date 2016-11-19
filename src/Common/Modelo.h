@@ -50,4 +50,10 @@ struct enemigoStruct {
 	int aparecePorIzq;
 };
 
+enum modoDeJuego {
+	INDIVIDUAL = 01,
+	COLABORATIVO = 02,
+	GRUPAL = 03
+};
+
 #endif

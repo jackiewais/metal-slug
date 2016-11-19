@@ -72,6 +72,7 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 				this->idJugadores++;
 				usuario->setIdJugador(this->idJugadores);
 				Jugador *jugador = new Jugador(usuario->getIdJugador(),5,this->parser->getAnchoJugador(),this->parser->getAltoJugador(), usuario, this->parser->getAltoEscenario());
+				setEquipo(jugador);
 				this->escenario->addJugador(jugador);
 				this->contenedor->addIdSocketIdJugador(msg.socketCli, jugador->getId());
 
@@ -111,6 +112,18 @@ int Servidor::loginInterpretarMensaje(mensajeStruct msg){
 		}
     }
 	return 0;
+}
+void Servidor::setEquipo(Jugador* jugador){
+
+
+	jugador->equipo = this->tipoDeJuego.back();
+	this->tipoDeJuego.pop_back();
+	if(modoDePrueba){
+		jugador->vida = 1000000;
+
+	}
+	cout << "El jugador " << jugador->getId() << "es del equipo " << jugador->equipo << endl;
+
 }
 
 int Servidor::procesarMensajeCola(mensajeStruct msg){
@@ -618,6 +631,7 @@ void Servidor::runServer(){
 			this->escenario->addEnemigoInactivo(*it);
 		}
 
+		ElegirModoDeJuego();
 		createExitThread();
 		createMainProcessorThread();
 
@@ -627,7 +641,71 @@ void Servidor::runServer(){
 		terminarThreads();
 	}
 };
+void Servidor::ElegirModoDeJuego(){
+	cout << "Modos de Juego" << endl;
+	cout << "==============" << endl;
+	cout << "1. Individual " << endl;
+	cout << "2. Colaborativo" << endl;
+	cout << "3. Grupal"		<< endl;
+	int opcion;
+	char a;
+	cin >> opcion;
 
+	if (opcion == 3){
+			modalidadDeJuego = GRUPAL;
+			cout << "Modo de Juego Elegido : GRUPAL" << endl;
+
+	}else {if (opcion == 2){
+			modalidadDeJuego = COLABORATIVO;
+			cout << "Modo de Juego Elegido : COLABORATIVO" << endl;
+		  }else{
+			  modalidadDeJuego = INDIVIDUAL;
+		  	  cout << "Modo de Juego Elegido : INDIVIDUAL" << endl;
+		  }
+	}
+cout <<" ============== " << endl;
+cout <<"Jugar en modo prueba ? S/N" << endl;
+cin >>a;
+
+if(toupper(a) == 'S'){
+	modoDePrueba = true;
+	cout << "MODO PRUEBA ON " << endl;
+
+}
+
+
+
+setModalidadDeJuego();
+
+}
+
+void Servidor::setModalidadDeJuego(){
+
+	switch (modalidadDeJuego) {
+		case INDIVIDUAL:
+					tipoDeJuego.push_front("1");
+					tipoDeJuego.push_front("2");
+					tipoDeJuego.push_front("3");
+					tipoDeJuego.push_front("4");
+			break;
+		case COLABORATIVO:
+					tipoDeJuego.push_front("1");
+					tipoDeJuego.push_front("1");
+					tipoDeJuego.push_front("1");
+					tipoDeJuego.push_front("1");
+			break;
+
+		case GRUPAL:
+					tipoDeJuego.push_front("1");
+					tipoDeJuego.push_front("1");
+					tipoDeJuego.push_front("2");
+					tipoDeJuego.push_front("2");
+			break;
+
+	}
+
+
+}
 int Servidor::terminarThreads(){
 	pthread_join(this->threadExit, NULL);
 	pthread_join(this->threadMain, NULL);

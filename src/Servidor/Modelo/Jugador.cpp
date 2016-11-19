@@ -21,10 +21,15 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, i
 
 }
 
+
 Jugador::~Jugador() {
 
 }
+void Jugador::setEquipo(string team){
 
+	this->equipo = team;
+
+}
 list<Bala*> Jugador::disparar(aimDirection direccion){
 	list<Bala*> balasDisparadas;
 	Bala *bala= new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);

@@ -60,6 +60,11 @@ private:
 	int procesarDesconexion(mensajeStruct mensaje);
 	EscenarioS* escenario;
 
+	modoDeJuego modalidadDeJuego;
+	bool modoDePrueba = false;
+	void setModalidadDeJuego();
+	void ElegirModoDeJuego();
+	void setEquipo(Jugador* jugador);
 	bool cerrarPrograma;
 	pthread_t threadExit, threadMain, threadTimer;
 	int terminarThreads();
@@ -72,6 +77,7 @@ private:
 	string CSV_PATH = "usuarios.csv";
 	string XML_PATH;
 
+	list<string> tipoDeJuego;//modalidad equipo,individual,etc
 
 
 public:

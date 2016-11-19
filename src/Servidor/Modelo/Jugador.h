@@ -18,7 +18,7 @@ private:
 	int piso;
 	int topeSalto;
 	int plataforma;
-	weapon arma = MACHINEGUN;
+	weapon arma = SHOOTGUN;
 
 	estadoJugador getEstadoParado();
 	estadoJugador getEstadoSaltarIzquierda();
@@ -65,6 +65,7 @@ public:
 	bool estaSaltando();
 	void moverAPosicionInicial();
 	void reiniciar();
+	void setEquipo(string equipo);
 	//estadoJugador resolverEstado(string accion, int vecesX);
 };
 
