@@ -21,6 +21,7 @@ private:
 	map<string, Enemigo*> enemigosVivos;
 	bool avanceBloqueado;
 	void colisionar(list<mensajeStruct>* mainList);
+	void findBonus(list<mensajeStruct>* mainList, Jugador *jugador);
 
 public:
 	int ancho;
@@ -50,7 +51,8 @@ public:
 	void moverBonuses(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeBonusNew(bonus bonus, int idBonus);
 	mensajeStruct getMensajeBonusUpd(bonus bonus, int idBonus);
-	mensajeStruct getMensajeBonusDel(bonus bonus, int idBonus);
+	mensajeStruct getMensajeBonusDel(int idBonus);
+	void eliminarBonus(list<mensajeStruct>* mainList, int idBonus);
 	list<mensajeStruct> getMensajeBala();
 	mensajeStruct getMensajeEnemigoMuerto(Enemigo *enemigo);
 	mensajeStruct getMensajeEndOfLevel();

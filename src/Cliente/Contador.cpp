@@ -49,7 +49,7 @@ void Contador::renderizar(){
 
 void Contador::renderizarCantBalas(){
 
-	int x = posX+120;
+	int x = posX+105;
 	int y = posY+40;
 
 	lbalas->render(x,posY);
