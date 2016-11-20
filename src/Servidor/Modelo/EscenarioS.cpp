@@ -649,9 +649,8 @@ void EscenarioS::findBonus(list<mensajeStruct>* mainList, Jugador *jugador) {
 					jugador->cambiarTipoDeArma(armaBonus);
 				break;
 				case POWER:
-					cout<<"BONUS: Tipo De Arma: GUN"<<endl;
-					armaBonus = GUN;
-					jugador->cambiarTipoDeArma(armaBonus);
+					cout<<"BONUS: Restablece Vida"<<endl;
+					jugador->reiniciarVida();
 				break;
 				case KILL_ALL:
 					cout<<"BONUS: Matar A Todos Los Enemigos"<<endl;

@@ -41,7 +41,7 @@ public:
 	int vida;
 	int municiones;
 	bool gameOver = false;
-
+	bool modoPrueba = false;
 	estadoJugador estado;
 	string equipo = "1";
 
@@ -68,6 +68,7 @@ public:
 	void setEquipo(string equipo);
 	//estadoJugador resolverEstado(string accion, int vecesX);
 	void sumarPuntos();
+	void reiniciarVida();
 	void restarVida(int herida);
 	void cambiarTipoDeArma(weapon arma);
 };

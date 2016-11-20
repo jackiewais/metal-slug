@@ -119,8 +119,7 @@ void Servidor::setEquipo(Jugador* jugador){
 	jugador->equipo = this->tipoDeJuego.back();
 	this->tipoDeJuego.pop_back();
 	if(modoDePrueba){
-		jugador->vida = 1000000;
-
+		jugador->modoPrueba = true;
 	}
 	cout << "El jugador " << jugador->getId() << "es del equipo " << jugador->equipo << endl;
 
