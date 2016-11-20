@@ -199,13 +199,20 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		//jugador->vida -= 1;
 
 		//Siempre false para poder probar
-		if(jugador->vida == 0 && jugador->puntaje > 1 && false){
-			jugador->gameOver=true;
-			mensajeStruct msjReset;
-			msjReset.tipo = GAME_OVER_ALL;
-			msjReset.objectId = jugador->getCodJugador();
-			msjReset.message = "GAME OVER";
-			returnList.push_back(msjReset);
+		if(jugador->vida == 0){
+			if (!jugador->gameOver){
+				jugador->gameOver=true;
+				bool gameOverAll = true;
+				for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+					if (!jugador->second->gameOver) gameOverAll = false;
+				}
+
+				mensajeStruct msjReset;
+				msjReset.tipo = gameOverAll?GAME_OVER_ALL:GAME_OVER_PLAYER;
+				msjReset.objectId = jugador->getCodJugador();
+				msjReset.message = "GAME OVER";
+				returnList.push_back(msjReset);
+			}
 		}
 
 		//if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
