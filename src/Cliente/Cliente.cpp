@@ -298,6 +298,15 @@ void *Cliente::recvMessage(void * arg){
 			case BALA_UPD:
 				if (context->jugando) context->updateBala(mensajeRta);
 				break;
+			case BONUS_NEW:
+				context->processNewBonus(mensajeRta);
+				break;
+			case BONUS_UPD:
+				context->updateBonus(mensajeRta);
+				break;
+			case BONUS_DEL:
+				context->escenario.deleteBonus(atoi(mensajeRta.objectId.c_str()));
+				break;
 			case DISCONNECTED:
 				context->datosConexion.conectado = false;
 				context->conexionCli.cerrarSocket(context->datosConexion.sockfd);
@@ -323,21 +332,38 @@ void *Cliente::recvMessage(void * arg){
 				break;
 			case END_OF_LEVEL:
 				if (!context->escenario.endOfLevel){
-				context->processEndOfLevel(mensajeRta);
+					context->processEndOfLevel(mensajeRta);
 				}
+				break;
+			case HANDSHAKE_GRAFIC_BASIC:
+				context->addGraficableBasic(mensajeRta);
 				break;
 		}
     }
 	return 0;
 };
 
+void Cliente::processNewBonus(mensajeStruct msg){
+	vector<string> result = Util::Split(msg.message,';');
+	int id = atoi(msg.objectId.c_str());
+	int posX = atoi(result[0].c_str());
+	int posY = atoi(result[1].c_str());
+	bonusTypes type = static_cast<bonusTypes>(atoi(result[2].c_str()));
+	this->escenario.crearBonus(id,posX,posY,type);
+}
+void Cliente::updateBonus(mensajeStruct msg){
+	vector<string> result = Util::Split(msg.message,';');
+	int id = atoi(msg.objectId.c_str());
+	int posX = atoi(result[0].c_str());
+	int posY = atoi(result[1].c_str());
+	this->escenario.updateBonus(id,posX,posY);
+}
 
 void Cliente::processEndOfLevel(mensajeStruct msg){
 	this->escenario.endOfLevel=true;
 	//en [0] estan los jugadores, en [1] están los equipos a
 	vector<string> result = Util::Split(msg.message,'#');
-
-	this->escenario.addEOLevelLabel("LEVEL COMPLETE",280,50);
+	this->escenario.addEOLevelLabel(msg.objectId+" COMPLETE!!",275,50);
 
 	this->escenario.addEOLevelLabel("PLAYERS",130,150);
 	//vector con los jugadores
@@ -464,6 +490,14 @@ void Cliente::createNro(mensajeStruct msg){
 
 }
 
+void Cliente::addGraficableBasic(mensajeStruct msg){
+	vector<string> result = Util::Split(msg.message,';');
+	string sprite = result[0];
+	int anchoFrame = atoi(result[1].c_str());
+	int altoFrame = atoi(result[2].c_str());
+	int cantFrame = atoi(result[3].c_str());
+	this->escenario.addGraficableBasic(msg.objectId,sprite, anchoFrame,altoFrame,cantFrame);
+}
 
 void Cliente::addSprite(mensajeStruct msg){
 	int ancho, alto;

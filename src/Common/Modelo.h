@@ -1,6 +1,7 @@
 #ifndef MODELO_H_
 #define MODELO_H_
 
+#include <string>
 
 enum estadoJugador{
 	PARADO_GUN = 01,
@@ -56,4 +57,18 @@ enum modoDeJuego {
 	GRUPAL = 03
 };
 
+enum bonusTypes{
+	MACHINEG=01,
+	SHOTG=02,
+	POWER=03,
+	KILL_ALL=04
+};
+
+
+struct bonus {
+	bonusTypes type;
+	int posXAbs;
+	int posX;
+	int posY;
+};
 #endif

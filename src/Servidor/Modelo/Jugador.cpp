@@ -416,3 +416,25 @@ estadoJugador Jugador::getEstadoCaminarIzquierda(){
 		return estado;
 
 }
+
+void Jugador::sumarPuntos() {
+
+	switch (this->arma){
+		case GUN:
+			this->puntaje += 30;
+		break;
+		case MACHINEGUN:
+			this->puntaje += 50;
+
+		break;
+		case SHOOTGUN:
+			this->puntaje += 100;
+		break;
+
+	}
+}
+
+void Jugador::restarVida(int herida) {
+
+	this->vida -= herida;
+}

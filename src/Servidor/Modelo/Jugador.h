@@ -67,6 +67,8 @@ public:
 	void reiniciar();
 	void setEquipo(string equipo);
 	//estadoJugador resolverEstado(string accion, int vecesX);
+	void sumarPuntos();
+	void restarVida(int herida);
 };
 
 #endif /* SRC_SERVIDOR_JUGADOR_H_ */

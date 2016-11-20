@@ -47,6 +47,10 @@ public:
 	mensajeStruct getMensajeEscenario();
 	mensajeStruct getMensajeEnemigoNuevo(Enemigo *enemigo);
 	mensajeStruct getMensajeEnemigoUpdate(Enemigo *enemigo);
+	void moverBonuses(list<mensajeStruct>* mainList);
+	mensajeStruct getMensajeBonusNew(bonus bonus, int idBonus);
+	mensajeStruct getMensajeBonusUpd(bonus bonus, int idBonus);
+	mensajeStruct getMensajeBonusDel(bonus bonus, int idBonus);
 	list<mensajeStruct> getMensajeBala();
 	mensajeStruct getMensajeEnemigoMuerto(Enemigo *enemigo);
 	mensajeStruct getMensajeEndOfLevel();
@@ -57,6 +61,8 @@ public:
 	bool endOfLevel=false;
 	int nivel=1;
 	int cantNiveles=3;
+	map<int, bonus> bonusInactivos;
+	map<int, bonus> bonusEnPantalla;
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ESCENARIOS_H_ */

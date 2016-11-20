@@ -3,44 +3,43 @@
 
 using namespace std;
 
-void GraficableBasic::initTexture(SDL_Renderer* gRend, string spritePath, int anchoTot, int altoTot)
+void GraficableBasic::initTexture(string spritePath, int anchoTot, int altoTot, int cantFrames)
 {
 
 	this->spritePath = spritePath;
-	this->anchoTot = anchoTot;
+	this->anchoTot = anchoTot/cantFrames;
 	this->altoTot=altoTot;
+	this->cantFrames = cantFrames;
+	this->gSpriteClips=new SDL_Rect[cantFrames];
 
-	gTexture.gRenderer = gRend;
-	//Load media
-	if( !loadMedia())
-	{
-		printf( "Failed to load media!\n" );
-	}
 }
 
-bool GraficableBasic::loadMedia()
+bool GraficableBasic::loadMedia(SDL_Renderer* gRend)
 {
 	//Loading success flag
 	bool success = true;
-
+	gTexture.gRenderer = gRend;
 	if( !gTexture.loadFromFile  ( "images/" + this->spritePath+ ".png" ) )
 	{
 		printf( "Failed to load texture!\n" );
 		success = false;
 	}
 
+	for (int i=0;i < cantFrames ;i++){
+		gSpriteClips[ i ].x =   anchoTot * i;
+		gSpriteClips[ i ].y =   0;
+		gSpriteClips[ i ].w =  anchoTot;
+		gSpriteClips[ i ].h =  altoTot;
+	}
+
 	return success;
 }
 
 
-void GraficableBasic::render(int posX, int posY)
+void GraficableBasic::render(int posX, int posY, int id)
 {
-	currentClip.x = 0;
-	currentClip.y = 0;
-	currentClip.h = altoTot;
-	currentClip.w = anchoTot;
+	SDL_Rect currentClip = gSpriteClips[id-1];
 	gTexture.render( posX, posY, &currentClip );
-
 }
 
 void GraficableBasic::close(){
@@ -50,4 +49,5 @@ void GraficableBasic::close(){
 
 GraficableBasic::~GraficableBasic()
 {
+	close();
 }

@@ -60,6 +60,11 @@
 			<ancho>20</ancho>
 			<alto>20</alto>
 		</sprite>
+		<sprite>
+		    <objectId>bonuses</objectId>
+			<ancho>1131</ancho>
+			<alto>113</alto>
+		</sprite>
 </sprites>
  <jugadores>
 	<jugador>
@@ -339,3 +344,53 @@
 		<aparecePorIzq>1</aparecePorIzq>
 	</enemigo>
 </enemigos>
+<basicSprites>
+	<sprite>
+		<id>bonus</id>
+		<sprite>bonuses</sprite>
+		<ancho>171</ancho>
+		<alto>40</alto>
+		<frames>4</frames>
+	</sprite>
+	<sprite>
+		<id>game_over</id>
+		<sprite>game_over</sprite>
+		<ancho>800</ancho>
+		<alto>600</alto>
+		<frames>1</frames>
+	</sprite>	
+	<sprite>
+		<id>fondo_negro</id>
+		<sprite>fondonegro</sprite>
+		<ancho>800</ancho>
+		<alto>600</alto>
+		<frames>1</frames>
+	</sprite>
+</basicSprites>
+<bonuses>
+	<bonus>
+		<type>01</type>
+		<posXAbs>950</posXAbs>
+		<posYAbs>520</posYAbs>	
+	</bonus>
+
+	<bonus>
+		<type>02</type>
+		<posXAbs>350</posXAbs>
+		<posYAbs>520</posYAbs>	
+	</bonus>
+
+
+
+	<bonus>
+		<type>04</type>
+		<posXAbs>1500</posXAbs>
+		<posYAbs>520</posYAbs>	
+	</bonus>
+
+	<bonus>
+		<type>03</type>
+		<posXAbs>1900</posXAbs>
+		<posYAbs>520</posYAbs>	
+	</bonus>
+</bonuses>

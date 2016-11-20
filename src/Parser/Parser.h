@@ -2,14 +2,14 @@
 #define PARSER_H_
 #include "lib/pugixml.hpp"
 #include "../Common/MensajeStruct.h"
+#include "../Common/Modelo.h"
 #include <string>
 #include <cstring>
 #include <sstream>
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include "../Common/Modelo.h"
-
+#include <map>
 
 
 using namespace pugi;
@@ -44,6 +44,12 @@ public:
 		return listaEnemigos;
 	}
 
+	std::vector<mensajeStruct> getBasicSprites()  {
+		return listaBasicSprites;
+	}
+	std::map<int,bonus> getBonuses()  {
+		return bonuses;
+	}
 	int getAnchoJugador();
 	int getAltoJugador();
 	int getAnchoEscenario();
@@ -63,6 +69,9 @@ private:
 	std::vector<mensajeStruct> listaObjetos;
 	std::vector<mensajeStruct> listaEstadosSprites;
 	std::vector<enemigoStruct> listaEnemigos;
+	std::vector<mensajeStruct> listaBasicSprites;
+
+	std::map<int,bonus> bonuses;
 
 	string anchoJugador;
 	string altoJugador;
@@ -77,6 +86,8 @@ private:
 	void getxmlFondos(const pugi::xml_document* doc);
 	void getxmlEnemigos(const pugi::xml_document* doc);
 	void getxmlEstadosSprites(const pugi::xml_document* doc);
+	void getxmlBasicSprites(const pugi::xml_document* doc);
+	void getxmlBonuses(const pugi::xml_document* doc);
 	bool validar(std::string numero);
 	void setAnchoJugador(const pugi::xml_document* doc);
 	void setAltoJugador(const pugi::xml_document* doc);
