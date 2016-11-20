@@ -59,7 +59,7 @@ private:
 	Contenedor* contenedor;
 	int procesarDesconexion(mensajeStruct mensaje);
 	EscenarioS* escenario;
-
+	int cantidadNada = 0;
 	modoDeJuego modalidadDeJuego;
 	bool modoDePrueba = false;
 	void setModalidadDeJuego();
