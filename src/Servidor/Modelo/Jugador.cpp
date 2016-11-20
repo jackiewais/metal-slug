@@ -444,9 +444,15 @@ void Jugador::sumarPuntos() {
 	}
 }
 
-void Jugador::restarVida(int herida) {
+void Jugador::reiniciarVida() {
 
-	this->vida -= herida;
+	this->vida =100;
+}
+
+void Jugador::restarVida(int herida) {
+	if (!modoPrueba){
+		this->vida -= herida;
+	}
 }
 
 void Jugador::cambiarTipoDeArma(weapon arma) {

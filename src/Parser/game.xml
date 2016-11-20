@@ -375,11 +375,10 @@
 	</bonus>
 
 	<bonus>
-		<type>02</type>
+		<type>03</type>
 		<posXAbs>350</posXAbs>
 		<posYAbs>520</posYAbs>	
 	</bonus>
-
 
 
 	<bonus>
@@ -389,7 +388,7 @@
 	</bonus>
 
 	<bonus>
-		<type>03</type>
+		<type>02</type>
 		<posXAbs>1900</posXAbs>
 		<posYAbs>520</posYAbs>	
 	</bonus>
