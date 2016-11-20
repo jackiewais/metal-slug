@@ -71,17 +71,19 @@ private:
 	void procesarTeclaPulsada(mensajeStruct msg);
 	void createTimerThread();
 	static void* manejarTimer (void *data);
+	void createActualizarThread();
+	static void* manejarActualizar (void *data);
+
 	int idJugadores = 0;
 	string convertirAString(int i);
 	Parser *parser;
 	string CSV_PATH = "usuarios.csv";
 	string XML_PATH;
-
 	list<string> tipoDeJuego;//modalidad equipo,individual,etc
 
 
 public:
-
+	void enviarActualizacion(list<mensajeStruct> mensajesRta);
 	Servidor();
 	virtual ~Servidor();
 	void runServer();

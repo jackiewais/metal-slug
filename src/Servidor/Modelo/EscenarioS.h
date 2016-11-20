@@ -58,6 +58,7 @@ public:
 	mensajeStruct getMensajeDesconexion(int jugadorId);
 	void resetEscenario();
 	void pasarDeNivel();
+	list<mensajeStruct> actualizar();
 	bool endOfLevel=false;
 	int nivel=1;
 	int cantNiveles=3;

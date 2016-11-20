@@ -146,6 +146,7 @@ void EscenarioS::moverBala(){
 	(*it)->movimientos +=1;
 	}
 
+
 	while(afuera){
 		afuera =false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
@@ -235,7 +236,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		//if (jugador->vida ==80 ) jugador->municiones=300;
 		//if (jugador->vida <80 ) jugador->municiones-=2;
 
+		/*if(!this->balas.empty()){
+						moverBala();
+						list<mensajeStruct> balasUpdate = getMensajeBala();
+						returnList.splice(returnList.end(), balasUpdate);
 
+		}*/
 		if (!this->avanceBloqueado) {
 			moverEscenario(&returnList);
 		}
@@ -255,12 +261,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			}
 			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
 		}
-		if(!this->balas.empty()){
-			moverBala();
-			list<mensajeStruct> balasUpdate = getMensajeBala();
-			returnList.splice(returnList.end(), balasUpdate);
 
-		}
 
 		//End of the level
 		if (this->avance > 2000 && !endOfLevel){
@@ -275,10 +276,30 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	return returnList;
 }
 
+list<mensajeStruct> EscenarioS::actualizar(){
+
+	list<mensajeStruct> returnList;
+ //cout << "cantidad de balas " << this->balas.size() << endl;
+	if(!this->balas.empty()){
+		cout << "cantidad de balas " << this->balas.size() << endl;
+				moverBala();
+				list<mensajeStruct> balasUpdate = getMensajeBala();
+				returnList.splice(returnList.end(), balasUpdate);
+
+			}
+SDL_Delay(3);
+return returnList;
+};
+
+
 void EscenarioS::aceptarCambios(){
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		jugador->second->aceptaCambios = true;
 	}
+
+
+
+
 }
 
 void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
@@ -524,6 +545,7 @@ void EscenarioS::resetEscenario(){
 		itOb->second={};
 	}
 	this->bonusInactivos.clear();
+	this->balas.clear();
 }
 
 void EscenarioS::pasarDeNivel(){
@@ -541,6 +563,7 @@ void EscenarioS::pasarDeNivel(){
 		itOb->second={};
 	}
 	this->bonusInactivos.clear();
+	this->balas.clear();
 }
 
 void EscenarioS::colisionar(list<mensajeStruct>* mainList) {

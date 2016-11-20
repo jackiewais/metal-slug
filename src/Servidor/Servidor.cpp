@@ -146,7 +146,7 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 			handshake(msg);
 			break;
 		case PULSA_TECLA:
-			if(msg.message == "0;NADA" && cantidadNada < 1){
+			if(msg.message == "0;NADA" && cantidadNada < 5){
 				cantidadNada += 1;
 
 			}else {
@@ -160,9 +160,10 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 	return 0;
 }
 
+
 void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 
-	Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
+   Usuario* usuario = this->contenedor->getUsuarioBySocket(msg.socketCli);
    list<mensajeStruct> mensajesRta;
 
    mensajesRta = this->escenario->moverJugador(usuario->getIdJugador(),msg.message);
@@ -179,6 +180,23 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 	  }
 
 	}
+}
+
+void Servidor::enviarActualizacion(list<mensajeStruct> mensajesRta){
+
+if(!mensajesRta.empty()){
+	for(auto const &user :  this->contenedor->socket_usuario) {
+		  if(user.second->isConectado()){
+			  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
+
+				for (mensajeStruct msgRta : mensajesRta) {
+					msgRta.socketCli = user.first;
+					colaCliente->push(msgRta);
+				 }
+		  }
+	}
+	}
+
 }
 
 
@@ -646,7 +664,7 @@ void Servidor::runServer(){
 			this->escenario->addEnemigoInactivo(*it);
 		}
 		this->escenario->addEnemigoFinalInactivo();
-
+		createActualizarThread();
 		ElegirModoDeJuego();
 		createExitThread();
 		createMainProcessorThread();
@@ -786,6 +804,7 @@ void Servidor::createMainProcessorThread(){
 	}
 }
 
+
 void Servidor::createTimerThread(){
 	int rc = pthread_create(&this->threadTimer, NULL,&Servidor::manejarTimer, this);
 	if (rc){
@@ -794,6 +813,25 @@ void Servidor::createTimerThread(){
 	}
 }
 
+void Servidor::createActualizarThread(){
+	int rc = pthread_create(&this->threadTimer, NULL,&Servidor::manejarActualizar, this);
+		if (rc){
+			printf("ERROR creando el thread del timer %i \n",rc);
+			Log::log('s',3,"Creando el thread del timer","");
+		}
+}
+
+void* Servidor::manejarActualizar(void * data){
+
+	Servidor* context = (Servidor*)data;
+
+	while (1){
+		context->enviarActualizacion(context->escenario->actualizar());
+	}
+
+	return 0;
+
+}
 void* Servidor::manejarTimer (void *data) {
 	Servidor* context = (Servidor*)data;
 
