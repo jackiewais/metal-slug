@@ -12,8 +12,7 @@ class Enemigo {
 public:
 	Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores);
 	virtual ~Enemigo();
-	void mover(int anchoEscenario, int vecesX, string accion);
-	void mover(int anchoEscenario);
+	virtual void mover(int anchoEscenario);
 	string getStringMensajeNew();
 	string getStringMensajeUpdate();
 	string getCodEnemigo();
@@ -30,7 +29,9 @@ public:
 	int velSalto;
 
 	estadoJugador estado;
-private:
+	string sprite;
+protected:
+	void mover(int anchoEscenario, int vecesX, string accion);
 	bool estaSaltando();
 	void manejarSalto();
 	void moverAPosicionInicial();

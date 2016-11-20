@@ -19,6 +19,7 @@ Enemigo::Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, 
 	this->mapJugadores = mapJugadores;
 	this->distanciaHastaLaQueSeAcercaAJugador = 10 + rand() % (801 - 10);
 	this->avanceEscenarioBloqueado = false;
+	this->sprite = "jugador4";
 
 	moverAPosicionInicial();
 }
@@ -119,7 +120,7 @@ string Enemigo::getStringMensajeNew() {
     stringstream x,y,estado;
     x << (this->posX);
     y << (this->posY);
-	return ("jugador4;" + x.str() + ";" + y.str());
+	return (this->sprite + ";" + x.str() + ";" + y.str());
 }
 
 string Enemigo::getCodEnemigo() {

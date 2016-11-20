@@ -7,6 +7,7 @@
 #include <list>
 #include "Jugador.h"
 #include "Enemigo.h"
+#include "EnemigoAirbusterRiberts.h"
 #include "../../Common/MensajeStruct.h"
 #include "../../Common/Mensajeria.h"
 #include "Bala.h"
@@ -36,6 +37,7 @@ public:
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	void addEnemigoInactivo(enemigoStruct enemigoStruct);
+	void addEnemigoFinalInactivo();
 	void matarEnemigo(list<mensajeStruct>* mainList, string id);
 	void matarEnemigos(list<mensajeStruct>* mainList);
 	void activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList);

@@ -630,6 +630,7 @@ void Servidor::runServer(){
 		for( it = enemigos.begin(); it != enemigos.end(); ++it) {
 			this->escenario->addEnemigoInactivo(*it);
 		}
+		this->escenario->addEnemigoFinalInactivo();
 
 		ElegirModoDeJuego();
 		createExitThread();

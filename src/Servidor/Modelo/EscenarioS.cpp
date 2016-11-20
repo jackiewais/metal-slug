@@ -54,6 +54,21 @@ void EscenarioS::addEnemigoInactivo(enemigoStruct enemigoStruct) {
 	this->enemigosInactivos.insert(pair<int, Enemigo*>(enemigoStruct.posXAbsolutaDeJugadorParaAparicion,enemigo));
 }
 
+void EscenarioS::addEnemigoFinalInactivo() {
+	int id = this->enemigosInactivos.size() + 1;
+	/*int velocidad = enemigoStruct.velocidad;
+	int ancho = enemigoStruct.ancho;
+	int alto = enemigoStruct.alto;*/
+	Enemigo *enemigo = new EnemigoAirbusterRiberts(id,5,362,222,this->alto,&this->mapJugadores);
+	/*if (enemigoStruct.bloquearAvanceEscenario != 0) {
+		enemigo->bloquearAvanceEscenario();
+	}
+	if (enemigoStruct.aparecePorIzq != 0) {
+		enemigo->aparecerPorIzquierda();
+	}*/
+	this->enemigosInactivos.insert(pair<int, Enemigo*>(500,enemigo));
+}
+
 void EscenarioS::activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList) {
 	Enemigo *enemigo = NULL;
 	std::multimap<int,Enemigo*>::iterator it, itLow, itUp;
