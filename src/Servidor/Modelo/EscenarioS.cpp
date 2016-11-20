@@ -97,20 +97,37 @@ void EscenarioS::moverBonuses(list<mensajeStruct>* mainList) {
 				mainList->push_back(getMensajeBonusNew(it->second,id));
 			}
 		}
-		 this->bonusInactivos.erase(id);
+		if (encontro)
+			this->bonusInactivos.erase(id);
 	}
 
-	for (map<int, bonus>::iterator  it = this->bonusEnPantalla.begin(); it != this->bonusEnPantalla.end(); it++) {
-		it->second.posX=it->second.posXAbs - this->avance;
-		if (it->second.posX + 70 < 0){
-			//Fuera de la pantalla
-			mainList->push_back(getMensajeBonusDel(it->second,it->first));
-		}else{
-			mainList->push_back(getMensajeBonusUpd(it->second,it->first));
+	encontro = true;
+	while (encontro){
+		encontro = false;
+		int id;
+		for (map<int, bonus>::iterator  it = this->bonusEnPantalla.begin(); it != this->bonusEnPantalla.end(); it++) {
+			it->second.posX=it->second.posXAbs - this->avance;
+			if (it->second.posX + 70 < 0){
+				//Fuera de la pantalla
+				encontro = true;
+				id = it->first;
+				break;
+			}else{
+				mainList->push_back(getMensajeBonusUpd(it->second,it->first));
+			}
+		}
+		if (encontro){
+			this->eliminarBonus(mainList,id);
 		}
 	}
-
 }
+
+void EscenarioS::eliminarBonus(list<mensajeStruct>* mainList, int idBonus){
+	mainList->push_back(getMensajeBonusDel(idBonus));
+	this->bonusEnPantalla.erase(idBonus);
+}
+
+
 void splitE(const string &s, char delim, vector<string> &elems) {
     stringstream ss;
     ss.str(s);
@@ -214,23 +231,6 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		//jugador->puntaje += 1;
 		//jugador->vida -= 1;
 
-		//Siempre false para poder probar
-		if(jugador->vida == 0){
-			if (!jugador->gameOver){
-				jugador->gameOver=true;
-				bool gameOverAll = true;
-				for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
-					if (!jugador->second->gameOver) gameOverAll = false;
-				}
-
-				mensajeStruct msjReset;
-				msjReset.tipo = gameOverAll?GAME_OVER_ALL:GAME_OVER_PLAYER;
-				msjReset.objectId = jugador->getCodJugador();
-				msjReset.message = "GAME OVER";
-				returnList.push_back(msjReset);
-			}
-		}
-
 		//if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
 		//if (jugador->vida >80 ) jugador->municiones=-1;
 		//if (jugador->vida ==80 ) jugador->municiones=300;
@@ -263,14 +263,32 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 
 
+		//evaluar colisiones despues del movimiento
+		colisionar(&returnList);
+
+		//Siempre false para poder probar
+		if(jugador->vida <= 0){
+			if (!jugador->gameOver){
+				jugador->gameOver=true;
+				bool gameOverAll = true;
+				for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+					if (!jugador->second->gameOver) gameOverAll = false;
+				}
+
+				mensajeStruct msjReset;
+				msjReset.tipo = gameOverAll?GAME_OVER_ALL:GAME_OVER_PLAYER;
+				msjReset.objectId = jugador->getCodJugador();
+				msjReset.message = "GAME OVER";
+				returnList.push_back(msjReset);
+			}
+		}
+
 		//End of the level
 		if (this->avance > 2000 && !endOfLevel){
 			returnList.push_back(getMensajeEndOfLevel());
 			endOfLevel=true;
 		}
 
-		//evaluar colisiones despues del movimiento
-		colisionar(&returnList);
 
 	}
 	return returnList;
@@ -417,7 +435,7 @@ mensajeStruct EscenarioS::getMensajeBonusUpd(bonus bonus, int idBonus){
 	msjBonus.message = convertirAString(bonus.posX)+";"+convertirAString(bonus.posY)+";"+convertirAString(bonus.type);
 	return msjBonus;
 }
-mensajeStruct EscenarioS::getMensajeBonusDel(bonus bonus, int idBonus){
+mensajeStruct EscenarioS::getMensajeBonusDel(int idBonus){
 	mensajeStruct msjBonus;
 	msjBonus.tipo = BONUS_DEL;
 	msjBonus.objectId = convertirAString(idBonus);
@@ -607,25 +625,60 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 						jugador->restarVida(1);
 					}
 				}
+				findBonus(mainList, jugador);
 			}
 		}
 	}
 
 	if (bala == NULL) {
-		for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
-			enemigo = itEnemigos->second;
-
-			for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); ++itJugador){
-				jugador = itJugador->second;
-				if (jugador->conectado()) {
-
+		for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); ++itJugador){
+			jugador = itJugador->second;
+			if (jugador->conectado()) {
+				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
+					enemigo = itEnemigos->second;
 					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
 						cout<<"cuchillazo del enemigo"<<endl;
 						jugador->restarVida(1);
 					}
 				}
+				findBonus(mainList, jugador);
 			}
 		}
+	}
+}
+
+void EscenarioS::findBonus(list<mensajeStruct>* mainList, Jugador *jugador) {
+	int id = 0;
+	for (map<int, bonus>::iterator itBonus=bonusEnPantalla.begin(); itBonus!=bonusEnPantalla.end(); itBonus++) {
+		if (Colision::colisionSoldadoConBonus(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,itBonus->second.posX, itBonus->second.posY,30,30)) {
+			weapon armaBonus;
+			switch (itBonus->second.type) {
+				case MACHINEG:
+					cout<<"BONUS: Tipo De Arma: MACHINEGUN"<<endl;
+					armaBonus = MACHINEGUN;
+					jugador->cambiarTipoDeArma(armaBonus);
+				break;
+				case SHOTG:
+					cout<<"BONUS: Tipo De Arma: SHOOTGUN"<<endl;
+					armaBonus = SHOOTGUN;
+					jugador->cambiarTipoDeArma(armaBonus);
+				break;
+				case POWER:
+					cout<<"BONUS: Restablece Vida"<<endl;
+					jugador->reiniciarVida();
+				break;
+				case KILL_ALL:
+					cout<<"BONUS: Matar A Todos Los Enemigos"<<endl;
+					matarEnemigos(mainList);
+				break;
+			}
+			id = itBonus->first;
+			break;//salgo del for porq no hay mas de un bonus en la misma posicion(en un mismo movimiento del jugador)
+		}
+	}
+
+	if (id != 0){
+		eliminarBonus(mainList,id);
 	}
 }
 

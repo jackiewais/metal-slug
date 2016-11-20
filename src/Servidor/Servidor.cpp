@@ -119,8 +119,7 @@ void Servidor::setEquipo(Jugador* jugador){
 	jugador->equipo = this->tipoDeJuego.back();
 	this->tipoDeJuego.pop_back();
 	if(modoDePrueba){
-		jugador->vida = 1000000;
-
+		jugador->modoPrueba = true;
 	}
 	cout << "El jugador " << jugador->getId() << "es del equipo " << jugador->equipo << endl;
 
@@ -303,7 +302,9 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.message="termino el handshake";
 	colaCliente->push(msg);
 
-	this->escenario->bonusInactivos = this->parser->getBonuses();
+	if (this->escenario->bonusInactivos.size() == 0){
+		this->escenario->bonusInactivos = this->parser->getBonuses();
+	}
 
 	createTimerThread();
 }

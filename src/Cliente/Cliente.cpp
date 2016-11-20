@@ -222,7 +222,6 @@ void *Cliente::recvMessage(void * arg){
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
-
 		switch (mensajeRta.tipo){
 			/*case RECIBIR_CHAT_SIGUE:
 			   //si ya existia concateno el mensaje
@@ -356,7 +355,8 @@ void Cliente::updateBonus(mensajeStruct msg){
 	int id = atoi(msg.objectId.c_str());
 	int posX = atoi(result[0].c_str());
 	int posY = atoi(result[1].c_str());
-	this->escenario.updateBonus(id,posX,posY);
+	bonusTypes type = static_cast<bonusTypes>(atoi(result[2].c_str()));
+	this->escenario.updateBonus(id,posX,posY,type);
 }
 
 void Cliente::processEndOfLevel(mensajeStruct msg){

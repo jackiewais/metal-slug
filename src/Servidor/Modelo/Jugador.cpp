@@ -16,6 +16,7 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, i
 	this->piso = altoEscenario - 150;
 	this->topeSalto = piso-100;
 	this->plataforma = topeSalto + 40;
+	this->arma = SHOOTGUN;
 
 	moverAPosicionInicial();
 
@@ -123,12 +124,21 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 
 			balasDisparadas.push_front(bala5);
 
+			this->municiones -=1;
+			if (this->municiones <= 0){
+				this->cambiarTipoDeArma(GUN);
+			}
 		break;
 		case SHOOTGUN:
 			bala->tipoDeBala = SHOOTGUN;
 			bala->x = this->posX+3;
 			bala->y = this->getPosY()+20;
 			balasDisparadas.push_front(bala);
+
+			this->municiones -=1;
+			if (this->municiones <= 0){
+				this->cambiarTipoDeArma(GUN);
+			}
 		break;
 
 	}
@@ -434,7 +444,30 @@ void Jugador::sumarPuntos() {
 	}
 }
 
-void Jugador::restarVida(int herida) {
+void Jugador::reiniciarVida() {
 
-	this->vida -= herida;
+	this->vida =100;
+}
+
+void Jugador::restarVida(int herida) {
+	if (!modoPrueba){
+		this->vida -= herida;
+	}
+}
+
+void Jugador::cambiarTipoDeArma(weapon arma) {
+	this->arma = arma;
+	switch (this->arma){
+		case GUN:
+			this->municiones = -1;
+		break;
+		case MACHINEGUN:
+			this->municiones = 200;
+		break;
+		case SHOOTGUN:
+			this->municiones = 30;
+		break;
+
+	}
+
 }

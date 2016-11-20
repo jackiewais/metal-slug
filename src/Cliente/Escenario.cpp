@@ -123,7 +123,7 @@ Progreso* Escenario::crearProgreso(std::string idSprite, int ancho, int alto  ) 
 Contador* Escenario::crearContador(string id, int puntaje, int vida, int municiones){
 	string idCopy = id;
 	idCopy.erase(0,1);
-	int x = 10 + (atoi(idCopy.c_str())-1) * 220;
+	int x = 5 + (atoi(idCopy.c_str())-1) * 200;
 	Contador* contador = new Contador(id,x,10,this->numero,this->progreso,this->lbalas,puntaje,vida,municiones);
 	this->contadores[id]= contador;
 	return contador;
@@ -297,8 +297,12 @@ void Escenario::crearBonus(int id, int x, int y, bonusTypes bonus) {
 	this->bonuses[id] = new Bonus();
 	this->bonuses[id]->init(grafBonus,bonus,x,y);
 }
-void Escenario::updateBonus(int id, int x, int y) {
-	this->bonuses[id]->setPosicion(x,y);
+void Escenario::updateBonus(int id, int x, int y, bonusTypes bonus) {
+	if ( this->bonuses.find(id) == this->bonuses.end()){
+		this->crearBonus(id,x,y,bonus);
+	}else{
+		this->bonuses[id]->setPosicion(x,y);
+	}
 }
 
 void Escenario::deleteBonus(int id) {

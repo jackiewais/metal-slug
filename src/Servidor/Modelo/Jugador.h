@@ -18,7 +18,7 @@ private:
 	int piso;
 	int topeSalto;
 	int plataforma;
-	weapon arma = MACHINEGUN;
+	weapon arma;// = MACHINEGUN;
 
 	estadoJugador getEstadoParado();
 	estadoJugador getEstadoSaltarIzquierda();
@@ -41,7 +41,7 @@ public:
 	int vida;
 	int municiones;
 	bool gameOver = false;
-
+	bool modoPrueba = false;
 	estadoJugador estado;
 	string equipo = "1";
 
@@ -68,7 +68,9 @@ public:
 	void setEquipo(string equipo);
 	//estadoJugador resolverEstado(string accion, int vecesX);
 	void sumarPuntos();
+	void reiniciarVida();
 	void restarVida(int herida);
+	void cambiarTipoDeArma(weapon arma);
 };
 
 #endif /* SRC_SERVIDOR_JUGADOR_H_ */
