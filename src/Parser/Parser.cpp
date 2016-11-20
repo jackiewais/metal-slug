@@ -44,6 +44,8 @@ bool Parser::parsearArchivoXML(const std::string& nameFileXML)
 	setAnchoEscenario(&doc);
 	setAltoEscenario(&doc);
 	getxmlEnemigos(&doc);
+	getxmlBasicSprites(&doc);
+	getxmlBonuses(&doc);
 	return true;
 }
 void Parser::getxmlSprites(const pugi::xml_document* doc)
@@ -272,6 +274,43 @@ void Parser::getxmlEnemigos(const pugi::xml_document* doc)
 	   enemigo.bloquearAvanceEscenario = atoi(bloquearAvanceEscenario.c_str());
 	   enemigo.aparecePorIzq = atoi(aparecePorIzq.c_str());
 	   listaEnemigos.push_back(enemigo);
+	}
+}
+void Parser::getxmlBasicSprites(const pugi::xml_document* doc)
+{
+
+	pugi::xml_node spritesNode = doc->child("basicSprites");
+		for (pugi::xml_node i = spritesNode.first_child(); i; i = i.next_sibling())
+		{
+		   mensajeStruct spriteMsj;
+		   std::string objectId = i.child("id").first_child().value();
+		   std::string sprite = i.child("sprite").first_child().value();
+		   std::string ancho = i.child("ancho").first_child().value();
+		   std::string alto = i.child("alto").first_child().value();
+		   std::string frames = i.child("frames").first_child().value();
+
+		   spriteMsj.tipo = HANDSHAKE_GRAFIC_BASIC;
+		   spriteMsj.objectId = objectId;
+		   spriteMsj.message = sprite+";"+ancho+";"+alto+";"+frames;
+		   spriteMsj.socketCli = cliente;
+		   listaSprites.push_back(spriteMsj);
+		}
+}
+
+
+void Parser::getxmlBonuses(const pugi::xml_document* doc)
+{
+	pugi::xml_node bonusesNode = doc->child("bonuses");
+	int id = 0;
+	for (pugi::xml_node i = bonusesNode.first_child(); i; i = i.next_sibling())
+	{
+		id++;
+		bonus bonus;
+		bonus.type = static_cast<bonusTypes>(atoi(i.child("type").first_child().value()));
+		bonus.posXAbs =  atoi(i.child("posXAbs").first_child().value());
+		bonus.posX =  bonus.posXAbs;
+		bonus.posY =  atoi(i.child("posYAbs").first_child().value());
+		bonuses[id]=bonus;
 	}
 }
 

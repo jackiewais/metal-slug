@@ -7,10 +7,10 @@
 class GraficableBasic
 {
 	public:
-	void initTexture(SDL_Renderer* gRend, std::string spritePath, int anchoTot, int altoTot);
-	void render(int posX, int posY);
+	void initTexture(std::string spritePath, int anchoTot, int altoTot, int id=1);
+	void render(int posX, int posY, int id=1);
 
-	bool loadMedia();
+	bool loadMedia(SDL_Renderer* gRend);
 
 	void close();
 	~GraficableBasic();
@@ -21,8 +21,8 @@ class GraficableBasic
 
 	int anchoTot;
 	int altoTot;
-	SDL_Rect currentClip;
-
+	int cantFrames;
+	SDL_Rect* gSpriteClips;
 
 };
 

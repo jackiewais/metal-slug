@@ -47,6 +47,7 @@ private:
 	void terminarThreadRecv();
 	void setDimensionesVentana(mensajeStruct msg);
 	void addSprite(mensajeStruct msg);
+	void addGraficableBasic(mensajeStruct msg);
 	void updateJugador(mensajeStruct msg);
 	Escenario escenario;
 
@@ -55,6 +56,8 @@ private:
 	string jugadorPrincipalId;
 	void createNro(mensajeStruct msg);
 	void processEndOfLevel(mensajeStruct msg);
+	void processNewBonus(mensajeStruct msg);
+	void updateBonus(mensajeStruct msg);
 
 public:
 	aimDirection dirDisparo= RIGHT;

@@ -67,7 +67,35 @@ void EscenarioS::activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* m
 		mainList->push_back(getMensajeEnemigoNuevo(enemigo));
 	}
 }
+void EscenarioS::moverBonuses(list<mensajeStruct>* mainList) {
+	bool encontro = true;
 
+	while (encontro){
+		encontro = false;
+		int id;
+		for (map<int, bonus>::iterator  it = this->bonusInactivos.begin(); it != this->bonusInactivos.end(); it++) {
+			if (it->second.posXAbs >= this->avance && it->second.posXAbs <= this->avance + this->ancho){
+				encontro = true;
+				id = it->first;
+				it->second.posX=it->second.posXAbs - this->avance;
+				this->bonusEnPantalla[id] = it->second;
+				mainList->push_back(getMensajeBonusNew(it->second,id));
+			}
+		}
+		 this->bonusInactivos.erase(id);
+	}
+
+	for (map<int, bonus>::iterator  it = this->bonusEnPantalla.begin(); it != this->bonusEnPantalla.end(); it++) {
+		it->second.posX=it->second.posXAbs - this->avance;
+		if (it->second.posX + 70 < 0){
+			//Fuera de la pantalla
+			mainList->push_back(getMensajeBonusDel(it->second,it->first));
+		}else{
+			mainList->push_back(getMensajeBonusUpd(it->second,it->first));
+		}
+	}
+
+}
 void splitE(const string &s, char delim, vector<string> &elems) {
     stringstream ss;
     ss.str(s);
@@ -148,12 +176,21 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		returnList.push_back(msjReset);
 		this->resetEscenario();
 	}else if(estado=="NEXT_LEVEL"){
-		mensajeStruct msjReset;
-		msjReset.tipo = NEXT_LEVEL;
-		msjReset.objectId = "X0";
-		msjReset.message = "NEXT_LEVEL";
-		returnList.push_back(msjReset);
-		this->pasarDeNivel();
+		if (this->nivel == this->cantNiveles){
+			mensajeStruct msjReset;
+			msjReset.tipo = RESET;
+			msjReset.objectId = "X0";
+			msjReset.message = "RESET";
+			returnList.push_back(msjReset);
+			this->resetEscenario();
+		}else{
+			mensajeStruct msjReset;
+			msjReset.tipo = NEXT_LEVEL;
+			msjReset.objectId = "X0";
+			msjReset.message = "NEXT_LEVEL";
+			returnList.push_back(msjReset);
+			this->pasarDeNivel();
+		}
 	}else{
 		jugador->mover(this->ancho,vecesX, estado);
 
@@ -185,6 +222,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 
 		activarEnemigos(this->avance + jugador->getPosX(), &returnList);
+		moverBonuses(&returnList);
 
 		this->avanceBloqueado = false;
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
@@ -203,7 +241,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 
 		//End of the level
-		if (this->avance > 200000 && !endOfLevel){
+		if (this->avance > 2000 && !endOfLevel){
 			returnList.push_back(getMensajeEndOfLevel());
 			endOfLevel=true;
 		}
@@ -316,6 +354,33 @@ mensajeStruct EscenarioS::getMensajeEnemigoNuevo(Enemigo *enemigo){
 	return msjEnemigo;
 }
 
+string convertirAString(int nro){
+	stringstream nroS;
+	nroS<<nro;
+	return nroS.str();
+}
+
+mensajeStruct EscenarioS::getMensajeBonusNew(bonus bonus, int idBonus){
+	mensajeStruct msjBonus;
+	msjBonus.tipo = BONUS_NEW;
+	msjBonus.objectId = convertirAString(idBonus);
+	msjBonus.message = convertirAString(bonus.posX)+";"+convertirAString(bonus.posY)+";"+convertirAString(bonus.type);
+	return msjBonus;
+}
+mensajeStruct EscenarioS::getMensajeBonusUpd(bonus bonus, int idBonus){
+	mensajeStruct msjBonus;
+	msjBonus.tipo = BONUS_UPD;
+	msjBonus.objectId = convertirAString(idBonus);
+	msjBonus.message = convertirAString(bonus.posX)+";"+convertirAString(bonus.posY)+";"+convertirAString(bonus.type);
+	return msjBonus;
+}
+mensajeStruct EscenarioS::getMensajeBonusDel(bonus bonus, int idBonus){
+	mensajeStruct msjBonus;
+	msjBonus.tipo = BONUS_DEL;
+	msjBonus.objectId = convertirAString(idBonus);
+	msjBonus.message = "DELETE BONUS";
+	return msjBonus;
+}
 mensajeStruct EscenarioS::getMensajeEnemigoMuerto(Enemigo *enemigo){
 	mensajeStruct msjEnemigo;
 
@@ -417,28 +482,43 @@ mensajeStruct EscenarioS::getMensajeEndOfLevel(){
 
 	mensajeStruct msjEOL;
 	msjEOL.tipo = END_OF_LEVEL;
+	msjEOL.objectId=(this->nivel == this->cantNiveles)?"GAME":"LEVEL";
 	msjEOL.message = mensaje;
 	return msjEOL;
 }
 
 void EscenarioS::resetEscenario(){
 	this->avance = 0;
+	this->nivel=1;
 	this->endOfLevel=false;
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		jugador->second->reiniciar();
 	}
+	for (map<int, bonus>::iterator  itOb = this->bonusEnPantalla.begin(); itOb != this->bonusEnPantalla.end(); itOb++) {
+		itOb->second={};
+	}
+	this->bonusEnPantalla.clear();
+	for (map<int, bonus>::iterator  itOb = this->bonusInactivos.begin(); itOb != this->bonusInactivos.end(); itOb++) {
+		itOb->second={};
+	}
+	this->bonusInactivos.clear();
 }
 
 void EscenarioS::pasarDeNivel(){
 	this->nivel++;
-	if (this->nivel > this->cantNiveles){
-		this->nivel=1;
-	}
 	this->avance = 0;
 	this->endOfLevel=false;
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		jugador->second->moverAPosicionInicial();
 	}
+	for (map<int, bonus>::iterator  itOb = this->bonusEnPantalla.begin(); itOb != this->bonusEnPantalla.end(); itOb++) {
+		itOb->second={};
+	}
+	this->bonusEnPantalla.clear();
+	for (map<int, bonus>::iterator  itOb = this->bonusInactivos.begin(); itOb != this->bonusInactivos.end(); itOb++) {
+		itOb->second={};
+	}
+	this->bonusInactivos.clear();
 }
 
 void EscenarioS::colisionar(list<mensajeStruct>* mainList) {

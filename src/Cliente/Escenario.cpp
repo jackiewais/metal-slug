@@ -16,8 +16,6 @@ Escenario::Escenario() {
 	lbalas = new Label();
 	lGameOver = new Label();
 	gameOver=false;
-	iGameOver=new GraficableBasic();
-	iFondoNegro=new GraficableBasic();
 }
 
 void Escenario::cargarMensajeEsperandoJugador(){
@@ -102,6 +100,14 @@ LTexture* Escenario::addSprite(std::string idSprite, int ancho, int alto) {
 	return textura;
 }
 
+void Escenario::addGraficableBasic(string id, string sprite, int ancho, int alto, int frames) {
+
+	GraficableBasic* graficable = new GraficableBasic();
+	graficable->initTexture(sprite,ancho,alto,frames);
+	this->graficablesBasic[id] = graficable;
+
+}
+
 Numero* Escenario::crearNumero(std::string idSprite, int ancho, int alto  ) {
 
 	this->numero->initTexture("images/" + idSprite + ".png", ancho,alto);
@@ -156,6 +162,11 @@ bool Escenario::loadMedia()
 		}
 	}
 
+	for (map<string, GraficableBasic*>::iterator it = this->graficablesBasic.begin(); it != this->graficablesBasic.end(); it++) {
+			it->second->loadMedia(this->gRenderer);
+	}
+
+
 	this->numero->loadMedia(this->gRenderer);
 	this->progreso->loadMedia(this->gRenderer);
 
@@ -163,8 +174,10 @@ bool Escenario::loadMedia()
 
 	this->lbalas->setData(this->gRenderer,"ARMS",36);
 	this->lGameOver->setData(this->gRenderer,"GAME OVER",72);
-	this->iGameOver->initTexture(this->gRenderer,"game_over",800,600);
-	this->iFondoNegro->initTexture(this->gRenderer,"fondonegro",800,600);
+	/*this->iGameOver->initTexture("game_over",800,600);
+	this->iGameOver->loadMedia(this->gRenderer);
+	this->iFondoNegro->initTexture("fondonegro",800,600);
+	this->iFondoNegro->loadMedia(this->gRenderer);*/
 	return true;
 }
 void Escenario::moverFondo(mensajeStruct msg){
@@ -234,6 +247,16 @@ void Escenario::close()
 	 }
 	 this->eoLevelLabels.clear();
 
+	for (map<std::string, GraficableBasic*>::iterator  itOb = this->graficablesBasic.begin(); itOb != this->graficablesBasic.end(); itOb++) {
+		delete itOb->second;
+	}
+	this->graficablesBasic.clear();
+	for (map<int, Bonus*>::iterator  itOb = this->bonuses.begin(); itOb != this->bonuses.end(); itOb++) {
+		delete itOb->second;
+	}
+	this->bonuses.clear();
+
+
 	//Destroy window
 	SDL_DestroyRenderer( gRenderer );
 
@@ -244,8 +267,6 @@ void Escenario::close()
 	progreso->close();
 	lbalas->close();
 	lGameOver->close();
-	iGameOver->close();
-	iFondoNegro->close();
 
 	//Quit SDL subsystems
 	IMG_Quit();
@@ -271,6 +292,22 @@ void Escenario::crearObjeto(std::string idObj, std::string idSprite, int x, int 
 	}
 }
 
+void Escenario::crearBonus(int id, int x, int y, bonusTypes bonus) {
+	GraficableBasic* grafBonus = this->graficablesBasic["bonus"];
+	this->bonuses[id] = new Bonus();
+	this->bonuses[id]->init(grafBonus,bonus,x,y);
+}
+void Escenario::updateBonus(int id, int x, int y) {
+	this->bonuses[id]->setPosicion(x,y);
+}
+
+void Escenario::deleteBonus(int id) {
+	if ( this->bonuses.find(id) != this->bonuses.end() ) {
+		delete this->bonuses[id];
+		this->bonuses.erase(id);
+	}
+}
+
 void Escenario::actualizarEnemigo(std::string idObj, int x, int y) {
 	// Si el objeto esta en el map
 	if ( this->mapObjetosGraficables.find(idObj) != this->mapObjetosGraficables.end() ) {
@@ -286,9 +323,9 @@ void Escenario::renderizarObjetos() {
 	SDL_RenderClear( this->gRenderer );
 
 	if (this->gameOverAll){
-		iGameOver->render(0,0);
+		this->graficablesBasic["game_over"]->render(0,0);
 	}else if (this->endOfLevel) {
-		iFondoNegro->render(0,0);
+		this->graficablesBasic["fondo_negro"]->render(0,0);
 		 for (list<Label*>::iterator it=eoLevelLabels.begin(); it != eoLevelLabels.end(); ++it){
 		    (*it)->renderDefault();
 		 }
@@ -304,7 +341,15 @@ void Escenario::renderizarObjetos() {
 				}
 			}
 		}
+
 		this->jugadorPrincipal->render();
+
+		//Render Bonuses
+		for (map<int, Bonus*>::iterator it = this->bonuses.begin(); it != this->bonuses.end(); it++) {
+			it->second->render();
+		}
+
+
 		if(!(this->balas.balas.empty())){
 		this->balas.render();
 		this->balas.balas.clear();

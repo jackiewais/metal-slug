@@ -209,6 +209,12 @@ void Servidor::handshake(mensajeStruct msg){
     	colaCliente->push(*i3);
     }
 
+    //MANDAR BASIC SPRITES
+	std::vector<mensajeStruct> vBasicSprites = parser->getBasicSprites();
+	for( vector<mensajeStruct>::iterator it = vBasicSprites.begin(); it != vBasicSprites.end(); ++it) {
+		colaCliente->push(*it);
+	}
+
     //ESTO TIENE QUE IR PRIMERO PORQUE CARGA TODAS LAS COSAS DEL CONTADOR
 	 msg.tipo = HANDSHAKE_SPRITE_NRO;
 	 msg.objectId="numbers";
@@ -271,6 +277,8 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.objectId="X0";
 	msg.message="termino el handshake";
 	colaCliente->push(msg);
+
+	this->escenario->bonusInactivos = this->parser->getBonuses();
 
 	createTimerThread();
 }
