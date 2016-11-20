@@ -525,6 +525,14 @@ void EscenarioS::resetEscenario(){
 		itOb->second={};
 	}
 	this->bonusInactivos.clear();
+	for (multimap<int, Enemigo*>::iterator  itOb = this->enemigosInactivos.begin(); itOb != this->enemigosInactivos.end(); itOb++) {
+		delete itOb->second;
+	}
+	this->enemigosInactivos.clear();
+	for (multimap<string, Enemigo*>::iterator  itOb = this->enemigosVivos.begin(); itOb != this->enemigosVivos.end(); itOb++) {
+		delete itOb->second;
+	}
+	this->enemigosVivos.clear();
 }
 
 void EscenarioS::pasarDeNivel(){
