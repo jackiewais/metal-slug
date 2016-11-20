@@ -285,7 +285,9 @@ void Servidor::handshake(mensajeStruct msg){
 	msg.message="termino el handshake";
 	colaCliente->push(msg);
 
-	this->escenario->bonusInactivos = this->parser->getBonuses();
+	if (this->escenario->bonusInactivos.size() == 0){
+		this->escenario->bonusInactivos = this->parser->getBonuses();
+	}
 
 	createTimerThread();
 }

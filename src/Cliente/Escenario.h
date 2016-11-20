@@ -60,7 +60,7 @@ public:
 	bool isGameOver();
 
 	void crearBonus(int id, int x, int y, bonusTypes bonus);
-	void updateBonus(int id, int x, int y);
+	void updateBonus(int id, int x, int y, bonusTypes bonus);
 	void deleteBonus(int id);
 
 	bool gameOver=false;

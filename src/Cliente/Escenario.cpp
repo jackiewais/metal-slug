@@ -297,8 +297,12 @@ void Escenario::crearBonus(int id, int x, int y, bonusTypes bonus) {
 	this->bonuses[id] = new Bonus();
 	this->bonuses[id]->init(grafBonus,bonus,x,y);
 }
-void Escenario::updateBonus(int id, int x, int y) {
-	this->bonuses[id]->setPosicion(x,y);
+void Escenario::updateBonus(int id, int x, int y, bonusTypes bonus) {
+	if ( this->bonuses.find(id) == this->bonuses.end()){
+		this->crearBonus(id,x,y,bonus);
+	}else{
+		this->bonuses[id]->setPosicion(x,y);
+	}
 }
 
 void Escenario::deleteBonus(int id) {

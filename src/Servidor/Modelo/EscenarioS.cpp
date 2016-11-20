@@ -213,23 +213,6 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		//jugador->puntaje += 1;
 		//jugador->vida -= 1;
 
-		//Siempre false para poder probar
-		if(jugador->vida == 0){
-			if (!jugador->gameOver){
-				jugador->gameOver=true;
-				bool gameOverAll = true;
-				for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
-					if (!jugador->second->gameOver) gameOverAll = false;
-				}
-
-				mensajeStruct msjReset;
-				msjReset.tipo = gameOverAll?GAME_OVER_ALL:GAME_OVER_PLAYER;
-				msjReset.objectId = jugador->getCodJugador();
-				msjReset.message = "GAME OVER";
-				returnList.push_back(msjReset);
-			}
-		}
-
 		//if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
 		//if (jugador->vida >80 ) jugador->municiones=-1;
 		//if (jugador->vida ==80 ) jugador->municiones=300;
@@ -262,14 +245,32 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 		}
 
+		//evaluar colisiones despues del movimiento
+		colisionar(&returnList);
+
+		//Siempre false para poder probar
+		if(jugador->vida <= 0){
+			if (!jugador->gameOver){
+				jugador->gameOver=true;
+				bool gameOverAll = true;
+				for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+					if (!jugador->second->gameOver) gameOverAll = false;
+				}
+
+				mensajeStruct msjReset;
+				msjReset.tipo = gameOverAll?GAME_OVER_ALL:GAME_OVER_PLAYER;
+				msjReset.objectId = jugador->getCodJugador();
+				msjReset.message = "GAME OVER";
+				returnList.push_back(msjReset);
+			}
+		}
+
 		//End of the level
 		if (this->avance > 2000 && !endOfLevel){
 			returnList.push_back(getMensajeEndOfLevel());
 			endOfLevel=true;
 		}
 
-		//evaluar colisiones despues del movimiento
-		colisionar(&returnList);
 
 	}
 	return returnList;
