@@ -53,6 +53,11 @@ public:
 		return colisionRectanguloConRectangulo(puntoXs1, puntoYs1, ancho1, alto1, puntoXs2, puntoYs2, ancho2, alto2);
 	}
 
+	static bool colisionSoldadoConBonus(int puntoXs1, int puntoYs1, int ancho1, int alto1, int puntoXbo2, int puntoYbo2, int ancho2, int alto2) {
+
+		return colisionRectanguloConRectangulo(puntoXs1, puntoYs1, ancho1, alto1, puntoXbo2, puntoYbo2, ancho2, alto2);
+	}
+
 
 private:
 

@@ -21,6 +21,7 @@ private:
 	map<string, Enemigo*> enemigosVivos;
 	bool avanceBloqueado;
 	void colisionar(list<mensajeStruct>* mainList);
+	void findBonus(list<mensajeStruct>* mainList, Jugador *jugador);
 
 public:
 	int ancho;

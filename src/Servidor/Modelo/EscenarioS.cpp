@@ -585,24 +585,56 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 						jugador->restarVida(1);
 					}
 				}
+				findBonus(mainList, jugador);
 			}
 		}
 	}
 
 	if (bala == NULL) {
-		for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
-			enemigo = itEnemigos->second;
-
-			for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); ++itJugador){
-				jugador = itJugador->second;
-				if (jugador->conectado()) {
-
+		for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); ++itJugador){
+			jugador = itJugador->second;
+			if (jugador->conectado()) {
+				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
+					enemigo = itEnemigos->second;
 					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
 						cout<<"cuchillazo del enemigo"<<endl;
 						jugador->restarVida(1);
 					}
 				}
+				findBonus(mainList, jugador);
 			}
+		}
+	}
+}
+
+void EscenarioS::findBonus(list<mensajeStruct>* mainList, Jugador *jugador) {
+
+	for (map<int, bonus>::iterator itBonus=bonusEnPantalla.begin(); itBonus!=bonusEnPantalla.end(); itBonus++) {
+		if (Colision::colisionSoldadoConBonus(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,itBonus->second.posX, itBonus->second.posY,30,30)) {
+			weapon armaBonus;
+			switch (itBonus->second.type) {
+				case MACHINEG:
+					cout<<"BONUS: Tipo De Arma: MACHINEGUN"<<endl;
+					armaBonus = MACHINEGUN;
+					jugador->cambiarTipoDeArma(armaBonus);
+				break;
+				case SHOTG:
+					cout<<"BONUS: Tipo De Arma: SHOOTGUN"<<endl;
+					armaBonus = SHOOTGUN;
+					jugador->cambiarTipoDeArma(armaBonus);
+				break;
+				case POWER:
+					cout<<"BONUS: Tipo De Arma: GUN"<<endl;
+					armaBonus = GUN;
+					jugador->cambiarTipoDeArma(armaBonus);
+				break;
+				case KILL_ALL:
+					cout<<"BONUS: Matar A Todos Los Enemigos"<<endl;
+					matarEnemigos(mainList);
+				break;
+			}
+			//eliminar bonus
+			break;//salgo del for porq no hay mas de un bonus en la misma posicion(en un mismo movimiento del jugador)
 		}
 	}
 }

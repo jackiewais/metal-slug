@@ -16,6 +16,7 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, i
 	this->piso = altoEscenario - 150;
 	this->topeSalto = piso-100;
 	this->plataforma = topeSalto + 40;
+	this->arma = SHOOTGUN;
 
 	moverAPosicionInicial();
 
@@ -437,4 +438,8 @@ void Jugador::sumarPuntos() {
 void Jugador::restarVida(int herida) {
 
 	this->vida -= herida;
+}
+
+void Jugador::cambiarTipoDeArma(weapon arma) {
+	this->arma = arma;
 }

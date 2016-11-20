@@ -18,7 +18,7 @@ private:
 	int piso;
 	int topeSalto;
 	int plataforma;
-	weapon arma = MACHINEGUN;
+	weapon arma;// = MACHINEGUN;
 
 	estadoJugador getEstadoParado();
 	estadoJugador getEstadoSaltarIzquierda();
@@ -69,6 +69,7 @@ public:
 	//estadoJugador resolverEstado(string accion, int vecesX);
 	void sumarPuntos();
 	void restarVida(int herida);
+	void cambiarTipoDeArma(weapon arma);
 };
 
 #endif /* SRC_SERVIDOR_JUGADOR_H_ */
