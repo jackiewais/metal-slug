@@ -51,7 +51,8 @@ public:
 	void moverBonuses(list<mensajeStruct>* mainList);
 	mensajeStruct getMensajeBonusNew(bonus bonus, int idBonus);
 	mensajeStruct getMensajeBonusUpd(bonus bonus, int idBonus);
-	mensajeStruct getMensajeBonusDel(bonus bonus, int idBonus);
+	mensajeStruct getMensajeBonusDel(int idBonus);
+	void eliminarBonus(list<mensajeStruct>* mainList, int idBonus);
 	list<mensajeStruct> getMensajeBala();
 	mensajeStruct getMensajeEnemigoMuerto(Enemigo *enemigo);
 	mensajeStruct getMensajeEndOfLevel();

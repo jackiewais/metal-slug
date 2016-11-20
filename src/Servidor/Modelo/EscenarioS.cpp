@@ -97,20 +97,37 @@ void EscenarioS::moverBonuses(list<mensajeStruct>* mainList) {
 				mainList->push_back(getMensajeBonusNew(it->second,id));
 			}
 		}
-		 this->bonusInactivos.erase(id);
+		if (encontro)
+			this->bonusInactivos.erase(id);
 	}
 
-	for (map<int, bonus>::iterator  it = this->bonusEnPantalla.begin(); it != this->bonusEnPantalla.end(); it++) {
-		it->second.posX=it->second.posXAbs - this->avance;
-		if (it->second.posX + 70 < 0){
-			//Fuera de la pantalla
-			mainList->push_back(getMensajeBonusDel(it->second,it->first));
-		}else{
-			mainList->push_back(getMensajeBonusUpd(it->second,it->first));
+	encontro = true;
+	while (encontro){
+		encontro = false;
+		int id;
+		for (map<int, bonus>::iterator  it = this->bonusEnPantalla.begin(); it != this->bonusEnPantalla.end(); it++) {
+			it->second.posX=it->second.posXAbs - this->avance;
+			if (it->second.posX + 70 < 0){
+				//Fuera de la pantalla
+				encontro = true;
+				id = it->first;
+				break;
+			}else{
+				mainList->push_back(getMensajeBonusUpd(it->second,it->first));
+			}
+		}
+		if (encontro){
+			this->eliminarBonus(mainList,id);
 		}
 	}
-
 }
+
+void EscenarioS::eliminarBonus(list<mensajeStruct>* mainList, int idBonus){
+	mainList->push_back(getMensajeBonusDel(idBonus));
+	this->bonusEnPantalla.erase(idBonus);
+}
+
+
 void splitE(const string &s, char delim, vector<string> &elems) {
     stringstream ss;
     ss.str(s);
@@ -397,7 +414,7 @@ mensajeStruct EscenarioS::getMensajeBonusUpd(bonus bonus, int idBonus){
 	msjBonus.message = convertirAString(bonus.posX)+";"+convertirAString(bonus.posY)+";"+convertirAString(bonus.type);
 	return msjBonus;
 }
-mensajeStruct EscenarioS::getMensajeBonusDel(bonus bonus, int idBonus){
+mensajeStruct EscenarioS::getMensajeBonusDel(int idBonus){
 	mensajeStruct msjBonus;
 	msjBonus.tipo = BONUS_DEL;
 	msjBonus.objectId = convertirAString(idBonus);
@@ -608,7 +625,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 }
 
 void EscenarioS::findBonus(list<mensajeStruct>* mainList, Jugador *jugador) {
-
+	int id = 0;
 	for (map<int, bonus>::iterator itBonus=bonusEnPantalla.begin(); itBonus!=bonusEnPantalla.end(); itBonus++) {
 		if (Colision::colisionSoldadoConBonus(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,itBonus->second.posX, itBonus->second.posY,30,30)) {
 			weapon armaBonus;
@@ -633,9 +650,13 @@ void EscenarioS::findBonus(list<mensajeStruct>* mainList, Jugador *jugador) {
 					matarEnemigos(mainList);
 				break;
 			}
-			//eliminar bonus
+			id = itBonus->first;
 			break;//salgo del for porq no hay mas de un bonus en la misma posicion(en un mismo movimiento del jugador)
 		}
+	}
+
+	if (id != 0){
+		eliminarBonus(mainList,id);
 	}
 }
 
