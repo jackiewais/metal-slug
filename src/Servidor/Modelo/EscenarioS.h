@@ -24,6 +24,7 @@ private:
 	void findBonus(list<mensajeStruct>* mainList, Jugador *jugador);
 
 public:
+	int cantidadNada = 0;
 	int ancho;
 	int alto;
 	int margen;

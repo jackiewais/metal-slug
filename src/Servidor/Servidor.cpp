@@ -145,14 +145,14 @@ int Servidor::procesarMensajeCola(mensajeStruct msg){
 			handshake(msg);
 			break;
 		case PULSA_TECLA:
-			if(msg.message == "0;NADA" && cantidadNada < 5){
+/*			if(msg.message == "0;NADA" && cantidadNada < 5){
 				cantidadNada += 1;
 
 			}else {
-				procesarTeclaPulsada(msg);
-				cantidadNada = 0;
+	*/			procesarTeclaPulsada(msg);
+		/*		cantidadNada = 0;
 
-			}
+			}*/
 			break;
 	}
 
