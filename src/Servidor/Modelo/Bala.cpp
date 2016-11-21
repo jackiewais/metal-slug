@@ -14,7 +14,7 @@ this->y = y;
 this->direccion = dir;
 this->velocidad = 5;
 this->IdJugador = jugador;
-this->radio = 7;
+this->radio = 10;
 }
 
 void Bala::mover(){

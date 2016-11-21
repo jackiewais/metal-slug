@@ -680,7 +680,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 			if (jugador->conectado()) {
 				//si la bala es del enemigo
 				if (bala->IdJugador == NULL) {
-					if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+					if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
 						cout<<"Restar vida al jugador"<<endl;
 						jugador->restarVida(10);
 					}
@@ -690,13 +690,13 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 					enemigo = itEnemigos->second;
 					//si la bala es del jugador
 					if (bala->IdJugador != NULL) {
-						if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+						if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
 							cout<<"Restar vida al enemigo"<<endl;
 							matarEnemigo(mainList, enemigo->getCodEnemigo());
 							Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
 							jugadorDisparo->sumarPuntos();
 						}
-					} else if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
+					} else if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto)) {
 								//si siguen vivos, si en los pasos anteriores no los mato una bala
 								cout<<"cuchillazo del enemigo"<<endl;
 								jugador->restarVida(1);
@@ -713,7 +713,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 			if (jugador->conectado()) {
 				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
 					enemigo = itEnemigos->second;
-					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
+					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto)) {
 						cout<<"cuchillazo del enemigo"<<endl;
 						jugador->restarVida(1);
 					}
@@ -727,7 +727,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 void EscenarioS::findBonus(list<mensajeStruct>* mainList, Jugador *jugador) {
 	int id = 0;
 	for (map<int, bonus>::iterator itBonus=bonusEnPantalla.begin(); itBonus!=bonusEnPantalla.end(); itBonus++) {
-		if (Colision::colisionSoldadoConBonus(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,itBonus->second.posX, itBonus->second.posY,30,30)) {
+		if (Colision::colisionSoldadoConBonus(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,itBonus->second.posX, itBonus->second.posY,30,30)) {
 			weapon armaBonus;
 			switch (itBonus->second.type) {
 				case MACHINEG:
