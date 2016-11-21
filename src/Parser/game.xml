@@ -65,8 +65,13 @@
 			<ancho>1131</ancho>
 			<alto>113</alto>
 		</sprite>
+		<sprite>
+		    <objectId>plataforma</objectId>
+			<ancho>140</ancho>
+			<alto>30</alto>
+		</sprite>
 </sprites>
- <jugadores>
+<jugadores>
 	<jugador>
 	    <objectId>J1</objectId>
 	    <imagen>jugador1</imagen>
@@ -83,14 +88,15 @@
 	    <objectId>J4</objectId>
 	    <imagen>jugador4</imagen>
 	</jugador>
- </jugadores>
-
-<fondos><fondo>
+</jugadores>
+<fondos>
+        <fondo>
 		    <imagen>fondoCielo</imagen>
 			<ancho>0</ancho>
 			<alto>0</alto>
 			<zIndex>6</zIndex>
-		</fondo><fondo>
+		</fondo>
+		<fondo>
 		    <imagen>fondoMedio</imagen>
 			<ancho>0</ancho>
 			<alto>0</alto>
@@ -261,6 +267,15 @@
 			<orden>1</orden>
 		</sprite>
 	</airbusterRiberts>
+	<Plataforma objetId="plataforma">
+		<sprite>
+		    <estado>1</estado>
+			<ancho>140</ancho>
+			<alto>30</alto>
+			<cantidad>1</cantidad>
+			<orden>1</orden>
+		</sprite>
+	</Plataforma>
 </estadosSprites>
 <enemigos>
 	<enemigo>
@@ -393,3 +408,21 @@
 		<posYAbs>520</posYAbs>	
 	</bonus>
 </bonuses>
+<plataformas>
+		<plataforma>
+		    <objectId>1</objectId>
+		    <imagen>plataforma</imagen>
+			<ancho>140</ancho>
+			<alto>30</alto>
+			<posX>150</posX>
+			<posY>300</posY>
+		</plataforma>
+		<plataforma>
+		    <objectId>2</objectId>
+		    <imagen>plataforma</imagen>
+			<ancho>140</ancho>
+			<alto>30</alto>
+			<posX>900</posX>
+			<posY>300</posY>
+		</plataforma>
+</plataformas>

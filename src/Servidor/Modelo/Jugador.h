@@ -19,6 +19,9 @@ private:
 	int topeSalto;
 	int plataforma;
 	weapon arma;// = MACHINEGUN;
+//SILVIA
+	int posXInicialP;
+	int posXFinalP;
 
 	estadoJugador getEstadoParado();
 	estadoJugador getEstadoSaltarIzquierda();
@@ -44,6 +47,8 @@ public:
 	bool modoPrueba = false;
 	estadoJugador estado;
 	string equipo = "1";
+//SILVIA
+	bool saltoDebajoLaPlataforma=false;
 
 
 
@@ -71,6 +76,9 @@ public:
 	void reiniciarVida();
 	void restarVida(int herida);
 	void cambiarTipoDeArma(weapon arma);
+//SILVIA
+	void setCoordPlataformaMasCercanaAlJugador(int posInicialP,int posFinalP, int posPiso);
+	int getAncho();
 };
 
 #endif /* SRC_SERVIDOR_JUGADOR_H_ */

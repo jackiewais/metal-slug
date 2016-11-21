@@ -50,6 +50,9 @@ public:
 	std::map<int,bonus> getBonuses()  {
 		return bonuses;
 	}
+	std::vector<mensajeStruct> getListaPlataformas()  {
+		return listaPlataformas;
+	}
 	int getAnchoJugador();
 	int getAltoJugador();
 	int getAnchoEscenario();
@@ -70,6 +73,7 @@ private:
 	std::vector<mensajeStruct> listaEstadosSprites;
 	std::vector<enemigoStruct> listaEnemigos;
 	std::vector<mensajeStruct> listaBasicSprites;
+	std::vector<mensajeStruct> listaPlataformas;
 
 	std::map<int,bonus> bonuses;
 
@@ -93,6 +97,7 @@ private:
 	void setAltoJugador(const pugi::xml_document* doc);
 	void setAnchoEscenario(const pugi::xml_document* doc);
 	void setAltoEscenario(const pugi::xml_document* doc);
+	void getxmlPlataformas(const pugi::xml_document* doc);
 };
 
 #endif /* PARSER_H_ */

@@ -12,6 +12,7 @@
 #include "./Modelo/EscenarioS.h"
 #include "Contenedor.h"
 #include "../Parser/Parser.h"
+#include "./Modelo/Plataforma.h"
 
 
 //#define XML_PATH "Parser/game.xml"

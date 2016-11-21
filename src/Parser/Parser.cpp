@@ -46,6 +46,7 @@ bool Parser::parsearArchivoXML(const std::string& nameFileXML)
 	getxmlEnemigos(&doc);
 	getxmlBasicSprites(&doc);
 	getxmlBonuses(&doc);
+	getxmlPlataformas(&doc);
 	return true;
 }
 void Parser::getxmlSprites(const pugi::xml_document* doc)
@@ -370,4 +371,45 @@ int Parser::getAnchoEscenario() {
 
 int Parser::getAltoEscenario() {
 	return atoi(this->altoEscenario.c_str());
+}
+void Parser::getxmlPlataformas(const pugi::xml_document* doc)
+{
+
+	pugi::xml_node plataformasNode = doc->child("plataformas");
+	for (pugi::xml_node i = plataformasNode.first_child(); i; i = i.next_sibling())
+	{
+			   mensajeStruct esPlataforma;
+			   std::string objectId = i.child("objectId").first_child().value();
+			   std::string imagen = i.child("imagen").first_child().value();
+			   std::string ancho = i.child("ancho").first_child().value();
+			   std::string alto = i.child("alto").first_child().value();
+			   std::string posX = i.child("posX").first_child().value();
+			   std::string posY = i.child("posY").first_child().value();
+			   if (!validar(objectId))
+						{
+				            objectId = "1";
+						}
+			   if (!validar(ancho))
+						{
+							ancho = "37";
+						}
+			   if (!validar(alto))
+						{
+							alto = "49";
+						}
+			   if (!validar(posX))
+						{
+							posX = "0"; //poner random
+						}
+			   if (!validar(posY))
+						{
+							posY = "100"; //dar tope
+						}
+
+			   esPlataforma.tipo = PLATAFORMA_NEW;
+			   esPlataforma.objectId = objectId;//imagen;
+			   esPlataforma.message = imagen+";"+ancho+";"+alto+";"+posX;
+			   esPlataforma.socketCli = cliente;
+			   listaPlataformas.push_back(esPlataforma);
+		}
 }

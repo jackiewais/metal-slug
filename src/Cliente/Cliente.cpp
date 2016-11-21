@@ -337,6 +337,17 @@ void *Cliente::recvMessage(void * arg){
 			case HANDSHAKE_GRAFIC_BASIC:
 				context->addGraficableBasic(mensajeRta);
 				break;
+//INICIO SILVIA
+			case PLATAFORMA_NEW:
+				context->objetoNuevo(mensajeRta);
+				break;
+			case PLATAFORMA_UPD:
+				if (context->jugando) context->updatePlataforma(mensajeRta);
+				break;
+			case PLATAFORMA_DEL:
+				context->escenario.eliminarObjeto(mensajeRta.objectId);
+				break;
+//FIN SILVIA
 		}
     }
 	return 0;
@@ -933,4 +944,17 @@ list<int> Cliente::getIdUsuarios() {
 	}
 
 	return idUsuarios;
+}
+//INICIO SILVIA
+void Cliente::updatePlataforma(mensajeStruct msg){
+	int x,y;
+	string conectado;
+	estadoJugador estado;
+	vector<string> result = Util::Split(msg.message, ';');
+	x=atoi(result[0].c_str());
+	y=atoi(result[1].c_str());
+	//estado jugador
+	estado = static_cast<estadoJugador>(atoi(result[2].c_str()));
+	conectado =result[3] ;
+	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
 }

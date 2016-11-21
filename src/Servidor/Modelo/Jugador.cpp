@@ -13,9 +13,9 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, i
 	this->municiones = -1;
 	this->vida=100;
 	this->usuario = usuario;
-	this->piso = altoEscenario - 150;
-	this->topeSalto = piso-100;
-	this->plataforma = topeSalto + 40;
+    this->piso = altoEscenario - 150;
+	this->topeSalto = piso-120;
+	this->plataforma = topeSalto + 60;
 	this->arma = SHOOTGUN;
 
 	moverAPosicionInicial();
@@ -267,8 +267,12 @@ void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 
 void Jugador::manejarSalto(){
 
-
+	int posMedioX = this->posX + (this->ancho/2); //SILVIA
 	if (estaSaltando()){
+		cout << "piso" <<this->piso <<endl;
+		cout << "tope" << this->topeSalto<< endl;
+		cout << "plataf" << this->plataforma<< endl;
+		int posYAnterior= this->posY; //SILVIA
 		this->posY += (velSalto * factorSalto);
 		if (this->posY < topeSalto){
 			factorSalto = 1;
@@ -276,16 +280,28 @@ void Jugador::manejarSalto(){
 			factorSalto = -1;
 			this-> posY = piso;
 			this->estado = getEstadoParado();
-		}else if (this->posY ==plataforma && factorSalto == 1 && this->posX > 100 && this->posX < 200){
-			factorSalto = -1;
+		}
+//SILVIA
+		if ((posYAnterior > plataforma ) && (this->posY== plataforma)){
+					if (((posMedioX > ((this->posXInicialP)))&& (posMedioX < (this->posXFinalP))) || ((posMedioX < (this->posXFinalP))&&(posMedioX > (this->posXInicialP)))){
+						  this->saltoDebajoLaPlataforma = true;
+					}else{
+						  this->saltoDebajoLaPlataforma = false;
+					}
+		}
+//SILVIA  if (this->posY ==plataforma && factorSalto == 1 && this->posX > 100 && this->posX < 200){
+		if ((!this->saltoDebajoLaPlataforma) && (this->posY ==plataforma) && (factorSalto == 1) && ((posMedioX >posXInicialP) && (posMedioX < posXFinalP))  ){
+		    factorSalto = -1;
 			this-> posY = plataforma;
 			this->estado = getEstadoParado();
 		}
 	}else{
-		if (this->posY ==plataforma && this->posX < 100) {
+//SILVIA if (this->posY ==plataforma && this->posX < 100) {
+		if (this->posY ==plataforma && posMedioX < this->posXInicialP){
 			factorSalto = 1;
 			this->estado = getEstadoSaltarIzquierda();
-		}else if(this->posY ==plataforma && this->posX > 200){
+//SILVIA }else if(this->posY ==plataforma && this->posX > 200){
+		}else if(this->posY ==plataforma && posMedioX > this->posXFinalP ){
 			factorSalto = 1;
 			this->estado = getEstadoSaltarDerecha();
 		}
@@ -470,4 +486,13 @@ void Jugador::cambiarTipoDeArma(weapon arma) {
 
 	}
 
+}
+//SILVIA
+void Jugador::setCoordPlataformaMasCercanaAlJugador(int posInicialP,int posFinalP, int posPiso){
+   this->posXInicialP=posInicialP;
+   this->posXFinalP=posFinalP;
+}
+int Jugador::getAncho() {
+
+	return this->ancho;
 }

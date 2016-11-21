@@ -11,6 +11,8 @@
 #include "../../Common/MensajeStruct.h"
 #include "../../Common/Mensajeria.h"
 #include "Bala.h"
+//SILVIA
+#include "Plataforma.h"
 
 class EscenarioS {
 
@@ -22,6 +24,10 @@ private:
 	bool avanceBloqueado;
 	void colisionar(list<mensajeStruct>* mainList);
 	void findBonus(list<mensajeStruct>* mainList, Jugador *jugador);
+	//SILVIA
+    map<int, Plataforma*> PlataformasActivas;
+    map<int, Plataforma*> PlataformasInactivos;
+
 
 public:
 	int cantidadNada = 0;
@@ -67,6 +73,16 @@ public:
 	int cantNiveles=3;
 	map<int, bonus> bonusInactivos;
 	map<int, bonus> bonusEnPantalla;
+
+	//SILVIA
+	void eliminarPlataforma(int id);
+	void addPlataformaInactivo(Plataforma* plataforma, int posXAbsolutaDePlataformaParaAparicion);
+    Plataforma* activarPlataforma(int posXAbsolutaPlataforma);
+	mensajeStruct getMensajePlataformaNuevo(Plataforma *plataforma);
+	mensajeStruct getMensajePlataformaUpdate(Plataforma *plataforma);
+	mensajeStruct getMensajePlataformaEliminada(Plataforma *plataforma);
+	mensajeStruct getMensajeEliminarPlataforma(Plataforma *plataforma);
+
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ESCENARIOS_H_ */

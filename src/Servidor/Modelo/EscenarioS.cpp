@@ -121,7 +121,6 @@ void EscenarioS::moverBonuses(list<mensajeStruct>* mainList) {
 		}
 	}
 }
-
 void EscenarioS::eliminarBonus(list<mensajeStruct>* mainList, int idBonus){
 	mainList->push_back(getMensajeBonusDel(idBonus));
 	this->bonusEnPantalla.erase(idBonus);
@@ -233,6 +232,29 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			this->pasarDeNivel();
 		}
 	}else{
+
+//INICIO SILVIA
+				int posInicialP=0;
+				int posFinalP=0;
+				int posPiso=0;  //alto del escenario
+				int medioJugador = jugador->getPosX() + (jugador->getAncho()/2);
+				int medioPlataforma;
+				int resultado = 800;
+				//Obtengo la plataforma màs cercana al jugador
+				map<int, Plataforma*>::iterator itP;
+	            for (itP = this->PlataformasActivas.begin(); itP != this->PlataformasActivas.end(); itP++) {
+					medioPlataforma = (*itP).second->getPosX() + ((*itP).second->getAncho()/2);
+			        if ( abs(medioPlataforma - medioJugador) < resultado) {
+				        posInicialP=(*itP).second->getPosX();
+				        posFinalP=(*itP).second->getPosX()+(*itP).second->getAncho();
+				        posPiso=(*itP).second->getPiso();
+				        resultado = abs(medioPlataforma - medioJugador);
+					}
+				}
+
+				jugador->setCoordPlataformaMasCercanaAlJugador(posInicialP,posFinalP,posPiso );
+//FIN SILVIA
+
 		jugador->mover(this->ancho,vecesX, estado);
 
 		//ESTO ES PARA PROBAR
@@ -270,6 +292,25 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
 		}
 
+//SILVIA INICIO
+		//Activa Nuevas Plataformas si se encuentran dentro de la ventana
+		Plataforma *plataforma = NULL;
+		plataforma = activarPlataforma(this->avance + jugador->getPosX());
+		if (plataforma != NULL) {
+			returnList.push_back(getMensajePlataformaNuevo(plataforma));
+		}
+		//Nueva posiciòn de la plataforma activa en X enviado al cliente
+		map<int, Plataforma*>::iterator it;
+	    for (it = this->PlataformasActivas.begin(); it != this->PlataformasActivas.end(); it++) {
+            plataforma = (*it).second;
+	    	returnList.push_back(getMensajePlataformaUpdate(plataforma));
+	    	//Si la plataforma se encuentra fuera de la ventana del lado izquierdo, se elimina y se elimina en el cliente
+			if ((plataforma->getPosX() + plataforma->getAncho()) < 0){
+				eliminarPlataforma(it->first);
+				returnList.push_back(getMensajeEliminarPlataforma(plataforma));
+			}
+		}
+//FIN SILVIA
 
 		//evaluar colisiones despues del movimiento
 		colisionar(&returnList);
@@ -387,6 +428,15 @@ void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
 			enemigo = itEnemigos->second;
 			enemigo->retrocederSegunAvanceEscenario(minPosX);
 		}
+//INICIO SILVIA
+		//Se mueve la posiciòn de la plataforma
+		map<int,Plataforma*>::iterator it;
+		Plataforma *plataforma = NULL;
+        for (it = this->PlataformasActivas.begin(); it != this->PlataformasActivas.end(); it++) {
+			plataforma = (*it).second;
+			plataforma->retrocederSegunAvanceEscenario(this->distancia);
+		}
+//FIN SILVIA
 		// hardcodeado por el momento
 
 		/*
@@ -729,4 +779,54 @@ void EscenarioS::matarEnemigos(list<mensajeStruct>* mainList) {
 		delete enemigo;
 		this->enemigosVivos.erase(it);
 	}
+}
+//SILVIA
+
+mensajeStruct EscenarioS::getMensajePlataformaNuevo(Plataforma *plataforma){
+	mensajeStruct msjPlataforma;
+
+	msjPlataforma.tipo = PLATAFORMA_NEW;
+	msjPlataforma.objectId = plataforma->getCodPlataforma();
+	msjPlataforma.message = plataforma->getStringMensajeNew();
+	return msjPlataforma;
+}
+mensajeStruct EscenarioS::getMensajePlataformaUpdate(Plataforma *plataforma){
+	mensajeStruct msjPlataforma;
+
+	msjPlataforma.tipo = PLATAFORMA_UPD;
+	msjPlataforma.objectId = plataforma->getCodPlataforma();
+	msjPlataforma.message = plataforma->getStringMensajeUpdate();
+	return msjPlataforma;
+}
+mensajeStruct EscenarioS::getMensajeEliminarPlataforma(Plataforma *plataforma){
+	mensajeStruct msjPlataforma;
+
+	msjPlataforma.tipo = PLATAFORMA_DEL;
+	msjPlataforma.objectId = plataforma->getCodPlataforma();
+	msjPlataforma.message="";
+
+	return msjPlataforma;
+}
+//SILVIA
+
+void EscenarioS::addPlataformaInactivo(Plataforma* plataforma, int posX) {
+	if ( this->PlataformasInactivos.find(posX) != this->PlataformasInactivos.end() ) {
+		this->PlataformasInactivos[posX] = plataforma;
+	} else {
+		this->PlataformasInactivos[posX] = plataforma;
+    }
+}
+Plataforma* EscenarioS::activarPlataforma(int posXAbsolutaJugador) {
+	Plataforma *plataforma = NULL;
+	if ( this->PlataformasInactivos.find(posXAbsolutaJugador) != this->PlataformasInactivos.end() ) {
+		plataforma = this->PlataformasInactivos[posXAbsolutaJugador];
+		this->PlataformasInactivos.erase(posXAbsolutaJugador);
+		this->PlataformasActivas[posXAbsolutaJugador]=plataforma;
+	}
+	return plataforma;
+}
+void EscenarioS::eliminarPlataforma(int id) {
+	map<int, Plataforma*>::iterator itPlataforma = this->PlataformasActivas.find(id);
+	this->PlataformasActivas.erase(itPlataforma);
+
 }

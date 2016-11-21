@@ -665,6 +665,21 @@ void Servidor::runServer(){
 			this->escenario->addEnemigoInactivo(*it);
 		}
 		this->escenario->addEnemigoFinalInactivo();
+
+		//SILVIA MANDAR PLATAFORMAS
+		   std::vector<mensajeStruct> v5 = parser->getListaPlataformas();
+		    std::vector<mensajeStruct>::iterator i5;
+		    for( i5 = v5.begin(); i5 != v5.end(); ++i5) {
+				vector<string> result = Util::Split((*i5).message,';');
+				int objectId5 = atoi((*i5).objectId.c_str());
+				string imagen = result[0];
+				int anchoP = atoi(result[1].c_str());
+				int altoP = atoi(result[2].c_str());
+				int posXP = atoi(result[3].c_str());
+			//	int posYP = atoi(result[3].c_str());
+				Plataforma *plataforma = new Plataforma(objectId5,imagen,5,posXP,anchoP,altoP, this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
+				this->escenario->addPlataformaInactivo(plataforma, posXP);
+		    }
 		createActualizarThread();
 		ElegirModoDeJuego();
 		createExitThread();
