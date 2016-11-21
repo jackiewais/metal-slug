@@ -10,6 +10,7 @@
 #include <iostream>
 #include <list>
 #include "LTextureBasic.h"
+#include "../Common/Modelo.h"
 using namespace std;
 
 class ContenedorBalas {
@@ -18,6 +19,7 @@ public:
 	struct pos{
 		int x;
 		int y;
+		weapon tipo;
 	};
 	list<pos> balas;
 	std::string spritePath;
@@ -27,7 +29,7 @@ public:
 	void initTexture(std::string spritePath, int anchoTot, int altoTot);
 	bool loadMedia(SDL_Renderer* gRend);
 
-	void addBalas(int x, int y);
+	void addBalas(int x, int y, int tipo);
 	void deleteBalas();
 	void render();
 

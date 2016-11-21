@@ -6,7 +6,7 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, i
 
 	this->id = id;
 	this->velocidad = velocidad;
-	this->velSalto = velocidad*2;
+	this->velSalto = velocidad*1.2;
 	this->ancho = ancho;
 	this->alto = alto;
 	this->puntaje = 0;

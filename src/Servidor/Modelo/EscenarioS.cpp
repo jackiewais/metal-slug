@@ -163,11 +163,12 @@ void EscenarioS::moverBala(){
 	(*it)->movimientos +=1;
 	}
 
+
 	while(afuera){
 		afuera =false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
 
-		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 10)){
+		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 100)){
 		afuera = true;
 		itDelete = it;
 		}
@@ -186,11 +187,19 @@ void EscenarioS::moverBala(){
 
 list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	Jugador* jugador = this->mapJugadores[jugadorId];
+	list<mensajeStruct> returnList;
+
+	if(mensaje == "0;NADA" && cantidadNada < 5 && !jugador->estaSaltando()){
+		cantidadNada += 1;
+
+	}else {
+		cantidadNada = 0;
+
+
 	vector<string> result = splitE(mensaje, ';');
 	int vecesX = atoi(result[0].c_str());
 	string estado = result[1];
 
-	list<mensajeStruct> returnList;
 	map<string, Enemigo*>::iterator itEnemigos;
 	Enemigo *enemigo = NULL;
 
@@ -235,7 +244,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		//if (jugador->vida ==80 ) jugador->municiones=300;
 		//if (jugador->vida <80 ) jugador->municiones-=2;
 
+		/*if(!this->balas.empty()){
+						moverBala();
+						list<mensajeStruct> balasUpdate = getMensajeBala();
+						returnList.splice(returnList.end(), balasUpdate);
 
+		}*/
 		if (!this->avanceBloqueado) {
 			moverEscenario(&returnList);
 		}
@@ -255,12 +269,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			}
 			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
 		}
-		if(!this->balas.empty()){
-			moverBala();
-			list<mensajeStruct> balasUpdate = getMensajeBala();
-			returnList.splice(returnList.end(), balasUpdate);
 
-		}
 
 		//evaluar colisiones despues del movimiento
 		colisionar(&returnList);
@@ -290,13 +299,41 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 
 	}
+	}
 	return returnList;
 }
+
+list<mensajeStruct> EscenarioS::actualizar(){
+
+	list<mensajeStruct> returnList;
+/*
+	map<int,Jugador*>::iterator it;
+
+	for(it=mapJugadores.begin(); it!=mapJugadores.end();it++){
+		it->second->manejarSalto();
+	}
+*/
+
+	if(!this->balas.empty()){
+
+				moverBala();
+				list<mensajeStruct> balasUpdate = getMensajeBala();
+				returnList.splice(returnList.end(), balasUpdate);
+
+			}
+SDL_Delay(3);
+return returnList;
+};
+
 
 void EscenarioS::aceptarCambios(){
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		jugador->second->aceptaCambios = true;
 	}
+
+
+
+
 }
 
 void EscenarioS::moverEscenario(list<mensajeStruct>* mainList) {
@@ -451,12 +488,14 @@ list<mensajeStruct> EscenarioS::getMensajeBala(){
 
 	while(it!=balas.end()){
 		int cantBalas = 0;
-		for(int j=0;(j<8 && it!=balas.end());j++){
+		for(int j=0;(j<7 && it!=balas.end());j++){
 			stringstream posx;
 			stringstream posy;
+			stringstream tipo;
 			posx<<(*it)->x;
 			posy<<(*it)->y;
-			mensaje+=posx.str()+";"+posy.str()+";";
+			tipo<<(*it)->tipoDeBala;
+		    mensaje+=posx.str()+";"+posy.str()+";"+tipo.str()+";";
 			cantBalas= j+1;
 			++it;
 
@@ -550,6 +589,7 @@ void EscenarioS::resetEscenario(){
 		delete itOb->second;
 	}
 	this->enemigosVivos.clear();
+	this->balas.clear();
 }
 
 void EscenarioS::pasarDeNivel(){
@@ -567,6 +607,7 @@ void EscenarioS::pasarDeNivel(){
 		itOb->second={};
 	}
 	this->bonusInactivos.clear();
+	this->balas.clear();
 }
 
 void EscenarioS::colisionar(list<mensajeStruct>* mainList) {

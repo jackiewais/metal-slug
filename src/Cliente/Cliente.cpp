@@ -445,13 +445,16 @@ void Cliente::updateBala(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
 	int x;
 	int y;
+	int tipo;
 	int pos=1;
 	int cantidadDeBalas = atoi(result[0].c_str());
 	for (int i=0; i<cantidadDeBalas ; i++){
 		x=atoi(result[pos].c_str());
 		y=atoi(result[pos+1].c_str());
-		escenario.balas.addBalas(x,y);
-		pos+=2;
+		tipo=atoi(result[pos+2].c_str());
+		escenario.balas.addBalas(x,y,tipo);
+		pos+=3;
+
 	}
 }
 
