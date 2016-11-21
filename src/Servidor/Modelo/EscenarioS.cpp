@@ -302,12 +302,13 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		//Nueva posiciòn de la plataforma activa en X enviado al cliente
 		map<int, Plataforma*>::iterator it;
 	    for (it = this->PlataformasActivas.begin(); it != this->PlataformasActivas.end(); it++) {
-            plataforma = (*it).second;
+            plataforma = it->second;
 	    	returnList.push_back(getMensajePlataformaUpdate(plataforma));
 	    	//Si la plataforma se encuentra fuera de la ventana del lado izquierdo, se elimina y se elimina en el cliente
 			if ((plataforma->getPosX() + plataforma->getAncho()) < 0){
-				eliminarPlataforma(it->first);
+				//eliminarPlataforma(it->first);
 				returnList.push_back(getMensajeEliminarPlataforma(plataforma));
+				this->PlataformasActivas.erase(it);
 			}
 		}
 //FIN SILVIA
