@@ -636,12 +636,11 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 							Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
 							jugadorDisparo->sumarPuntos();
 						}
-					}
-					if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
-						//si siguen vivos, si en los pasos anteriores no los mato una bala
-						cout<<"cuchillazo del enemigo"<<endl;
-						jugador->restarVida(1);
-					}
+					} else if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho/2,enemigo->alto)) {
+								//si siguen vivos, si en los pasos anteriores no los mato una bala
+								cout<<"cuchillazo del enemigo"<<endl;
+								jugador->restarVida(1);
+						   }
 				}
 				findBonus(mainList, jugador);
 			}
