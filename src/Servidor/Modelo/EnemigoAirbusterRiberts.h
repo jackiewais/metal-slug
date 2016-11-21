@@ -13,6 +13,7 @@ public:
 	EnemigoAirbusterRiberts(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores);
 	virtual ~EnemigoAirbusterRiberts();
 	void mover(int anchoEscenario);
+	bool esEnemigoFinal();
 
 private:
 	void mover(int anchoEscenario, int vecesX, string accion);

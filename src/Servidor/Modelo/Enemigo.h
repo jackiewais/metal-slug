@@ -20,6 +20,7 @@ public:
 	void bloquearAvanceEscenario();
 	bool estaBloqueadoElAvanceDelEscenario(int anchoEscenario);
 	void aparecerPorIzquierda();
+	virtual bool esEnemigoFinal();
 
 	int posX;
 	int posY;

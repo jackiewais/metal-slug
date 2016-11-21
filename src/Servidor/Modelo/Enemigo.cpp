@@ -147,3 +147,7 @@ bool Enemigo::estaBloqueadoElAvanceDelEscenario(int anchoEscenario) {
 void Enemigo::aparecerPorIzquierda() {
 	this->posX = 0;
 }
+
+bool Enemigo::esEnemigoFinal() {
+	return false;
+}

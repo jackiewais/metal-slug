@@ -46,3 +46,7 @@ void EnemigoAirbusterRiberts::moverAPosicionInicial(){
 	this->posY = 50;
 	this->estado=PARADO_GUN;
 }
+
+bool EnemigoAirbusterRiberts::esEnemigoFinal() {
+	return true;
+}
