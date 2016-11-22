@@ -16,7 +16,7 @@ Jugador::Jugador(int id, int velocidad, int ancho, int alto, Usuario* usuario, i
     this->piso = altoEscenario - 150;
 	this->topeSalto = piso-120;
 	this->plataforma = topeSalto + 60;
-	this->arma = SHOOTGUN;
+	this->arma = GUN;
 
 	moverAPosicionInicial();
 
