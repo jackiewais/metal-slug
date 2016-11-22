@@ -12,7 +12,7 @@ Bala::Bala(int x, int y, int dir,int jugador) {
 this->x = x;
 this->y = y;
 this->direccion = dir;
-this->velocidad = 5;
+this->velocidad = 20;
 this->IdJugador = jugador;
 this->radio = 10;
 }
@@ -25,14 +25,14 @@ void Bala::mover(){
 					switch(balaMachine){
 					case up:
 						this->x +=this->velocidad;
-						if(movimientos >=50){
+						if(movimientos >=2){
 							this->y -=1;
 							movimientos = 0;
 							}
 					break;
 					case down :
 						this->x +=this->velocidad;
-						if(movimientos >=50){
+						if(movimientos >=2){
 							this->y +=1;
 							movimientos = 0;
 							}
@@ -47,14 +47,14 @@ void Bala::mover(){
 					switch(balaMachine){
 					case up:
 						this->x-=this->velocidad;
-						if(movimientos >=50){
+						if(movimientos >=2){
 							this->y -=1;
 							movimientos = 0;
 							}
 					break;
 					case down :
 						this->x-=this->velocidad;
-						if(movimientos >=50){
+						if(movimientos >=2){
 							this->y +=1;
 							movimientos = 0;
 							}

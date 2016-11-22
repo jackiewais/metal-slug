@@ -559,15 +559,17 @@ list<mensajeStruct> EscenarioS::getMensajeBala(){
 
 	while(it!=balas.end()){
 		int cantBalas = 0;
-		for(int j=0;(j<6 && it!=balas.end());j++){
+		for(int j=0;(j<5 && it!=balas.end());j++){
 			stringstream posx;
 			stringstream posy;
 			stringstream tipo;
+			stringstream direccion;
 			posx<<(*it)->x;
 			posy<<(*it)->y;
-			//tipo<<(*it)->tipoDeBala;
-		 //   mensaje+=posx.str()+";"+posy.str()+";"+tipo.str()+";";
-		    mensaje+=posx.str()+";"+posy.str()+";";
+			tipo<<(*it)->tipoDeBala;
+			direccion<<(*it)->direccion;
+		    mensaje+=posx.str()+";"+posy.str()+";"+tipo.str()+";"+direccion.str()+";";
+		   // mensaje+=posx.str()+";"+posy.str()+";";
 			cantBalas= j+1;
 			++it;
 

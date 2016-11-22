@@ -458,14 +458,17 @@ void Cliente::updateBala(mensajeStruct msg){
 	int y;
 	int tipo=1;
 	int pos=1;
+	aimDirection direccion;
 	int cantidadDeBalas = atoi(result[0].c_str());
+	cout << msg.message << endl;
 	for (int i=0; i<cantidadDeBalas ; i++){
 		x=atoi(result[pos].c_str());
 		y=atoi(result[pos+1].c_str());
-	//	tipo=atoi(result[pos+2].c_str());
-		escenario.balas.addBalas(x,y,tipo);
-		//pos+=3;
-		pos+=2;
+		tipo=atoi(result[pos+2].c_str());
+		direccion=aimDirection(atoi(result[pos+3].c_str()));
+		escenario.balas.addBalas(x,y,tipo,direccion);
+		pos+=4;
+		//pos+=2;
 	}
 }
 
