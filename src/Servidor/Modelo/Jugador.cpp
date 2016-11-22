@@ -34,11 +34,7 @@ void Jugador::setEquipo(string team){
 list<Bala*> Jugador::disparar(aimDirection direccion){
 	list<Bala*> balasDisparadas;
 	Bala *bala= new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
-	Bala *bala1 = new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
-	Bala *bala2 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
-	Bala *bala3 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
-	Bala *bala4 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
-	Bala *bala5 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
+	Bala *bala1,*bala2,*bala3,*bala4,*bala5;
 
 	switch (this->arma){
 		case GUN:
@@ -48,6 +44,11 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 			balasDisparadas.push_front(bala);
 		break;
 		case MACHINEGUN:
+			bala1 = new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
+			bala2 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
+			bala3 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
+			bala4 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
+			bala5 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
 			bala->tipoDeBala = MACHINEGUN;
 			bala->balaMachine= down;
 
@@ -275,9 +276,7 @@ void Jugador::manejarSalto(){
 
 	int posMedioX = this->posX + (this->ancho/2); //SILVIA
 	if (estaSaltando()){
-		cout << "piso" <<this->piso <<endl;
-		cout << "tope" << this->topeSalto<< endl;
-		cout << "plataf" << this->plataforma<< endl;
+
 		int posYAnterior= this->posY; //SILVIA
 		this->posY += (velSalto * factorSalto);
 		if (this->posY < topeSalto){
