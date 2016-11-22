@@ -17,17 +17,17 @@ public:
 		if (direccion != DIAGRIGHT && direccion != DIAGLEFT) {
 
 			//transformo la bala en un rectangulo (cuadrado, ancho = alto)
-			int puntoXbRect = puntoXb - radio;
-			int puntoYbRect = puntoYb - radio;
-			int anchoAltobRect = 2 * radio;
-			hayColision = colisionRectanguloConRectangulo(puntoXs, puntoYs, ancho, alto, puntoXbRect, puntoYbRect, anchoAltobRect, anchoAltobRect);
+			int anchoAltobRect = (2 * radio);
+			hayColision = colisionRectanguloConRectangulo(puntoXs, puntoYs, ancho, alto, puntoXb, puntoYb, anchoAltobRect, anchoAltobRect);
 		}
 
 		if (hayColision || direccion == DIAGRIGHT || direccion == DIAGLEFT) {
 
 			//Si la bala va en diagonal no puedo transformarla en un rectangulo
-			//ademas, si no va en diagonal y colisiono como rectangulo, vuelvo a colisionar con su forma real (circulo)
-			hayColision = colisionRectanguloConCirculo(puntoXs, puntoYs, ancho, alto, puntoXb, puntoYb, radio);
+			//ademas, si no va en diagonal y colisiono como rectangulo, vuelvo a colisionar como circulo
+			int puntoXbCirc = (puntoXb + radio);
+			int puntoYbCirc = (puntoYb + radio);
+			hayColision = colisionRectanguloConCirculo(puntoXs, puntoYs, ancho, alto, puntoXbCirc, puntoYbCirc, radio);
 			/*
 			if (hayColision) {
 			//logica para transformar la cabeza del soldado en un circulo y colisionar circulo con circulo
@@ -55,7 +55,7 @@ public:
 
 	static bool colisionSoldadoConBonus(int puntoXs1, int puntoYs1, int ancho1, int alto1, int puntoXbo2, int puntoYbo2, int ancho2, int alto2) {
 
-		return colisionRectanguloConRectangulo(puntoXs1, puntoYs1, ancho1, alto1, puntoXbo2, puntoYbo2, ancho2, alto2);
+		return colisionRectanguloConRectangulo(puntoXs1, puntoYs1, ancho1/2, alto1, puntoXbo2, puntoYbo2, ancho2, alto2);
 	}
 
 
