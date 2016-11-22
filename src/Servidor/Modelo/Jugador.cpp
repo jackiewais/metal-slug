@@ -238,10 +238,16 @@ void Jugador::mover(int anchoEscenario, int vecesX, string accion) {
 
 		if (vecesX == 0){
 			if (!estaSaltando()){
+				if (accion=="DISPARO"){
+					this->estado = DISPARANDO_DER;
+				}else
 				this->estado = getEstadoParado();
 			}
 		}else{
 			if (!estaSaltando()){
+				if (accion=="DISPARO"){
+					this->estado =  (vecesX >= 0)?DISPARANDO_DER:DISPARANDO_IZQ;
+				}else
 				this->estado =  (vecesX > 0)?getEstadoCaminarDerecha():getEstadoCaminarIzquierda();
 			}
 

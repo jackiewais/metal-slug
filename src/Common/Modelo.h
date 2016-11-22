@@ -19,7 +19,9 @@ enum estadoJugador{
 	SALTA_DER_MACHINE = 04,
 	SALTA_IZQ_MACHINE = 05,
 
-	SIN_ESTADO = 50,
+	DISPARANDO_DER=06,
+	DISPARANDO_IZQ=07,
+	SIN_ESTADO = 50
 };
 
 enum aimDirection {

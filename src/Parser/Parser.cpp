@@ -206,7 +206,7 @@ void Parser::getxmlEstadosSprites(const pugi::xml_document* doc)
 			   std::string alto = i.child("alto").first_child().value();
 			   std::string cantidad = i.child("cantidad").first_child().value();
 			   std::string orden = i.child("orden").first_child().value();
-			   if (!validar(estado) || atoi(estado.c_str())<1 || atoi(estado.c_str())>5)
+			   if (!validar(estado) || atoi(estado.c_str())<1)
 						{
 							estado = "1";
 						}
@@ -222,7 +222,7 @@ void Parser::getxmlEstadosSprites(const pugi::xml_document* doc)
 						{
 							cantidad = "3";
 						}
-			   if (!validar(orden) || atoi(orden.c_str())<1 || atoi(orden.c_str())>5)
+			   if (!validar(orden) || atoi(orden.c_str())<1)
 						{
 							orden = "1";
 						}

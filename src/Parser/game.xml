@@ -146,6 +146,20 @@
 			<cantidad>13</cantidad>
 			<orden>5</orden>
 		</sprite>
+		<sprite>
+		    <estado>6</estado>
+			<ancho>37</ancho>
+			<alto>49</alto>
+			<cantidad>1</cantidad>
+			<orden>6</orden>
+		</sprite>
+		<sprite>
+		    <estado>7</estado>
+			<ancho>37</ancho>
+			<alto>49</alto>
+			<cantidad>1</cantidad>
+			<orden>7</orden>
+		</sprite>
 	</jugador>
 	<jugador objetId="jugador2">
 		<sprite>
@@ -182,6 +196,21 @@
 			<alto>49</alto>
 			<cantidad>13</cantidad>
 			<orden>5</orden>
+		</sprite>
+
+		<sprite>
+		    <estado>6</estado>
+			<ancho>37</ancho>
+			<alto>49</alto>
+			<cantidad>1</cantidad>
+			<orden>6</orden>
+		</sprite>
+		<sprite>
+		    <estado>7</estado>
+			<ancho>37</ancho>
+			<alto>49</alto>
+			<cantidad>1</cantidad>
+			<orden>7</orden>
 		</sprite>
 	</jugador>
     <jugador objetId="jugador3">
@@ -220,6 +249,21 @@
 			<cantidad>13</cantidad>
 			<orden>5</orden>
 		</sprite>
+
+		<sprite>
+		    <estado>6</estado>
+			<ancho>37</ancho>
+			<alto>49</alto>
+			<cantidad>1</cantidad>
+			<orden>6</orden>
+		</sprite>
+		<sprite>
+		    <estado>7</estado>
+			<ancho>37</ancho>
+			<alto>49</alto>
+			<cantidad>1</cantidad>
+			<orden>7</orden>
+		</sprite>
 	</jugador>
 	<jugador objetId="jugador4">
 		<sprite>
@@ -256,6 +300,21 @@
 			<alto>49</alto>
 			<cantidad>13</cantidad>
 			<orden>5</orden>
+		</sprite>
+
+		<sprite>
+		    <estado>6</estado>
+			<ancho>37</ancho>
+			<alto>49</alto>
+			<cantidad>1</cantidad>
+			<orden>6</orden>
+		</sprite>
+		<sprite>
+		    <estado>7</estado>
+			<ancho>37</ancho>
+			<alto>49</alto>
+			<cantidad>1</cantidad>
+			<orden>7</orden>
 		</sprite>
 	</jugador>
 	<airbusterRiberts objetId="airbus">

@@ -90,5 +90,6 @@ void ObjetoGraficable::actualizarEstado(estadoJugador estado) {
 		this->estadoActual = estado;
 		this->itEstado = this->textura->mapFrames[estado]->begin();
 		this->iteradorDeItEstado = 0;
+
 	}
 }
