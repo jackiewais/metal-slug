@@ -77,9 +77,9 @@ void EscenarioS::activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* m
 	itUp = this->enemigosInactivos.upper_bound(posXAbsolutaJugador);
 	for (it = itLow; it != itUp; it++) {
 		enemigo = it->second;
-		this->enemigosInactivos.erase(it);
 		this->enemigosVivos[enemigo->getCodEnemigo()] = enemigo;
 		mainList->push_back(getMensajeEnemigoNuevo(enemigo));
+		this->enemigosInactivos.erase(it);
 	}
 }
 void EscenarioS::moverBonuses(list<mensajeStruct>* mainList) {
@@ -174,9 +174,8 @@ void EscenarioS::moverBala(){
 
     }
 	if(afuera){
-
-	balas.erase(itDelete);
-	delete (*itDelete);
+		delete (*itDelete);
+		balas.erase(itDelete);
 	}
 	}
 
