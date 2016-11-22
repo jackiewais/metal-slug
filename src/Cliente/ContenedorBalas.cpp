@@ -60,20 +60,22 @@ void ContenedorBalas::render()
 			currentClip.y = 50;
 			currentClip.h = 50;
 			currentClip.w = 70;
-		}else{
-			cout << "ES BALA COMUN " << endl;
-			currentClip.x = 0;
-			currentClip.y = 0;
-			currentClip.h = 50;
-			currentClip.w = 30;
 
-		}if (it->tipo == SHOOTGUN){
-			currentClip.x = 0;
-			currentClip.y = 0;
-			currentClip.h = 100;
-			currentClip.w = 100;
+		}else if (it->tipo == SHOOTGUN){
+				cout << "ES SHOOTGUN " << endl;
+				currentClip.x = 0;
+				currentClip.y = 0;
+				currentClip.h = 100;
+				currentClip.w = 100;
 
-		}
+			  }else {
+					cout << "ES BALA COMUN " << endl;
+					currentClip.x = 0;
+					currentClip.y = 0;
+					currentClip.h = 50;
+					currentClip.w = 30;
+
+			  }
 			int posX=(*it).x;
 			int posY=(*it).y;
 			this->balasTexture.render( posX, posY, &currentClip );

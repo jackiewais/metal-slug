@@ -680,7 +680,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 			if (jugador->conectado()) {
 				//si la bala es del enemigo
 				if (bala->IdJugador == NULL) {
-					if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho/2,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+					if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion,false)) {
 						cout<<"Restar vida al jugador"<<endl;
 						jugador->restarVida(10);
 					}
@@ -690,13 +690,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 					enemigo = itEnemigos->second;
 					//si la bala es del jugador
 					if (bala->IdJugador != NULL) {
-						int anchoEnemigo;
-						if (!enemigo->esEnemigoFinal()) {
-							anchoEnemigo = (enemigo->ancho / 2);
-						} else {
-							anchoEnemigo = enemigo->ancho;
-						}
-						if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,anchoEnemigo,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+						if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion,enemigo->esEnemigoFinal())) {
 							cout<<"Restar vida al enemigo"<<endl;
 							matarEnemigo(mainList, enemigo->getCodEnemigo());
 							Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];

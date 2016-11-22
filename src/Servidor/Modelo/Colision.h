@@ -10,9 +10,13 @@ class Colision {
 
 public:
 
-	static bool colisionSoldadoConBala(int puntoXs, int puntoYs, int ancho, int alto, int puntoXb, int puntoYb, int radio,int direccion) {
+	static bool colisionSoldadoConBala(int puntoXs, int puntoYs, int ancho, int alto, int puntoXb, int puntoYb, int radio,int direccion, bool esEnemigoFinal) {
 
 		bool hayColision = false;
+
+		if (!esEnemigoFinal) {
+			ancho = (ancho / 2);
+		}
 
 		if (direccion != DIAGRIGHT && direccion != DIAGLEFT) {
 
@@ -28,22 +32,21 @@ public:
 			int puntoXbCirc = (puntoXb + radio);
 			int puntoYbCirc = (puntoYb + radio);
 			hayColision = colisionRectanguloConCirculo(puntoXs, puntoYs, ancho, alto, puntoXbCirc, puntoYbCirc, radio);
-			/*
+
 			if (hayColision) {
 			//logica para transformar la cabeza del soldado en un circulo y colisionar circulo con circulo
-				int radioCabeza = 20;
+				int radioCabeza = (alto / 3);
 				int puntoYsCuerpo = puntoYs + (radioCabeza * 2);
 				int altoCuerpo = alto - (radioCabeza * 2);
 				//colision cuerpo soldado con bala
-				hayColision = colisionRectanguloConCirculo(puntoXs, puntoYsCuerpo, ancho, altoCuerpo, puntoXb, puntoYb, radio);
+				hayColision = colisionRectanguloConCirculo(puntoXs, puntoYsCuerpo, ancho, altoCuerpo, puntoXbCirc, puntoYbCirc, radio);
 				if (!hayColision) {
-					int puntoXsCabeza = (puntoXs / 2);
+					int puntoXsCabeza = (puntoXs + (ancho / 4));
 					int puntoYsCabeza = (puntoYs + radioCabeza);
 					//si no, colision cabeza soldado con bala
-					hayColision = colisionCirculoConCirculo(puntoXsCabeza, puntoYsCabeza, radioCabeza, puntoXb, puntoYb, radio);
+					hayColision = colisionCirculoConCirculo(puntoXsCabeza, puntoYsCabeza, radioCabeza, puntoXbCirc, puntoYbCirc, radio);
 				}
 			}
-			*/
 		}
 		return hayColision;
 	}
@@ -55,7 +58,9 @@ public:
 
 	static bool colisionSoldadoConBonus(int puntoXs1, int puntoYs1, int ancho1, int alto1, int puntoXbo2, int puntoYbo2, int ancho2, int alto2) {
 
-		return colisionRectanguloConRectangulo(puntoXs1, puntoYs1, ancho1/2, alto1, puntoXbo2, puntoYbo2, ancho2, alto2);
+		int anchoSoldado = (2 * ancho1 / 3);
+
+		return colisionRectanguloConRectangulo(puntoXs1, puntoYs1, anchoSoldado, alto1, puntoXbo2, puntoYbo2, ancho2, alto2);
 	}
 
 
