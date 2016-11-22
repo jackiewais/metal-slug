@@ -719,8 +719,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 					//si la bala es del jugador
 					if (bala->IdJugador != NULL) {
 						if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion,enemigo->esEnemigoFinal())) {
-							cout<<"Restar vida al enemigo"<<endl;
-							matarEnemigo(mainList, enemigo->getCodEnemigo());
+							herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);
 							Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
 							jugadorDisparo->sumarPuntos();
 						}
@@ -787,15 +786,17 @@ void EscenarioS::findBonus(list<mensajeStruct>* mainList, Jugador *jugador) {
 	}
 }
 
-void EscenarioS::matarEnemigo(list<mensajeStruct>* mainList, string id) {
+void EscenarioS::herirEnemigo(list<mensajeStruct>* mainList, string id, Bala *bala) {
 	Enemigo *enemigo = NULL;
 	map<string, Enemigo*>::iterator itEnemigos = this->enemigosVivos.find(id);
 	// Si el objeto esta en el map
 	if ( itEnemigos != this->enemigosVivos.end() ) {
 		enemigo = itEnemigos->second;
-		mainList->push_back(getMensajeEnemigoMuerto(enemigo));
-		delete enemigo;
-		this->enemigosVivos.erase(itEnemigos);
+		if ( enemigo->restarVida(bala->tipoDeBala ) ) {
+			mainList->push_back(getMensajeEnemigoMuerto(enemigo));
+			delete enemigo;
+			this->enemigosVivos.erase(itEnemigos);
+		}
 	}
 }
 

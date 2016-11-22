@@ -16,7 +16,7 @@ public:
 	bool esEnemigoFinal();
 
 private:
-	void mover(int anchoEscenario, int vecesX, string accion);
+	void mover(int anchoEscenario, int vecesX);
 	void moverAPosicionInicial();
 };
 

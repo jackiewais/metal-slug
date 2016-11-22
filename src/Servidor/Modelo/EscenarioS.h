@@ -46,7 +46,7 @@ public:
 	void addJugador(Jugador* jugador);
 	void addEnemigoInactivo(enemigoStruct enemigoStruct);
 	void addEnemigoFinalInactivo();
-	void matarEnemigo(list<mensajeStruct>* mainList, string id);
+	void herirEnemigo(list<mensajeStruct>* mainList, string id, Bala *bala);
 	void matarEnemigos(list<mensajeStruct>* mainList);
 	void activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList);
 	list<mensajeStruct>  moverJugador(int idJugador, string mensaje);

@@ -21,6 +21,7 @@ public:
 	bool estaBloqueadoElAvanceDelEscenario(int anchoEscenario);
 	void aparecerPorIzquierda();
 	virtual bool esEnemigoFinal();
+	bool restarVida(weapon arma);
 
 	int posX;
 	int posY;
@@ -46,6 +47,7 @@ protected:
 	map<int, Jugador*> *mapJugadores;
 	int distanciaHastaLaQueSeAcercaAJugador;
 	bool avanceEscenarioBloqueado;
+	int vida;
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ENEMIGO_H_ */

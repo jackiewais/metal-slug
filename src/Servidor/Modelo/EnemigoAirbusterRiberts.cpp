@@ -7,6 +7,7 @@ EnemigoAirbusterRiberts::EnemigoAirbusterRiberts(int id, int velocidad, int anch
 :Enemigo(id, velocidad, ancho, alto, altoEscenario, mapJugadores)
 {
 	this->sprite = "airbus";
+	this->vida = 1000;
 	moverAPosicionInicial();
 }
 
@@ -23,21 +24,23 @@ void EnemigoAirbusterRiberts::mover(int anchoEscenario) {
 
 
 		if ( (this->posX - unJugador->getPosX()) > this->distanciaHastaLaQueSeAcercaAJugador ) {
-			this->mover(anchoEscenario, -1, "PARADO_GUN");
+			this->estado = CAMINA_IZQ_GUN;
+			this->mover(anchoEscenario, -1);
 		} else if ( (this->posX - unJugador->getPosX()) < -this->distanciaHastaLaQueSeAcercaAJugador ) {
-			this->mover(anchoEscenario, 1, "PARADO_GUN");
+			this->estado = CAMINA_DER_GUN;
+			this->mover(anchoEscenario, 1);
 		} else if ( (this->posX < 0) && (this->posX < unJugador->getPosX()) ) {
-			this->mover(anchoEscenario, 1, "PARADO_GUN");
+			this->mover(anchoEscenario, 1);
 		} else if ( (this->posX > (anchoEscenario - this->ancho)) && (this->posX > unJugador->getPosX()) ) {
-			this->mover(anchoEscenario, -1, "PARADO_GUN");
+			this->mover(anchoEscenario, -1);
 		} else {
-			this->mover(anchoEscenario, 0, "PARADO_GUN");
+			this->mover(anchoEscenario, 0);
 		}
 
 	}
 }
 
-void EnemigoAirbusterRiberts::mover(int anchoEscenario, int vecesX, string accion) {
+void EnemigoAirbusterRiberts::mover(int anchoEscenario, int vecesX) {
 	this->posX += (vecesX * this->velocidad);
 }
 

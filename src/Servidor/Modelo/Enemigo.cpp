@@ -19,6 +19,7 @@ Enemigo::Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, 
 	this->mapJugadores = mapJugadores;
 	this->distanciaHastaLaQueSeAcercaAJugador = 10 + rand() % (801 - 10);
 	this->avanceEscenarioBloqueado = false;
+	this->vida = 10;
 	this->sprite = "jugador4";
 
 	moverAPosicionInicial();
@@ -149,5 +150,26 @@ void Enemigo::aparecerPorIzquierda() {
 }
 
 bool Enemigo::esEnemigoFinal() {
+	return false;
+}
+
+// Devuelve true cuando se muere
+bool Enemigo::restarVida(weapon arma) {
+	switch (arma){
+		case GUN:
+			this->vida -= 10;
+		break;
+		case MACHINEGUN:
+			this->vida -= 20;
+
+		break;
+		case SHOOTGUN:
+			this->vida -= 50;
+		break;
+
+	}
+	if (this->vida <= 0) {
+		return true;
+	}
 	return false;
 }
