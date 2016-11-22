@@ -18,9 +18,10 @@ ContenedorBalas::~ContenedorBalas() {
 	// TODO Auto-generated destructor stub
 }
 
-void ContenedorBalas::addBalas(int x, int y, int tipo){
+void ContenedorBalas::addBalas(int x, int y, int tipo,aimDirection direccion){
 
 	pos posicion;
+	posicion.direccion = direccion;
 	posicion.x = x;
 	posicion.y = y;
 	posicion.tipo = weapon(tipo);
@@ -51,30 +52,40 @@ bool ContenedorBalas::loadMedia(SDL_Renderer* gRend)
 void ContenedorBalas::render()
 {
 	SDL_Rect currentClip;
+	int offset;
+
 	list<pos>::iterator it;
 		for (it=balas.begin(); it!=balas.end(); ++it){
+			switch (it->direccion){
+			case RIGHT:
+				offset=0;
+				break;
+			case LEFT:
+				offset = 80;
+				break;
+			case UP:
+				offset = 160;
+				break;
+			}
 
 		if(it->tipo == MACHINEGUN){
-			cout << "ES MACHINE " << endl;
-			currentClip.x = 0;
+
+			currentClip.x = offset;
 			currentClip.y = 50;
-			currentClip.h = 50;
+			currentClip.h = 150;
 			currentClip.w = 70;
-
 		}else if (it->tipo == SHOOTGUN){
-				cout << "ES SHOOTGUN " << endl;
-				currentClip.x = 0;
-				currentClip.y = 0;
-				currentClip.h = 100;
-				currentClip.w = 100;
 
+			currentClip.x = 0;
+			currentClip.y = 0;
+			currentClip.h = 100;
+			currentClip.w = 100;
 			  }else {
-					cout << "ES BALA COMUN " << endl;
-					currentClip.x = 0;
-					currentClip.y = 0;
-					currentClip.h = 50;
-					currentClip.w = 30;
 
+			currentClip.x = 0;
+			currentClip.y = 0;
+			currentClip.h = 50;
+			currentClip.w = 30;
 			  }
 			int posX=(*it).x;
 			int posY=(*it).y;

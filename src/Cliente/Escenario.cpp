@@ -256,6 +256,10 @@ void Escenario::close()
 	}
 	this->bonuses.clear();
 
+	for (list<Label*>::iterator it=eoLevelLabels.begin(); it != eoLevelLabels.end(); ++it){
+		delete (*it);
+	 }
+	this->eoLevelLabels.clear();
 
 	//Destroy window
 	SDL_DestroyRenderer( gRenderer );

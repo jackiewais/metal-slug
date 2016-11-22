@@ -20,6 +20,7 @@ public:
 		int x;
 		int y;
 		weapon tipo;
+		aimDirection direccion;
 	};
 	list<pos> balas;
 	std::string spritePath;
@@ -29,7 +30,7 @@ public:
 	void initTexture(std::string spritePath, int anchoTot, int altoTot);
 	bool loadMedia(SDL_Renderer* gRend);
 
-	void addBalas(int x, int y, int tipo);
+	void addBalas(int x, int y, int tipo,aimDirection direccion);
 	void deleteBalas();
 	void render();
 
