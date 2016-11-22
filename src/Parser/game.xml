@@ -325,6 +325,20 @@
 			<cantidad>12</cantidad>
 			<orden>1</orden>
 		</sprite>
+		<sprite>
+		    <estado>2</estado>
+			<ancho>181</ancho>
+			<alto>111</alto>
+			<cantidad>12</cantidad>
+			<orden>2</orden>
+		</sprite>
+		<sprite>
+		    <estado>3</estado>
+			<ancho>181</ancho>
+			<alto>111</alto>
+			<cantidad>12</cantidad>
+			<orden>3</orden>
+		</sprite>
 	</airbusterRiberts>
 	<Plataforma objetId="plataforma">
 		<sprite>
