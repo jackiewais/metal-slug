@@ -710,7 +710,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 			if (jugador->conectado()) {
 				//si la bala es del enemigo
 				if (bala->IdJugador == NULL) {
-					if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion,false)) {
+					if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
 						cout<<"Restar vida al jugador"<<endl;
 						jugador->restarVida(10);
 					}
@@ -720,11 +720,20 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 					enemigo = itEnemigos->second;
 					//si la bala es del jugador
 					if (bala->IdJugador != NULL) {
-						if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion,enemigo->esEnemigoFinal())) {
-							herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);
-							Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
-							jugadorDisparo->sumarPuntos();
+						if(!enemigo->esEnemigoFinal()) {
+							if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+								herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);
+								Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
+								jugadorDisparo->sumarPuntos();
+							}
+						}else {
+							if (Colision::colisionAirbusterRibertsConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio)) {
+								herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);
+								Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
+								jugadorDisparo->sumarPuntos();
+							}
 						}
+
 					} else if (Colision::colisionSoldadoConSoldado(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto)) {
 								//si siguen vivos, si en los pasos anteriores no los mato una bala
 								cout<<"cuchillazo del enemigo"<<endl;

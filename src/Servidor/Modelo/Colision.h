@@ -10,13 +10,11 @@ class Colision {
 
 public:
 
-	static bool colisionSoldadoConBala(int puntoXs, int puntoYs, int ancho, int alto, int puntoXb, int puntoYb, int radio,int direccion, bool esEnemigoFinal) {
+	static bool colisionSoldadoConBala(int puntoXs, int puntoYs, int ancho, int alto, int puntoXb, int puntoYb, int radio,int direccion) {
 
 		bool hayColision = false;
 
-		if (!esEnemigoFinal) {
-			ancho = (ancho / 2);
-		}
+		ancho = (ancho / 2);
 
 		if (direccion != DIAGRIGHT && direccion != DIAGLEFT) {
 
@@ -63,6 +61,34 @@ public:
 		return colisionRectanguloConRectangulo(puntoXs1, puntoYs1, anchoSoldado, alto1, puntoXbo2, puntoYbo2, ancho2, alto2);
 	}
 
+	static bool colisionAirbusterRibertsConBala(int puntoX, int puntoY, int ancho, int alto, int puntoXb, int puntoYb, int radio) {
+
+		bool hayColision = false;
+
+		//transformo la bala en un rectangulo (cuadrado, ancho = alto)
+		int anchoAltobRect = (2 * radio);
+		hayColision = colisionRectanguloConRectangulo(puntoX, puntoY, ancho, alto, puntoXb, puntoYb, anchoAltobRect, anchoAltobRect);
+
+		if (hayColision) {
+
+			//colisiono como rectangulo, vuelvo a colisionar como circulo y la parte trazera como rectangulo
+			int puntoXbCirc = (puntoXb + radio);
+			int puntoYbCirc = (puntoYb + radio);
+			hayColision = colisionRectanguloConCirculo(puntoX, puntoY, ancho, alto, puntoXbCirc, puntoYbCirc, radio);
+
+			if (!hayColision) {
+				//si no colisiono, verifico colisionar como circulo y la parte delantera como circulo
+				int anchoParteMedio = (ancho / 2);
+				int puntoXParteDelantera = (puntoX + anchoParteMedio);
+				int radioParteDelantera = (alto / 2);
+				int puntoXCircParteDelantera = (puntoXParteDelantera + (anchoParteMedio / 2));
+				int puntoYCircParteDelantera = (puntoY + radioParteDelantera);
+
+				hayColision = colisionCirculoConCirculo(puntoXCircParteDelantera, puntoYCircParteDelantera, radioParteDelantera, puntoXbCirc, puntoYbCirc, radio);
+			}
+		}
+		return hayColision;
+	}
 
 private:
 
