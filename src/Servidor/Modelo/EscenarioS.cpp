@@ -187,7 +187,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	Jugador* jugador = this->mapJugadores[jugadorId];
 	list<mensajeStruct> returnList;
 
-	if(mensaje == "0;NADA" && cantidadNada < 5 && !jugador->estaSaltando()){
+	if(mensaje == "0;NADA" && cantidadNada < 1 && !jugador->estaSaltando()){
 		cantidadNada += 1;
 
 	}else {
@@ -197,10 +197,10 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 	vector<string> result = splitE(mensaje, ';');
 	int vecesX = atoi(result[0].c_str());
 	string estado = result[1];
-
+/*
 	map<string, Enemigo*>::iterator itEnemigos;
 	Enemigo *enemigo = NULL;
-
+*/
 	if(estado=="DISPARO"){
 		int direccion = atoi(result[2].c_str());
 		this->addBala(jugador->disparar(aimDirection(direccion)));
@@ -279,7 +279,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 
 		activarEnemigos(this->avance + jugador->getPosX(), &returnList);
-		moverBonuses(&returnList);
+/*		moverBonuses(&returnList);
 
 		this->avanceBloqueado = false;
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
@@ -290,15 +290,16 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 			}
 			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
 		}
-
+*/
 //SILVIA INICIO
 		//Activa Nuevas Plataformas si se encuentran dentro de la ventana
 		Plataforma *plataforma = NULL;
 		plataforma = activarPlataforma(this->avance + jugador->getPosX());
+
 		if (plataforma != NULL) {
 			returnList.push_back(getMensajePlataformaNuevo(plataforma));
 		}
-		//Nueva posiciòn de la plataforma activa en X enviado al cliente
+		/*		//Nueva posiciòn de la plataforma activa en X enviado al cliente
 		map<int, Plataforma*>::iterator it;
 	    for (it = this->PlataformasActivas.begin(); it != this->PlataformasActivas.end(); it++) {
             plataforma = it->second;
@@ -309,11 +310,11 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 				returnList.push_back(getMensajeEliminarPlataforma(plataforma));
 				this->PlataformasActivas.erase(it);
 			}
-		}
+		}*/
 //FIN SILVIA
 
 		//evaluar colisiones despues del movimiento
-		colisionar(&returnList);
+		//colisionar(&returnList);
 
 		//Siempre false para poder probar
 		if(jugador->vida <= 0){
@@ -347,22 +348,42 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 list<mensajeStruct> EscenarioS::actualizar(){
 
 	list<mensajeStruct> returnList;
-/*
-	map<int,Jugador*>::iterator it;
+	map<string, Enemigo*>::iterator itEnemigos;
+	Enemigo *enemigo = NULL;
 
-	for(it=mapJugadores.begin(); it!=mapJugadores.end();it++){
-		it->second->manejarSalto();
-	}
-*/
 
 	if(!this->balas.empty()){
+	moverBala();
+	list<mensajeStruct> balasUpdate = getMensajeBala();
+	returnList.splice(returnList.end(), balasUpdate);
+	}
 
-				moverBala();
-				list<mensajeStruct> balasUpdate = getMensajeBala();
-				returnList.splice(returnList.end(), balasUpdate);
+	moverBonuses(&returnList);
 
+		this->avanceBloqueado = false;
+		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
+			enemigo = itEnemigos->second;
+			enemigo->mover(this->ancho);
+			if (enemigo->estaBloqueadoElAvanceDelEscenario(this->ancho)) {
+				this->avanceBloqueado = true;
 			}
-SDL_Delay(3);
+			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
+		}
+		Plataforma *plataforma = NULL;
+			//Nueva posiciòn de la plataforma activa en X enviado al cliente
+			map<int, Plataforma*>::iterator it;
+		    for (it = this->PlataformasActivas.begin(); it != this->PlataformasActivas.end(); it++) {
+	            plataforma = it->second;
+		    	returnList.push_back(getMensajePlataformaUpdate(plataforma));
+		    	//Si la plataforma se encuentra fuera de la ventana del lado izquierdo, se elimina y se elimina en el cliente
+				if ((plataforma->getPosX() + plataforma->getAncho()) < 0){
+					//eliminarPlataforma(it->first);
+					returnList.push_back(getMensajeEliminarPlataforma(plataforma));
+					this->PlataformasActivas.erase(it);
+				}
+			}
+	colisionar(&returnList);
+SDL_Delay(20);
 return returnList;
 };
 
@@ -640,6 +661,10 @@ void EscenarioS::resetEscenario(){
 		delete itOb->second;
 	}
 	this->enemigosVivos.clear();
+	list<Bala*>::iterator it;
+	for(it=this->balas.begin();it!=this->balas.end();++it){
+		delete (*it);
+	}
 	this->balas.clear();
 }
 
@@ -658,7 +683,11 @@ void EscenarioS::pasarDeNivel(){
 		itOb->second={};
 	}
 	this->bonusInactivos.clear();
-	this->balas.clear();
+	list<Bala*>::iterator it;
+		for(it=this->balas.begin();it!=this->balas.end();++it){
+			delete (*it);
+		}
+		this->balas.clear();
 }
 
 void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
