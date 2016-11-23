@@ -30,7 +30,7 @@ private:
 	estadoJugador getEstadoCaminarDerecha();
 
 public:
-	list<Bala*> disparar(aimDirection direccion);
+	list<Bala*> disparar(aimDirection direccion,int velocidad);
 	Usuario* usuario;
 	bool aceptaCambios = true;
 	int posX;

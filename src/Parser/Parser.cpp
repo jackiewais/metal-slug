@@ -47,6 +47,7 @@ bool Parser::parsearArchivoXML(const std::string& nameFileXML)
 	getxmlBasicSprites(&doc);
 	getxmlBonuses(&doc);
 	getxmlPlataformas(&doc);
+	getxmlBala(&doc);
 	return true;
 }
 void Parser::getxmlSprites(const pugi::xml_document* doc)
@@ -412,4 +413,30 @@ void Parser::getxmlPlataformas(const pugi::xml_document* doc)
 			   esPlataforma.socketCli = cliente;
 			   listaPlataformas.push_back(esPlataforma);
 		}
+}
+void Parser::getxmlBala(const pugi::xml_document* doc)
+{
+	pugi::xml_node balaNode = doc->child("balas");
+	std::string imagen = balaNode.child("imagen").first_child().value();
+	std::string ancho = balaNode.child("ancho").first_child().value();
+	std::string alto = balaNode.child("alto").first_child().value();
+	std::string velocidad = balaNode.child("velocidad").first_child().value();
+
+	if (!validar(ancho))
+		{
+			ancho = "10";
+		}
+	if (!validar(alto))
+		{
+			alto = "10";
+		}
+	if (!validar(velocidad))
+		{
+			alto = "10";
+		}
+	bala.tipo = BALA_NEW;
+	bala.message = imagen+";"+ancho+";"+alto+";"+velocidad;
+	bala.socketCli = cliente;
+
+	this->velocidadBala = atoi(velocidad.c_str());
 }

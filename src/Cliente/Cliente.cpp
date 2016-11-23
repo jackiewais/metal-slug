@@ -222,7 +222,7 @@ void *Cliente::recvMessage(void * arg){
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
-		cout << "mensaje tipo: " << mensajeRta.tipo << " - " << mensajeRta.message << " - " << mensajeRta.objectId << endl;
+	//	cout << "mensaje tipo: " << mensajeRta.tipo << " - " << mensajeRta.message << " - " << mensajeRta.objectId << endl;
 		switch (mensajeRta.tipo){
 			/*case RECIBIR_CHAT_SIGUE:
 			   //si ya existia concateno el mensaje
@@ -293,7 +293,10 @@ void *Cliente::recvMessage(void * arg){
 				context->escenario.eliminarObjeto(mensajeRta.objectId);
 				break;
 			case BALA_NEW:
-			//	context->objetoNuevo(mensajeRta);
+				//context->creaBala(mensajeRta);
+			//	context->escenario.balas.initTexture("images/gun.png",10,10);
+
+
 				break;
 			case BALA_UPD:
 				if (context->jugando) context->updateBala(mensajeRta);
@@ -452,7 +455,13 @@ void Cliente::updateEnemigo(mensajeStruct msg){
 	conectado =result[3] ;
 	escenario.actualizarPosicionObjeto(msg.objectId,x,y,estado,conectado);
 }
-
+void Cliente::creaBala(mensajeStruct msg){
+	vector<string> result = Util::Split(msg.message,';');
+	string path = result[0].c_str();
+	int alto =  atoi(result[2].c_str());
+	int ancho =  atoi(result[2].c_str());
+	this->escenario.balas.initTexture("images/"+path+"png",alto,ancho);
+}
 void Cliente::updateBala(mensajeStruct msg){
 	vector<string> result = Util::Split(msg.message,';');
 	int x;

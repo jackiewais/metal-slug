@@ -76,7 +76,7 @@ public:
 	int cantNiveles=3;
 	map<int, bonus> bonusInactivos;
 	map<int, bonus> bonusEnPantalla;
-
+	int velocidadBala;
 	//SILVIA
 	void eliminarPlataforma(int id);
 	void addPlataformaInactivo(Plataforma* plataforma, int posXAbsolutaDePlataformaParaAparicion);
@@ -85,7 +85,7 @@ public:
 	mensajeStruct getMensajePlataformaUpdate(Plataforma *plataforma);
 	mensajeStruct getMensajePlataformaEliminada(Plataforma *plataforma);
 	mensajeStruct getMensajeEliminarPlataforma(Plataforma *plataforma);
-
+	int tiempoDisparoEnemigo = 0;
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ESCENARIOS_H_ */

@@ -31,9 +31,9 @@ void Jugador::setEquipo(string team){
 	this->equipo = team;
 
 }
-list<Bala*> Jugador::disparar(aimDirection direccion){
+list<Bala*> Jugador::disparar(aimDirection direccion, int velocidad){
 	list<Bala*> balasDisparadas;
-	Bala *bala= new Bala(this->posX+3,this->posY+20,direccion,this->id);
+	Bala *bala= new Bala(this->posX+3,this->posY+20,direccion,this->id,velocidad);
 	int posX = this->posX;
 	int posY = this->posY;
 	switch (direccion){
@@ -58,11 +58,11 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 			balasDisparadas.push_front(bala);
 		break;
 		case MACHINEGUN:
-			bala1 = new Bala(posX+3,posY+20,direccion,this->id);
-			bala2 = new Bala(posX+3,posY+30,direccion,this->id);
-			bala3 = new Bala(posX+3,posY+30,direccion,this->id);
-			bala4 = new Bala(posX+3,posY+30,direccion,this->id);
-			bala5 = new Bala(posX+3,posY+30,direccion,this->id);
+			bala1 = new Bala(posX+3,posY+20,direccion,this->id,velocidad);
+			bala2 = new Bala(posX+3,posY+30,direccion,this->id,velocidad);
+			bala3 = new Bala(posX+3,posY+30,direccion,this->id,velocidad);
+			bala4 = new Bala(posX+3,posY+30,direccion,this->id,velocidad);
+			bala5 = new Bala(posX+3,posY+30,direccion,this->id,velocidad);
 
 			bala->tipoDeBala = MACHINEGUN;
 			bala->balaMachine= down;

@@ -215,7 +215,7 @@ if(!mensajesRta.empty()){
 void Servidor::handshake(mensajeStruct msg){
 	//apunto a la cola de mensajes de clientes que voy a mandar mensajes.
 	queue<mensajeStruct>* colaCliente = socketIdQueue[msg.socketCli];
-
+	escenario->velocidadBala = velocidadBala;
     Parser *parser = new Parser(msg.socketCli);
     if (this->escenario->nivel==1){
     	parser->parsearArchivoXML(XML_PATH);
@@ -224,6 +224,8 @@ void Servidor::handshake(mensajeStruct msg){
     	parser->parsearArchivoXML(levelpath);
     }
 
+    colaCliente->push(parser->getBala());
+    int velocidadBalaAux = parser->getVelocidadBala();
    //MANDO DIMENSIONES DE VENTANA.
     colaCliente->push(parser->getVentana());
 	//MANDAR SPRITES

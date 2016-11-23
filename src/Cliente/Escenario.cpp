@@ -396,6 +396,7 @@ void Escenario::actualizarPosicionObjeto(std::string idObj, int x, int y, estado
 	}
 }
 
+
 void Escenario::eliminarObjeto(std::string idObj) {
 	// Si el objeto esta en el map
 	if ( this->mapObjetosGraficables.find(idObj) != this->mapObjetosGraficables.end() ) {
