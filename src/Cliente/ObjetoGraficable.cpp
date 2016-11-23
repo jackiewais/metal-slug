@@ -82,13 +82,17 @@ void ObjetoGraficable::actualizarEstado(estadoJugador estado) {
 		if (this->iteradorDeItEstado >= 2) {
 			this->iteradorDeItEstado = 0;
 			this->itEstado++;
-			if (this->itEstado == this->textura->mapFrames[estado]->end()) {
-				this->itEstado = this->textura->mapFrames[estado]->begin();
+			if ( this->textura->mapFrames.find(estado) != this->textura->mapFrames.end() ) {
+				if (this->itEstado == this->textura->mapFrames[estado]->end()) {
+					this->itEstado = this->textura->mapFrames[estado]->begin();
+				}
 			}
 		}
 	} else {
 		this->estadoActual = estado;
-		this->itEstado = this->textura->mapFrames[estado]->begin();
+		if ( this->textura->mapFrames.find(estado) != this->textura->mapFrames.end() ) {
+			this->itEstado = this->textura->mapFrames[estado]->begin();
+		}
 		this->iteradorDeItEstado = 0;
 
 	}
