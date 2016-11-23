@@ -8,6 +8,7 @@
 #include "Jugador.h"
 #include "Enemigo.h"
 #include "EnemigoAirbusterRiberts.h"
+#include "EnemigoTaniOh.h"
 #include "../../Common/MensajeStruct.h"
 #include "../../Common/Mensajeria.h"
 #include "Bala.h"

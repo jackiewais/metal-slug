@@ -67,6 +67,9 @@ void EscenarioS::addEnemigoFinalInactivo() {
 		enemigo->aparecerPorIzquierda();
 	}*/
 	this->enemigosInactivos.insert(pair<int, Enemigo*>(500,enemigo));
+
+	//enemigo = new EnemigoTaniOh(id+1,5,508,252,this->alto,&this->mapJugadores);
+	//this->enemigosInactivos.insert(pair<int, Enemigo*>(600,enemigo));
 }
 
 void EscenarioS::activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList) {

@@ -56,6 +56,11 @@
 			<alto>222</alto>
 		</sprite>
 		<sprite>
+		    <objectId>taniOh</objectId>
+			<ancho>508</ancho>
+			<alto>252</alto>
+		</sprite>
+		<sprite>
 		    <objectId>bala</objectId>
 			<ancho>20</ancho>
 			<alto>20</alto>
@@ -340,6 +345,15 @@
 			<orden>3</orden>
 		</sprite>
 	</airbusterRiberts>
+	<taniOh objetId="taniOh">
+		<sprite>
+		    <estado>1</estado>
+			<ancho>254</ancho>
+			<alto>126</alto>
+			<cantidad>4</cantidad>
+			<orden>1</orden>
+		</sprite>
+	</taniOh>
 	<Plataforma objetId="plataforma">
 		<sprite>
 		    <estado>1</estado>
