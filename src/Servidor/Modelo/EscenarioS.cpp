@@ -167,7 +167,7 @@ void EscenarioS::moverBala(){
 		afuera =false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
 
-		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 100)){
+		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 5)){
 		afuera = true;
 		itDelete = it;
 		}
@@ -383,7 +383,7 @@ list<mensajeStruct> EscenarioS::actualizar(){
 				}
 			}
 	colisionar(&returnList);
-SDL_Delay(20);
+SDL_Delay(10);
 return returnList;
 };
 

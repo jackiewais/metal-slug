@@ -56,6 +56,8 @@ void ContenedorBalas::render()
 
 	list<pos>::iterator it;
 		for (it=balas.begin(); it!=balas.end(); ++it){
+			int posX=(*it).x;
+			int posY=(*it).y;
 			switch (it->direccion){
 			case RIGHT:
 				offset=0;
@@ -75,11 +77,19 @@ void ContenedorBalas::render()
 			currentClip.h = 150;
 			currentClip.w = 70;
 		}else if (it->tipo == SHOOTGUN){
-
 			currentClip.x = 0;
-			currentClip.y = 0;
+			currentClip.y = 200;
 			currentClip.h = 100;
-			currentClip.w = 100;
+			currentClip.w = 85;
+			for(int i =0 ; i<5 ; i++){
+
+				for (int j= 0; j <4 ; j++){
+
+					this->balasTexture.render( posX, posY, &currentClip );
+					currentClip.x +=99;
+				}
+				currentClip.y+=80;
+			}
 			  }else {
 
 			currentClip.x = 0;
@@ -87,8 +97,7 @@ void ContenedorBalas::render()
 			currentClip.h = 50;
 			currentClip.w = 30;
 			  }
-			int posX=(*it).x;
-			int posY=(*it).y;
+
 			this->balasTexture.render( posX, posY, &currentClip );
 		}
 }

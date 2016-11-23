@@ -33,22 +33,37 @@ void Jugador::setEquipo(string team){
 }
 list<Bala*> Jugador::disparar(aimDirection direccion){
 	list<Bala*> balasDisparadas;
-	Bala *bala= new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
-	Bala *bala1,*bala2,*bala3,*bala4,*bala5;
+	Bala *bala= new Bala(this->posX+3,this->posY+20,direccion,this->id);
+	int posX = this->posX;
+	int posY = this->posY;
+	switch (direccion){
+	case RIGHT:
+		posY-=10;
+		break;
+	case LEFT:
+		posY-=10;
+		posX-=120;
+		break;
+	case UP:
+		posY-=80;
+		break;
+	}
 
+	Bala *bala1,*bala2,*bala3,*bala4,*bala5;
 	switch (this->arma){
 		case GUN:
 			bala->tipoDeBala = GUN;
 			bala->x = this->posX+3;
-			bala->y = this->getPosY()+20;
+			bala->y = this->posY+20;
 			balasDisparadas.push_front(bala);
 		break;
 		case MACHINEGUN:
-			bala1 = new Bala(this->posX+3,this->getPosY()+20,direccion,this->id);
-			bala2 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
-			bala3 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
-			bala4 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
-			bala5 = new Bala(this->posX+3,this->getPosY()+30,direccion,this->id);
+			bala1 = new Bala(posX+3,posY+20,direccion,this->id);
+			bala2 = new Bala(posX+3,posY+30,direccion,this->id);
+			bala3 = new Bala(posX+3,posY+30,direccion,this->id);
+			bala4 = new Bala(posX+3,posY+30,direccion,this->id);
+			bala5 = new Bala(posX+3,posY+30,direccion,this->id);
+
 			bala->tipoDeBala = MACHINEGUN;
 			bala->balaMachine= down;
 
@@ -70,46 +85,46 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 			//SI ESTOY APUNTADO ARRIBA CAMBIA LA POSICION INICIAL DE LAS BALAS
 			if(direccion == UP){
 			//PRIMER RONDA
-			bala->x = this->posX+10;
-			bala->y = this->getPosY()+73;
+			bala->x = posX+10;
+			bala->y = posY+73;
 
-			bala1->x = this->posX+10;
-			bala1->y = this->getPosY()+83;
+			bala1->x = posX+10;
+			bala1->y = posY+83;
 
-			bala2->x = this->posX+10;
-			bala2->y = this->getPosY()+93;
+			bala2->x = posX+10;
+			bala2->y = posY+93;
 			// SEGUNDA RONDA
 
-			bala3->x = this->posX+10;
-			bala3->y = this->getPosY()+23;
+			bala3->x = posX+10;
+			bala3->y = posY+23;
 
-			bala4->x = this->posX+10;
-			bala4->y = this->getPosY()+33;
+			bala4->x = posX+10;
+			bala4->y = posY+33;
 
-			bala5->x = this->posX+10;
-			bala5->y = this->getPosY()+43;
+			bala5->x = posX+10;
+			bala5->y = posY+43;
 
 
 			}else{
 
-			bala->x = this->posX+93;
-			bala->y = this->getPosY()+30;
+			bala->x = posX+93;
+			bala->y = posY+30;
 
-			bala1->x = this->posX+103;
-			bala1->y = this->getPosY()+30;
+			bala1->x = posX+103;
+			bala1->y = posY+30;
 
-			bala2->x = this->posX+113;
-			bala2->y = this->getPosY()+30;
+			bala2->x = posX+113;
+			bala2->y = posY+30;
 			// SEGUNDA RONDA
 
-			bala3->x = this->posX+13;
-			bala3->y = this->getPosY()+30;
+			bala3->x = posX+13;
+			bala3->y = posY+30;
 
-			bala4->x = this->posX+23;
-			bala4->y = this->getPosY()+30;
+			bala4->x = posX+23;
+			bala4->y = posY+30;
 
-			bala5->x = this->posX+33;
-			bala5->y = this->getPosY()+30;
+			bala5->x = posX+33;
+			bala5->y = posY+30;
 			}
 
 			//PRIMER RONDA
@@ -132,8 +147,12 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 		break;
 		case SHOOTGUN:
 			bala->tipoDeBala = SHOOTGUN;
-			bala->x = this->posX+3;
-			bala->y = this->getPosY()+20;
+			if(direccion == LEFT){
+				bala->x = posX;
+			}else{
+			bala->x = posX+30;
+			}
+			bala->y = posY+20;
 			balasDisparadas.push_front(bala);
 
 			this->municiones -=1;
