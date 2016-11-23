@@ -21,7 +21,7 @@
 			<alto>0</alto>
 		</sprite>	
   		<sprite>
-		    <objectId>fondoCielo</objectId>
+		    <objectId>fondoCielo_2</objectId>
 			<ancho>0</ancho>
 			<alto>0</alto>
 		</sprite>
@@ -108,7 +108,7 @@
 </jugadores>
 <fondos>
         <fondo>
-		    <imagen>fondoCielo</imagen>
+		    <imagen>fondoCielo_2</imagen>
 			<ancho>0</ancho>
 			<alto>0</alto>
 			<zIndex>6</zIndex>
@@ -540,9 +540,9 @@
 		<sprite>enemigo</sprite>
 	</enemigo>
 	<enemigo>
-		<ancho>224</ancho>
-		<alto>226</alto>
-		<tipo>hiDo</tipo>
+		<ancho>508</ancho>
+		<alto>252</alto>
+		<tipo>taniOh</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>2000</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
@@ -604,7 +604,7 @@
 		    <imagen>plataforma</imagen>
 			<ancho>140</ancho>
 			<alto>30</alto>
-			<posX>850</posX>
+			<posX>900</posX>
 			<posY>300</posY>
 		</plataforma>
 		<plataforma>
@@ -612,7 +612,7 @@
 		    <imagen>plataforma</imagen>
 			<ancho>140</ancho>
 			<alto>30</alto>
-			<posX>1200</posX>
+			<posX>1500</posX>
 			<posY>300</posY>
 		</plataforma>
 </plataformas>
