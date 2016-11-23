@@ -640,13 +640,7 @@ mensajeStruct EscenarioS::getMensajeEndOfLevel(){
 	return msjEOL;
 }
 
-void EscenarioS::resetEscenario(){
-	this->avance = 0;
-	this->nivel=1;
-	this->endOfLevel=false;
-	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
-		jugador->second->reiniciar();
-	}
+void EscenarioS::limpiarListas(){
 	for (map<int, bonus>::iterator  itOb = this->bonusEnPantalla.begin(); itOb != this->bonusEnPantalla.end(); itOb++) {
 		itOb->second={};
 	}
@@ -668,6 +662,28 @@ void EscenarioS::resetEscenario(){
 		delete (*it);
 	}
 	this->balas.clear();
+
+	for (map<int, Plataforma*>::iterator  itOb = this->PlataformasActivas.begin(); itOb != this->PlataformasActivas.end(); itOb++) {
+		delete itOb->second;
+	}
+	this->PlataformasActivas.clear();
+
+	for (map<int, Plataforma*>::iterator  itOb = this->PlataformasInactivos.begin(); itOb != this->PlataformasInactivos.end(); itOb++) {
+		delete itOb->second;
+	}
+	this->PlataformasInactivos.clear();
+
+}
+
+
+void EscenarioS::resetEscenario(){
+	this->avance = 0;
+	this->nivel=1;
+	this->endOfLevel=false;
+	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
+		jugador->second->reiniciar();
+	}
+	limpiarListas();
 }
 
 void EscenarioS::pasarDeNivel(){
@@ -677,19 +693,7 @@ void EscenarioS::pasarDeNivel(){
 	for (map<int,Jugador*>::iterator jugador=this->mapJugadores.begin(); jugador!=this->mapJugadores.end(); ++jugador){
 		jugador->second->moverAPosicionInicial();
 	}
-	for (map<int, bonus>::iterator  itOb = this->bonusEnPantalla.begin(); itOb != this->bonusEnPantalla.end(); itOb++) {
-		itOb->second={};
-	}
-	this->bonusEnPantalla.clear();
-	for (map<int, bonus>::iterator  itOb = this->bonusInactivos.begin(); itOb != this->bonusInactivos.end(); itOb++) {
-		itOb->second={};
-	}
-	this->bonusInactivos.clear();
-	list<Bala*>::iterator it;
-		for(it=this->balas.begin();it!=this->balas.end();++it){
-			delete (*it);
-		}
-		this->balas.clear();
+	limpiarListas();
 }
 
 void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
@@ -787,6 +791,7 @@ void EscenarioS::findBonus(list<mensajeStruct>* mainList, Jugador *jugador) {
 					matarEnemigos(mainList);
 				break;
 			}
+			jugador->sumarPuntosBonus();
 			id = itBonus->first;
 			break;//salgo del for porq no hay mas de un bonus en la misma posicion(en un mismo movimiento del jugador)
 		}
