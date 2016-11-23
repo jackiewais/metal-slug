@@ -280,6 +280,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		if (!this->avanceBloqueado) {
 			moverEscenario(&returnList);
 		}
+
 		returnList.push_back(getMensajeJugador(jugador));
 		returnList.push_back(getMensajeEscenario());
 
