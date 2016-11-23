@@ -47,6 +47,7 @@ enum balaMachineGun{
 struct enemigoStruct {
 	int ancho;
 	int alto;
+	std::string tipo;
 	int velocidad;
 	int posXAbsolutaDeJugadorParaAparicion;
 	int bloquearAvanceEscenario;

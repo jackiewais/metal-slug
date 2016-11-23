@@ -61,6 +61,11 @@
 			<alto>252</alto>
 		</sprite>
 		<sprite>
+		    <objectId>hiDo</objectId>
+			<ancho>224</ancho>
+			<alto>226</alto>
+		</sprite>
+		<sprite>
 		    <objectId>gun</objectId>
 			<ancho>20</ancho>
 			<alto>20</alto>
@@ -355,6 +360,15 @@
 			<orden>1</orden>
 		</sprite>
 	</taniOh>
+	<hiDo objetId="hiDo">
+		<sprite>
+		    <estado>1</estado>
+			<ancho>112</ancho>
+			<alto>113</alto>
+			<cantidad>12</cantidad>
+			<orden>1</orden>
+		</sprite>
+	</hiDo>
 	<Plataforma objetId="plataforma">
 		<sprite>
 		    <estado>1</estado>
@@ -369,6 +383,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>500</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>0</bloquearAvanceEscenario>
@@ -377,6 +392,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1000</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
@@ -385,6 +401,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1000</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>0</bloquearAvanceEscenario>
@@ -393,6 +410,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1200</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>0</bloquearAvanceEscenario>
@@ -401,6 +419,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1300</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
@@ -409,6 +428,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1300</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
@@ -417,6 +437,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1300</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
@@ -425,6 +446,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1300</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
@@ -433,6 +455,7 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1500</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
@@ -441,8 +464,18 @@
 	<enemigo>
 		<ancho>74</ancho>
 		<alto>98</alto>
+		<tipo>comun</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>1500</posXAbsolutaDeJugadorParaAparicion>
+		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
+		<aparecePorIzq>1</aparecePorIzq>
+	</enemigo>
+	<enemigo>
+		<ancho>224</ancho>
+		<alto>226</alto>
+		<tipo>hiDo</tipo>
+		<velocidad>5</velocidad>
+		<posXAbsolutaDeJugadorParaAparicion>2000</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
 		<aparecePorIzq>1</aparecePorIzq>
 	</enemigo>

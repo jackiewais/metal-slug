@@ -324,8 +324,6 @@ void Servidor::handshake(mensajeStruct msg){
 		for( it = enemigos.begin(); it != enemigos.end(); ++it) {
 			this->escenario->addEnemigoInactivo(*it);
 		}
-
-		this->escenario->addEnemigoFinalInactivo();
 	}
 
 

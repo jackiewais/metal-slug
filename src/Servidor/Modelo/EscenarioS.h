@@ -9,6 +9,7 @@
 #include "Enemigo.h"
 #include "EnemigoAirbusterRiberts.h"
 #include "EnemigoTaniOh.h"
+#include "EnemigoHiDo.h"
 #include "../../Common/MensajeStruct.h"
 #include "../../Common/Mensajeria.h"
 #include "Bala.h"
@@ -47,7 +48,6 @@ public:
 	Jugador* getJugadorById(int id);
 	void addJugador(Jugador* jugador);
 	void addEnemigoInactivo(enemigoStruct enemigoStruct);
-	void addEnemigoFinalInactivo();
 	void herirEnemigo(list<mensajeStruct>* mainList, string id, Bala *bala);
 	void matarEnemigos(list<mensajeStruct>* mainList);
 	void activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList);
