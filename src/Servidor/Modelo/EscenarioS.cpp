@@ -44,6 +44,7 @@ void EscenarioS::addEnemigoInactivo(enemigoStruct enemigoStruct) {
 	int velocidad = enemigoStruct.velocidad;
 	int ancho = enemigoStruct.ancho;
 	int alto = enemigoStruct.alto;
+	string sprite = enemigoStruct.sprite;
 	Enemigo *enemigo;
 	if (enemigoStruct.tipo == "airbusterRiberts") {
 		// ancho,alto 362,222
@@ -56,7 +57,7 @@ void EscenarioS::addEnemigoInactivo(enemigoStruct enemigoStruct) {
 		enemigo = new EnemigoHiDo(id,velocidad,alto,ancho,this->alto,&this->mapJugadores);
 	} else {
 		// ancho,alto 74,98
-		enemigo = new Enemigo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores);
+		enemigo = new Enemigo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores,sprite);
 		if (enemigoStruct.aparecePorIzq != 0) {
 			enemigo->aparecerPorIzquierda();
 		}

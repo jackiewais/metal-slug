@@ -4,7 +4,7 @@
 using namespace std;
 
 EnemigoAirbusterRiberts::EnemigoAirbusterRiberts(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores)
-:Enemigo(id, velocidad, ancho, alto, altoEscenario, mapJugadores)
+:Enemigo(id, velocidad, ancho, alto, altoEscenario, mapJugadores, "airbus")
 {
 	this->sprite = "airbus";
 	this->vida = 1000;

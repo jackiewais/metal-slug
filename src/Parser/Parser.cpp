@@ -250,7 +250,7 @@ void Parser::getxmlEnemigos(const pugi::xml_document* doc)
 	   std::string posXAbsolutaDeJugadorParaAparicion = i.child("posXAbsolutaDeJugadorParaAparicion").first_child().value();
 	   std::string bloquearAvanceEscenario = i.child("bloquearAvanceEscenario").first_child().value();
 	   std::string aparecePorIzq = i.child("aparecePorIzq").first_child().value();
-
+	   string sprite = i.child("sprite").first_child().value();
 	   if (!validar(ancho)){
 		   ancho = "0";
 	   }
@@ -277,6 +277,7 @@ void Parser::getxmlEnemigos(const pugi::xml_document* doc)
 	   enemigo.posXAbsolutaDeJugadorParaAparicion = atoi(posXAbsolutaDeJugadorParaAparicion.c_str());
 	   enemigo.bloquearAvanceEscenario = atoi(bloquearAvanceEscenario.c_str());
 	   enemigo.aparecePorIzq = atoi(aparecePorIzq.c_str());
+	   enemigo.sprite = sprite;
 	   listaEnemigos.push_back(enemigo);
 	}
 }

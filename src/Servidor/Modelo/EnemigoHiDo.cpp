@@ -1,7 +1,7 @@
 #include "EnemigoHiDo.h"
 
 EnemigoHiDo::EnemigoHiDo(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores)
-:Enemigo(id, velocidad, ancho, alto, altoEscenario, mapJugadores)
+:Enemigo(id, velocidad, ancho, alto, altoEscenario, mapJugadores, "hiDo")
 {
 	this->sprite = "hiDo";
 	this->vida = 1000;

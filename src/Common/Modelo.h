@@ -52,6 +52,7 @@ struct enemigoStruct {
 	int posXAbsolutaDeJugadorParaAparicion;
 	int bloquearAvanceEscenario;
 	int aparecePorIzq;
+	std::string sprite;
 };
 
 enum modoDeJuego {
