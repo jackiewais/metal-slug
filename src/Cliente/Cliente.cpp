@@ -222,6 +222,7 @@ void *Cliente::recvMessage(void * arg){
 	while(!finish){
 		finish = context->conexionCli.recibirMensaje(&context->datosConexion, &mensajeRta);
 		Log::log('c',1,"Mensaje recibido: " ,mensajeRta.message);
+		cout << "mensaje tipo: " << mensajeRta.tipo << " - " << mensajeRta.message << " - " << mensajeRta.objectId << endl;
 		switch (mensajeRta.tipo){
 			/*case RECIBIR_CHAT_SIGUE:
 			   //si ya existia concateno el mensaje
@@ -460,7 +461,7 @@ void Cliente::updateBala(mensajeStruct msg){
 	int pos=1;
 	aimDirection direccion;
 	int cantidadDeBalas = atoi(result[0].c_str());
-	cout << msg.message << endl;
+
 	for (int i=0; i<cantidadDeBalas ; i++){
 		x=atoi(result[pos].c_str());
 		y=atoi(result[pos+1].c_str());

@@ -8,6 +8,7 @@ using namespace std;
 class Label {
 	public:
 		Label();
+		~Label();
 		void setData(SDL_Renderer* gRend, string text, int size);
 		bool loadMedia();
 		void close();

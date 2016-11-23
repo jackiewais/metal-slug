@@ -109,12 +109,15 @@ void Enemigo::moverAPosicionInicial(){
 	this->estado=PARADO_GUN;
 }
 
+string Enemigo::getUtimoChar(){
+	return "C";
+}
 string Enemigo::getStringMensajeUpdate() {
     stringstream x,y,estado;
     x << (this->posX);
     y << (this->posY);
     estado << this->estado;
-	return (x.str() + ";" + y.str() + ";" + estado.str() + ";C");
+	return (x.str() + ";" + y.str() + ";" + estado.str() + ";"+this->getUtimoChar());
 }
 
 string Enemigo::getStringMensajeNew() {

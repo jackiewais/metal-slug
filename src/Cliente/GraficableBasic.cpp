@@ -10,7 +10,7 @@ void GraficableBasic::initTexture(string spritePath, int anchoTot, int altoTot, 
 	this->anchoTot = anchoTot/cantFrames;
 	this->altoTot=altoTot;
 	this->cantFrames = cantFrames;
-	this->gSpriteClips=new SDL_Rect[cantFrames];
+	//this->gSpriteClips= SDL_Rect[cantFrames];
 
 }
 

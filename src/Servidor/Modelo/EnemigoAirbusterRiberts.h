@@ -14,6 +14,7 @@ public:
 	virtual ~EnemigoAirbusterRiberts();
 	void mover(int anchoEscenario);
 	bool esEnemigoFinal();
+	string getUtimoChar();
 
 private:
 	void mover(int anchoEscenario, int vecesX);

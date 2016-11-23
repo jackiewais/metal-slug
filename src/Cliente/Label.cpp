@@ -66,6 +66,12 @@ void Label::close()
 }
 
 
+Label::~Label()
+{
+	close();
+}
+
+
 void Label::setDefaultPos(int x, int y){
 	this->defaultX = x;
 	this->defaultY = y;

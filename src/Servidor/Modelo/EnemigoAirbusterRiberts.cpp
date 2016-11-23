@@ -44,6 +44,15 @@ void EnemigoAirbusterRiberts::mover(int anchoEscenario) {
 	}
 }
 
+
+string EnemigoAirbusterRiberts::getUtimoChar(){
+	if (this->vida >= 600){
+		return "C";
+	}else{
+		return "D";
+	}
+}
+
 void EnemigoAirbusterRiberts::mover(int anchoEscenario, int vecesX) {
 	this->posX += (vecesX * this->velocidad);
 }

@@ -22,6 +22,7 @@ public:
 	void aparecerPorIzquierda();
 	virtual bool esEnemigoFinal();
 	bool restarVida(weapon arma);
+	virtual string getUtimoChar();
 
 	int posX;
 	int posY;

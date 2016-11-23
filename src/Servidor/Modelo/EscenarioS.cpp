@@ -109,14 +109,16 @@ void EscenarioS::moverBonuses(list<mensajeStruct>* mainList) {
 		encontro = false;
 		int id;
 		for (map<int, bonus>::iterator  it = this->bonusEnPantalla.begin(); it != this->bonusEnPantalla.end(); it++) {
-			it->second.posX=it->second.posXAbs - this->avance;
-			if (it->second.posX + 70 < 0){
-				//Fuera de la pantalla
-				encontro = true;
-				id = it->first;
-				break;
-			}else{
-				mainList->push_back(getMensajeBonusUpd(it->second,it->first));
+			if (it->second.posX!=it->second.posXAbs - this->avance){
+				it->second.posX=it->second.posXAbs - this->avance;
+				if (it->second.posX + 70 < 0){
+					//Fuera de la pantalla
+					encontro = true;
+					id = it->first;
+					break;
+				}else{
+					mainList->push_back(getMensajeBonusUpd(it->second,it->first));
+				}
 			}
 		}
 		if (encontro){
@@ -187,6 +189,7 @@ void EscenarioS::moverBala(){
 
 
 list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
+	cout << "mover Jug " << jugadorId << " - " << mensaje << endl;
 	Jugador* jugador = this->mapJugadores[jugadorId];
 	list<mensajeStruct> returnList;
 
@@ -335,12 +338,12 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 				returnList.push_back(msjReset);
 			}
 		}
-
+/*
 		//End of the level
 		if (this->avance > 2000 && !endOfLevel){
 			returnList.push_back(getMensajeEndOfLevel());
 			endOfLevel=true;
-		}
+		}*/
 
 
 	}
@@ -582,6 +585,7 @@ list<mensajeStruct> EscenarioS::getMensajeBala(){
 		cantidadBalas  << cantBalas;
 		mensajeStruct msjBala;
 		msjBala.tipo = BALA_UPD;
+		msjBala.objectId="B0";
 		msjBala.message = cantidadBalas.str() + ";" + mensaje;
 		mensaje="";
 		msjRespuesta.push_front(msjBala);
@@ -845,6 +849,10 @@ void EscenarioS::herirEnemigo(list<mensajeStruct>* mainList, string id, Bala *ba
 		enemigo = itEnemigos->second;
 		if ( enemigo->restarVida(bala->tipoDeBala ) ) {
 			mainList->push_back(getMensajeEnemigoMuerto(enemigo));
+			if(enemigo->esEnemigoFinal()) {
+				mainList->push_back(getMensajeEndOfLevel());
+				endOfLevel=true;
+			}
 			delete enemigo;
 			this->enemigosVivos.erase(itEnemigos);
 		}
@@ -854,11 +862,23 @@ void EscenarioS::herirEnemigo(list<mensajeStruct>* mainList, string id, Bala *ba
 void EscenarioS::matarEnemigos(list<mensajeStruct>* mainList) {
 	Enemigo *enemigo = NULL;
 	// Si el objeto esta en el map
-	for (map<string, Enemigo*>::iterator it = this->enemigosVivos.begin(); it != this->enemigosVivos.end(); it++) {
-		enemigo = it->second;
-		mainList->push_back(getMensajeEnemigoMuerto(enemigo));
-		delete enemigo;
-		this->enemigosVivos.erase(it);
+	bool elimina = true;
+	string key;
+	while(elimina){
+		elimina = false;
+		for (map<string, Enemigo*>::iterator it = this->enemigosVivos.begin(); it != this->enemigosVivos.end(); it++) {
+			enemigo = it->second;
+			if(!enemigo->esEnemigoFinal()) {
+				mainList->push_back(getMensajeEnemigoMuerto(enemigo));
+				//delete enemigo;
+				elimina = true;
+				key = it->first;
+			}
+		}
+		if (elimina){
+			//delete enemigo;
+			this->enemigosVivos.erase(key);
+		}
 	}
 }
 //SILVIA

@@ -22,7 +22,7 @@ class GraficableBasic
 	int anchoTot;
 	int altoTot;
 	int cantFrames;
-	SDL_Rect* gSpriteClips;
+	SDL_Rect gSpriteClips[10];
 
 };
 
