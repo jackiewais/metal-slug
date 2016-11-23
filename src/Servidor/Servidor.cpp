@@ -28,7 +28,7 @@ using namespace std;
 
 
 SDL_mutex *mutexQueue;
-
+SDL_mutex *mutexQueueClientes;
 int getPosXInicial(int idJugador){
 	return 10+idJugador*30;
 }
@@ -168,20 +168,27 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
    mensajesRta = this->escenario->moverJugador(usuario->getIdJugador(),msg.message);
 
 
+
 	for(auto const &user :  this->contenedor->socket_usuario) {
 	  if(user.second->isConectado()){
 		  queue<mensajeStruct>* colaCliente = socketIdQueue[user.first];
 
 			for (mensajeStruct msgRta : mensajesRta) {
 				msgRta.socketCli = user.first;
+				  if (SDL_LockMutex(mutexQueue) == 0) {
 				colaCliente->push(msgRta);
+				SDL_UnlockMutex(mutexQueue);
+							}
 			 }
 	  }
 
 	}
+
 }
 
 void Servidor::enviarActualizacion(list<mensajeStruct> mensajesRta){
+
+
 
 if(!mensajesRta.empty()){
 	for(auto const &user :  this->contenedor->socket_usuario) {
@@ -190,11 +197,17 @@ if(!mensajesRta.empty()){
 
 				for (mensajeStruct msgRta : mensajesRta) {
 					msgRta.socketCli = user.first;
+					if (SDL_LockMutex(mutexQueue) == 0) {
+
 					colaCliente->push(msgRta);
+					SDL_UnlockMutex(mutexQueue);
+							}
 				 }
 		  }
 	}
 	}
+
+
 
 }
 
@@ -672,6 +685,7 @@ void Servidor::runServer(){
 	cout << "Starting server app" << endl;
 	Log::log('s',1,"Starting server app","");
 	mutexQueue = SDL_CreateMutex();
+	mutexQueueClientes = SDL_CreateMutex();
 	this->cerrarPrograma = false;
 	this->threadExit = 0;
 	this->threadMain= 0;
