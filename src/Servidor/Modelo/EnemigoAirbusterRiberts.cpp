@@ -21,13 +21,17 @@ void EnemigoAirbusterRiberts::mover(int anchoEscenario) {
 
 	if ( it != this->mapJugadores->end() ) {
 		unJugador = it->second;
+		int distancia = this->posX + (this->ancho/2) - unJugador->getPosX();
 
-
-		if ( (this->posX - unJugador->getPosX()) > this->distanciaHastaLaQueSeAcercaAJugador ) {
-			this->estado = CAMINA_IZQ_GUN;
-			this->mover(anchoEscenario, -1);
-		} else if ( (this->posX - unJugador->getPosX()) < -this->distanciaHastaLaQueSeAcercaAJugador ) {
+		if ( distancia <= 0 ) {
 			this->estado = CAMINA_DER_GUN;
+		} else {
+			this->estado = CAMINA_IZQ_GUN;
+		}
+
+		if ( distancia > this->distanciaHastaLaQueSeAcercaAJugador ) {
+			this->mover(anchoEscenario, -1);
+		} else if ( distancia < -this->distanciaHastaLaQueSeAcercaAJugador ) {
 			this->mover(anchoEscenario, 1);
 		} else if ( (this->posX < 0) && (this->posX < unJugador->getPosX()) ) {
 			this->mover(anchoEscenario, 1);
