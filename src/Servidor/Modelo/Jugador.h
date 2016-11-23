@@ -73,6 +73,7 @@ public:
 	void setEquipo(string equipo);
 	//estadoJugador resolverEstado(string accion, int vecesX);
 	void sumarPuntos();
+	void sumarPuntosBonus();
 	void reiniciarVida();
 	void restarVida(int herida);
 	void cambiarTipoDeArma(weapon arma);

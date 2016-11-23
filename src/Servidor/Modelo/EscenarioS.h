@@ -19,17 +19,18 @@ class EscenarioS {
 private:
 	int distancia;
 	int avance;
-	multimap<int, Enemigo*> enemigosInactivos;
-	map<string, Enemigo*> enemigosVivos;
 	bool avanceBloqueado;
 	void colisionar(list<mensajeStruct>* mainList);
 	void findBonus(list<mensajeStruct>* mainList, Jugador *jugador);
+
+public:
 	//SILVIA
     map<int, Plataforma*> PlataformasActivas;
     map<int, Plataforma*> PlataformasInactivos;
 
+	multimap<int, Enemigo*> enemigosInactivos;
+	map<string, Enemigo*> enemigosVivos;
 
-public:
 	int cantidadNada = 0;
 	int ancho;
 	int alto;
@@ -65,6 +66,7 @@ public:
 	mensajeStruct getMensajeEndOfLevel();
 	void aceptarCambios();
 	mensajeStruct getMensajeDesconexion(int jugadorId);
+	void limpiarListas();
 	void resetEscenario();
 	void pasarDeNivel();
 	list<mensajeStruct> actualizar();

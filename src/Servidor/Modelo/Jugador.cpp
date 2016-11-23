@@ -467,6 +467,10 @@ estadoJugador Jugador::getEstadoCaminarIzquierda(){
 
 }
 
+void Jugador::sumarPuntosBonus(){
+       this->puntaje += 5;
+}
+
 void Jugador::sumarPuntos() {
 
 	switch (this->arma){
