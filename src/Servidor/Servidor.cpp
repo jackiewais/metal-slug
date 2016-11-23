@@ -208,7 +208,6 @@ void Servidor::handshake(mensajeStruct msg){
     	parser->parsearArchivoXML(XML_PATH);
     }else{
     	string levelpath = XML_PATH.substr(0, XML_PATH.size()-4) +  "_" + convertirAString(this->escenario->nivel) + ".xml";
-
     	parser->parsearArchivoXML(levelpath);
     }
 
@@ -305,6 +304,46 @@ void Servidor::handshake(mensajeStruct msg){
 	if (this->escenario->bonusInactivos.size() == 0){
 		this->escenario->bonusInactivos = this->parser->getBonuses();
 	}
+
+	cout << "JW 1" << endl;
+	if (this->escenario->enemigosInactivos.size() == 0){
+		cout << "JW 2" << endl;
+		std::vector<enemigoStruct> enemigos = this->parser->getListaEnemigos();
+		cout << "JW 3" << endl;
+		std::vector<enemigoStruct>::iterator it;
+		for( it = enemigos.begin(); it != enemigos.end(); ++it) {
+			this->escenario->addEnemigoInactivo(*it);
+		}
+
+		cout << "JW 4" << endl;
+		this->escenario->addEnemigoFinalInactivo();
+	}
+
+
+	cout << "JW 5" << endl;
+	if (this->escenario->PlataformasInactivos.size() == 0){
+
+		cout << "JW 6" << endl;
+		//SILVIA MANDAR PLATAFORMAS
+		std::vector<mensajeStruct> v5 = this->parser->getListaPlataformas();
+		std::vector<mensajeStruct>::iterator i5;
+
+		cout << "JW 7" << endl;
+		for( i5 = v5.begin(); i5 != v5.end(); ++i5) {
+			vector<string> result = Util::Split((*i5).message,';');
+			int objectId5 = atoi((*i5).objectId.c_str());
+			string imagen = result[0];
+			int anchoP = atoi(result[1].c_str());
+			int altoP = atoi(result[2].c_str());
+			int posXP = atoi(result[3].c_str());
+		//	int posYP = atoi(result[3].c_str());
+			Plataforma *plataforma = new Plataforma(objectId5,imagen,5,posXP,anchoP,altoP, this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
+			this->escenario->addPlataformaInactivo(plataforma, posXP);
+		}
+	}
+
+	cout << "JW 8" << endl;
+
 
 	createTimerThread();
 }
@@ -659,27 +698,6 @@ void Servidor::runServer(){
 
 		this->escenario = new EscenarioS(this->parser->getAnchoEscenario(),this->parser->getAltoEscenario());
 
-		std::vector<enemigoStruct> enemigos = this->parser->getListaEnemigos();
-		std::vector<enemigoStruct>::iterator it;
-		for( it = enemigos.begin(); it != enemigos.end(); ++it) {
-			this->escenario->addEnemigoInactivo(*it);
-		}
-		this->escenario->addEnemigoFinalInactivo();
-
-		//SILVIA MANDAR PLATAFORMAS
-		   std::vector<mensajeStruct> v5 = parser->getListaPlataformas();
-		    std::vector<mensajeStruct>::iterator i5;
-		    for( i5 = v5.begin(); i5 != v5.end(); ++i5) {
-				vector<string> result = Util::Split((*i5).message,';');
-				int objectId5 = atoi((*i5).objectId.c_str());
-				string imagen = result[0];
-				int anchoP = atoi(result[1].c_str());
-				int altoP = atoi(result[2].c_str());
-				int posXP = atoi(result[3].c_str());
-			//	int posYP = atoi(result[3].c_str());
-				Plataforma *plataforma = new Plataforma(objectId5,imagen,5,posXP,anchoP,altoP, this->parser->getAltoEscenario(), &this->escenario->mapJugadores);
-				this->escenario->addPlataformaInactivo(plataforma, posXP);
-		    }
 		createActualizarThread();
 		ElegirModoDeJuego();
 		createExitThread();
