@@ -58,6 +58,12 @@ public:
 	int getAnchoEscenario();
 	int getAltoEscenario();
 	int getCantJugadores();
+	int getVelocidadBala(){
+		return velocidadBala;
+	}
+	const mensajeStruct getBala() const {
+		return bala;
+	}
 
 private:
 
@@ -74,6 +80,7 @@ private:
 	std::vector<enemigoStruct> listaEnemigos;
 	std::vector<mensajeStruct> listaBasicSprites;
 	std::vector<mensajeStruct> listaPlataformas;
+	mensajeStruct bala;
 
 	std::map<int,bonus> bonuses;
 
@@ -82,6 +89,7 @@ private:
 	string anchoEscenario;
 	string altoEscenario;
 	int cantJugadores;
+	int velocidadBala;
 
 	void getxmlCantJugadores(const pugi::xml_document* doc);
 	void getxmlSprites(const pugi::xml_document* doc);
@@ -98,6 +106,7 @@ private:
 	void setAnchoEscenario(const pugi::xml_document* doc);
 	void setAltoEscenario(const pugi::xml_document* doc);
 	void getxmlPlataformas(const pugi::xml_document* doc);
+	void getxmlBala(const pugi::xml_document* doc);
 };
 
 #endif /* PARSER_H_ */
