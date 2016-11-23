@@ -7,7 +7,7 @@
 using namespace std;
 
 
-Enemigo::Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores) {
+Enemigo::Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores, string sprite = "enemigo") {
 	this->id = id;
 	this->velocidad = velocidad;
 	this->velSalto = velocidad*2;
@@ -20,7 +20,7 @@ Enemigo::Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, 
 	this->distanciaHastaLaQueSeAcercaAJugador = 10 + rand() % (801 - 10);
 	this->avanceEscenarioBloqueado = false;
 	this->vida = 10;
-	this->sprite = "jugador4";
+	this->sprite = sprite;
 
 	moverAPosicionInicial();
 }

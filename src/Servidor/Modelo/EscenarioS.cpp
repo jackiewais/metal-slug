@@ -44,32 +44,29 @@ void EscenarioS::addEnemigoInactivo(enemigoStruct enemigoStruct) {
 	int velocidad = enemigoStruct.velocidad;
 	int ancho = enemigoStruct.ancho;
 	int alto = enemigoStruct.alto;
-	Enemigo *enemigo = new Enemigo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores);
+	string sprite = enemigoStruct.sprite;
+	Enemigo *enemigo;
+	if (enemigoStruct.tipo == "airbusterRiberts") {
+		// ancho,alto 362,222
+		enemigo = new EnemigoAirbusterRiberts(id,velocidad,alto,ancho,this->alto,&this->mapJugadores);
+	} else if (enemigoStruct.tipo == "taniOh") {
+		// ancho,alto 508,252
+		enemigo = new EnemigoTaniOh(id,velocidad,alto,ancho,this->alto,&this->mapJugadores);
+	} else if (enemigoStruct.tipo == "hiDo") {
+		// ancho,alto 224,226
+		enemigo = new EnemigoHiDo(id,velocidad,alto,ancho,this->alto,&this->mapJugadores);
+	} else {
+		// ancho,alto 74,98
+		enemigo = new Enemigo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores,sprite);
+		if (enemigoStruct.aparecePorIzq != 0) {
+			enemigo->aparecerPorIzquierda();
+		}
+	}
+
 	if (enemigoStruct.bloquearAvanceEscenario != 0) {
 		enemigo->bloquearAvanceEscenario();
 	}
-	if (enemigoStruct.aparecePorIzq != 0) {
-		enemigo->aparecerPorIzquierda();
-	}
 	this->enemigosInactivos.insert(pair<int, Enemigo*>(enemigoStruct.posXAbsolutaDeJugadorParaAparicion,enemigo));
-}
-
-void EscenarioS::addEnemigoFinalInactivo() {
-	int id = this->enemigosInactivos.size() + 1;
-	/*int velocidad = enemigoStruct.velocidad;
-	int ancho = enemigoStruct.ancho;
-	int alto = enemigoStruct.alto;*/
-	Enemigo *enemigo = new EnemigoAirbusterRiberts(id,5,362,222,this->alto,&this->mapJugadores);
-	/*if (enemigoStruct.bloquearAvanceEscenario != 0) {
-		enemigo->bloquearAvanceEscenario();
-	}
-	if (enemigoStruct.aparecePorIzq != 0) {
-		enemigo->aparecerPorIzquierda();
-	}*/
-	this->enemigosInactivos.insert(pair<int, Enemigo*>(500,enemigo));
-
-	//enemigo = new EnemigoTaniOh(id+1,5,508,252,this->alto,&this->mapJugadores);
-	//this->enemigosInactivos.insert(pair<int, Enemigo*>(600,enemigo));
 }
 
 void EscenarioS::activarEnemigos(int posXAbsolutaJugador, list<mensajeStruct>* mainList) {

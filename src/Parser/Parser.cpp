@@ -245,11 +245,12 @@ void Parser::getxmlEnemigos(const pugi::xml_document* doc)
 	   enemigoStruct enemigo;
 	   std::string ancho = i.child("ancho").first_child().value();
 	   std::string alto = i.child("alto").first_child().value();
+	   std::string tipo = i.child("tipo").first_child().value();
 	   std::string velocidad = i.child("velocidad").first_child().value();
 	   std::string posXAbsolutaDeJugadorParaAparicion = i.child("posXAbsolutaDeJugadorParaAparicion").first_child().value();
 	   std::string bloquearAvanceEscenario = i.child("bloquearAvanceEscenario").first_child().value();
 	   std::string aparecePorIzq = i.child("aparecePorIzq").first_child().value();
-
+	   string sprite = i.child("sprite").first_child().value();
 	   if (!validar(ancho)){
 		   ancho = "0";
 	   }
@@ -271,10 +272,12 @@ void Parser::getxmlEnemigos(const pugi::xml_document* doc)
 
 	   enemigo.ancho = atoi(ancho.c_str());
 	   enemigo.alto = atoi(alto.c_str());
+	   enemigo.tipo = tipo;
 	   enemigo.velocidad = atoi(velocidad.c_str());
 	   enemigo.posXAbsolutaDeJugadorParaAparicion = atoi(posXAbsolutaDeJugadorParaAparicion.c_str());
 	   enemigo.bloquearAvanceEscenario = atoi(bloquearAvanceEscenario.c_str());
 	   enemigo.aparecePorIzq = atoi(aparecePorIzq.c_str());
+	   enemigo.sprite = sprite;
 	   listaEnemigos.push_back(enemigo);
 	}
 }

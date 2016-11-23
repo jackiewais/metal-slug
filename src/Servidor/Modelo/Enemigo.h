@@ -10,7 +10,7 @@ using namespace std;
 
 class Enemigo {
 public:
-	Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores);
+	Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores, string sprite);
 	virtual ~Enemigo();
 	virtual void mover(int anchoEscenario);
 	string getStringMensajeNew();

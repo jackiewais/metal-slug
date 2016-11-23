@@ -14,6 +14,7 @@ public:
 	virtual ~EnemigoTaniOh();
 	void mover(int anchoEscenario);
 	bool esEnemigoFinal();
+	string getUtimoChar();
 
 private:
 	void mover(int anchoEscenario, int vecesX);
