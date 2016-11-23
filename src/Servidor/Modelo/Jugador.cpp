@@ -148,7 +148,7 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 		case SHOOTGUN:
 			bala->tipoDeBala = SHOOTGUN;
 			if(direccion == LEFT){
-				bala->x = posX;
+				bala->x = posX-30;
 			}else{
 			bala->x = posX+30;
 			}

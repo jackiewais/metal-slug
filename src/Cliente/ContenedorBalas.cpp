@@ -53,26 +53,36 @@ void ContenedorBalas::render()
 {
 	SDL_Rect currentClip;
 	int offset;
-
+	SDL_RendererFlip flip;
 	list<pos>::iterator it;
 		for (it=balas.begin(); it!=balas.end(); ++it){
 			int posX=(*it).x;
 			int posY=(*it).y;
+			double angulo = 0;
 			switch (it->direccion){
 			case RIGHT:
 				offset=0;
+				flip = SDL_FLIP_NONE;
 				break;
 			case LEFT:
+				flip = SDL_FLIP_HORIZONTAL;
 				offset = 80;
 				break;
 			case UP:
+				angulo = 90;
 				offset = 160;
+				break;
+			case DIAGLEFT:
+				angulo = 45;
+				break;
+			case DIAGRIGHT:
+				angulo = 135;
 				break;
 			}
 
 		if(it->tipo == MACHINEGUN){
 
-			currentClip.x = offset;
+			currentClip.x = 0;
 			currentClip.y = 50;
 			currentClip.h = 150;
 			currentClip.w = 70;
@@ -85,7 +95,7 @@ void ContenedorBalas::render()
 
 				for (int j= 0; j <4 ; j++){
 
-					this->balasTexture.render( posX, posY, &currentClip );
+					this->balasTexture.render( posX, posY, &currentClip,angulo,NULL,flip );
 					currentClip.x +=99;
 				}
 				currentClip.y+=80;
@@ -98,7 +108,7 @@ void ContenedorBalas::render()
 			currentClip.w = 30;
 			  }
 
-			this->balasTexture.render( posX, posY, &currentClip );
+		this->balasTexture.render( posX, posY, &currentClip,angulo,NULL,flip);
 		}
 }
 
