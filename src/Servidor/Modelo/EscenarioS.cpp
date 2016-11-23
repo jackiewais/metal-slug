@@ -386,7 +386,7 @@ list<mensajeStruct> EscenarioS::actualizar(){
 				}
 			}
 	colisionar(&returnList);
-SDL_Delay(10);
+SDL_Delay(20);
 return returnList;
 };
 
