@@ -39,6 +39,14 @@ void EnemigoTaniOh::mover(int anchoEscenario) {
 	}
 }
 
+string EnemigoTaniOh::getUtimoChar(){
+	if (this->vida >= 600){
+		return "C";
+	}else{
+		return "D";
+	}
+}
+
 void EnemigoTaniOh::mover(int anchoEscenario, int vecesX) {
 	this->posX += (vecesX * this->velocidad);
 }
