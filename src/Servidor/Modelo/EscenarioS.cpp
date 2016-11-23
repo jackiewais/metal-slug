@@ -189,7 +189,7 @@ void EscenarioS::moverBala(){
 
 
 list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
-	cout << "mover Jug " << jugadorId << " - " << mensaje << endl;
+	//cout << "mover Jug " << jugadorId << " - " << mensaje << endl;
 	Jugador* jugador = this->mapJugadores[jugadorId];
 	list<mensajeStruct> returnList;
 
@@ -209,7 +209,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 */
 	if(estado=="DISPARO"){
 		int direccion = atoi(result[2].c_str());
-		this->addBala(jugador->disparar(aimDirection(direccion)));
+		this->addBala(jugador->disparar(aimDirection(direccion),velocidadBala));
 		// PARA PROBAR
 		//this->matarEnemigos(&returnList);
 	}
@@ -357,7 +357,7 @@ list<mensajeStruct> EscenarioS::actualizar(){
 	list<mensajeStruct> returnList;
 	map<string, Enemigo*>::iterator itEnemigos;
 	Enemigo *enemigo = NULL;
-
+	this->tiempoDisparoEnemigo +=1;
 
 	if(!this->balas.empty()){
 	moverBala();
@@ -371,6 +371,12 @@ list<mensajeStruct> EscenarioS::actualizar(){
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
 			enemigo = itEnemigos->second;
 			enemigo->mover(this->ancho);
+			if(this->tiempoDisparoEnemigo <= 30){
+			Bala* bala1 = new Bala(enemigo->posX,enemigo->posY,RIGHT,0,2);
+			this->balas.push_back(bala1);
+			this->tiempoDisparoEnemigo = 0;
+			cout << "crear bala enemigo" << endl;
+			}
 			if (enemigo->estaBloqueadoElAvanceDelEscenario(this->ancho)) {
 				this->avanceBloqueado = true;
 			}

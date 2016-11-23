@@ -62,7 +62,7 @@ public:
 	void crearBonus(int id, int x, int y, bonusTypes bonus);
 	void updateBonus(int id, int x, int y, bonusTypes bonus);
 	void deleteBonus(int id);
-
+	void creaBala(mensajeStruct mesajeRta);
 	bool gameOver=false;
 	bool gameOverAll=false;
 	bool endOfLevel=false;

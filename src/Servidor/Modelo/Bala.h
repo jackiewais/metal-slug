@@ -22,7 +22,7 @@ public:
 	int x,y;
 	int direccion;
 	void mover();
-	Bala(int x,int y, int dir,int jugador);
+	Bala(int x,int y, int dir,int jugador,int velocidad);
 	virtual ~Bala();
 };
 

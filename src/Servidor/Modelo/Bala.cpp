@@ -7,12 +7,12 @@
 
 #include "Bala.h"
 
-Bala::Bala(int x, int y, int dir,int jugador) {
+Bala::Bala(int x, int y, int dir,int jugador, int velocidad) {
 
 this->x = x;
 this->y = y;
 this->direccion = dir;
-this->velocidad = 10;
+this->velocidad = velocidad;
 this->IdJugador = jugador;
 this->radio = 10;
 }

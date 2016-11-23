@@ -58,7 +58,8 @@ private:
 	void processEndOfLevel(mensajeStruct msg);
 	void processNewBonus(mensajeStruct msg);
 	void updateBonus(mensajeStruct msg);
-//SILVIA
+	void creaBala(mensajeStruct msg);
+	//SILVIA
 	void updatePlataforma(mensajeStruct msg);
 
 public:
