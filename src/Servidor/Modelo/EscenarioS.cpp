@@ -261,22 +261,6 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 //FIN SILVIA
 
 		jugador->mover(this->ancho,vecesX, estado);
-
-		//ESTO ES PARA PROBAR
-		//jugador->puntaje += 1;
-		//jugador->vida -= 1;
-
-		//if (jugador->vida == 0) {jugador->vida=100; jugador->municiones = 200;}
-		//if (jugador->vida >80 ) jugador->municiones=-1;
-		//if (jugador->vida ==80 ) jugador->municiones=300;
-		//if (jugador->vida <80 ) jugador->municiones-=2;
-
-		/*if(!this->balas.empty()){
-						moverBala();
-						list<mensajeStruct> balasUpdate = getMensajeBala();
-						returnList.splice(returnList.end(), balasUpdate);
-
-		}*/
 		if (!this->avanceBloqueado) {
 			moverEscenario(&returnList);
 		}
@@ -286,18 +270,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 
 
 		activarEnemigos(this->avance + jugador->getPosX(), &returnList);
-/*		moverBonuses(&returnList);
 
-		this->avanceBloqueado = false;
-		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
-			enemigo = itEnemigos->second;
-			enemigo->mover(this->ancho);
-			if (enemigo->estaBloqueadoElAvanceDelEscenario(this->ancho)) {
-				this->avanceBloqueado = true;
-			}
-			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
-		}
-*/
 //SILVIA INICIO
 		//Activa Nuevas Plataformas si se encuentran dentro de la ventana
 		Plataforma *plataforma = NULL;
@@ -306,24 +279,25 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		if (plataforma != NULL) {
 			returnList.push_back(getMensajePlataformaNuevo(plataforma));
 		}
-		/*		//Nueva posiciòn de la plataforma activa en X enviado al cliente
-		map<int, Plataforma*>::iterator it;
-	    for (it = this->PlataformasActivas.begin(); it != this->PlataformasActivas.end(); it++) {
-            plataforma = it->second;
-	    	returnList.push_back(getMensajePlataformaUpdate(plataforma));
-	    	//Si la plataforma se encuentra fuera de la ventana del lado izquierdo, se elimina y se elimina en el cliente
-			if ((plataforma->getPosX() + plataforma->getAncho()) < 0){
-				//eliminarPlataforma(it->first);
-				returnList.push_back(getMensajeEliminarPlataforma(plataforma));
-				this->PlataformasActivas.erase(it);
-			}
-		}*/
+
 //FIN SILVIA
+		map<string, Enemigo*>::iterator itEnemigos;
+		Enemigo *enemigo = NULL;
+		list<Bala*> balasEnemigos;
+		bool disparar = false;
+		this->tiempoDisparoEnemigo +=1;
+		if(this->tiempoDisparoEnemigo >200){
+			disparar =true;
+			this->tiempoDisparoEnemigo = 0;
+		}
+		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
+					enemigo = itEnemigos->second;
+					if(!enemigo->esEnemigoFinal() && disparar){
+					balasEnemigos.push_back(enemigo->disparar());
+					}
 
-		//evaluar colisiones despues del movimiento
-		//colisionar(&returnList);
-
-		//Siempre false para poder probar
+				}
+		this->addBala(balasEnemigos);
 		if(jugador->vida <= 0){
 			if (!jugador->gameOver){
 				jugador->gameOver=true;
@@ -339,49 +313,33 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 				returnList.push_back(msjReset);
 			}
 		}
-/*
-		//End of the level
-		if (this->avance > 2000 && !endOfLevel){
-			returnList.push_back(getMensajeEndOfLevel());
-			endOfLevel=true;
-		}*/
 
 
 	}
-	}
+
+
+
+}
 	return returnList;
 }
 
-list<mensajeStruct> EscenarioS::actualizar(){
 
+
+list<mensajeStruct> EscenarioS::actualizar(){
 	list<mensajeStruct> returnList;
 	map<string, Enemigo*>::iterator itEnemigos;
 	Enemigo *enemigo = NULL;
-	this->tiempoDisparoEnemigo +=1;
-
-	if(!this->balas.empty()){
-	moverBala();
-	list<mensajeStruct> balasUpdate = getMensajeBala();
-	returnList.splice(returnList.end(), balasUpdate);
-	}
-
 	moverBonuses(&returnList);
-
 		this->avanceBloqueado = false;
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
 			enemigo = itEnemigos->second;
 			enemigo->mover(this->ancho);
-			if(this->tiempoDisparoEnemigo <= 30){
-			Bala* bala1 = new Bala(enemigo->posX,enemigo->posY,RIGHT,0,2);
-			this->balas.push_back(bala1);
-			this->tiempoDisparoEnemigo = 0;
-			cout << "crear bala enemigo" << endl;
-			}
 			if (enemigo->estaBloqueadoElAvanceDelEscenario(this->ancho)) {
 				this->avanceBloqueado = true;
 			}
 			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
 		}
+
 		Plataforma *plataforma = NULL;
 			//Nueva posiciòn de la plataforma activa en X enviado al cliente
 			map<int, Plataforma*>::iterator it;
@@ -395,10 +353,18 @@ list<mensajeStruct> EscenarioS::actualizar(){
 					this->PlataformasActivas.erase(it);
 				}
 			}
+
+	if(!this->balas.empty()){
+		moverBala();
+		list<mensajeStruct> balasUpdate = getMensajeBala();
+		returnList.splice(returnList.end(), balasUpdate);
+		}
+
 	colisionar(&returnList);
-SDL_Delay(20);
+	SDL_Delay(20);
 return returnList;
-};
+}
+
 
 
 void EscenarioS::aceptarCambios(){
@@ -733,7 +699,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 			if (jugador->conectado()) {
 				if(!eliminarBala) {
 					//si la bala es del enemigo
-					if (bala->IdJugador == NULL) {
+					if (bala->IdJugador == 0) {
 						if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
 							cout<<"Restar vida al jugador"<<endl;
 							jugador->restarVida(10);
@@ -748,7 +714,7 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 					enemigo = itEnemigos->second;
 					if(!eliminarBala) {
 						//si la bala es del jugador
-						if (bala->IdJugador != NULL) {
+						if (bala->IdJugador != 0) {
 							if(!enemigo->esEnemigoFinal()) {
 								if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
 									herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);

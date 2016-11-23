@@ -75,7 +75,7 @@ private:
 	void createActualizarThread();
 	static void* manejarActualizar (void *data);
 
-	int velocidadBala=10;
+	int velocidadBala;
 	int idJugadores = 0;
 	string convertirAString(int i);
 	Parser *parser;

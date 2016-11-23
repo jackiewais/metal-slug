@@ -176,3 +176,7 @@ bool Enemigo::restarVida(weapon arma) {
 	}
 	return false;
 }
+Bala* Enemigo::disparar(){
+	Bala* bala1 = new Bala(this->posX,this->posY+30,this->estado,0,2);
+	return bala1;
+}

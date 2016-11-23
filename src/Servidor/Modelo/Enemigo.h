@@ -23,7 +23,7 @@ public:
 	virtual bool esEnemigoFinal();
 	bool restarVida(weapon arma);
 	virtual string getUtimoChar();
-
+	Bala* disparar();
 	int posX;
 	int posY;
 	int alto;

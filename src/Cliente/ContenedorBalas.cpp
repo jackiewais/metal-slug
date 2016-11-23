@@ -50,7 +50,7 @@ bool ContenedorBalas::loadMedia(SDL_Renderer* gRend)
 	return success;
 }
 void ContenedorBalas::render()
-{
+{	cout << "arranca render " << endl;
 	SDL_Rect currentClip;
 	int offset;
 	bool up= false;
@@ -123,6 +123,7 @@ void ContenedorBalas::render()
 
 		this->balasTexture.render( posX, posY, &currentClip,angulo,NULL,flip);
 		}
+		cout << "termina render " << endl;
 }
 
 //sin usar por ahora.

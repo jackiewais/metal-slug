@@ -250,7 +250,7 @@ void *Cliente::recvMessage(void * arg){
 				context->addSprite(mensajeRta);
 				break;
 			case HANDSHAKE_SPRITE_NRO:
-				context->escenario.balas.initTexture("images/gun.png",10,10);
+				//context->escenario.balas.initTexture("images/gun.png",10,10);
 				context->createNro(mensajeRta);
 				context->escenario.crearProgreso("loadbar",100,30);
 				break;
@@ -293,7 +293,7 @@ void *Cliente::recvMessage(void * arg){
 				context->escenario.eliminarObjeto(mensajeRta.objectId);
 				break;
 			case BALA_NEW:
-				//context->creaBala(mensajeRta);
+				context->creaBala(mensajeRta);
 			//	context->escenario.balas.initTexture("images/gun.png",10,10);
 
 
@@ -460,9 +460,10 @@ void Cliente::creaBala(mensajeStruct msg){
 	string path = result[0].c_str();
 	int alto =  atoi(result[2].c_str());
 	int ancho =  atoi(result[2].c_str());
-	this->escenario.balas.initTexture("images/"+path+"png",alto,ancho);
+	this->escenario.balas.initTexture("images/"+path+".png",alto,ancho);
 }
 void Cliente::updateBala(mensajeStruct msg){
+	cout << "llego acá " << endl;
 	vector<string> result = Util::Split(msg.message,';');
 	int x;
 	int y;
@@ -480,6 +481,7 @@ void Cliente::updateBala(mensajeStruct msg){
 		pos+=4;
 		//pos+=2;
 	}
+	cout << "salio de balas updat " << endl;
 }
 
 

@@ -61,12 +61,6 @@
 			<alto>252</alto>
 		</sprite>
 		<sprite>
-		    <objectId>gun</objectId>
-			<ancho>20</ancho>
-			<alto>20</alto>
-			<velocidad>10</velocidad>
-		</sprite>
-		<sprite>
 		    <objectId>bonuses</objectId>
 			<ancho>1131</ancho>
 			<alto>113</alto>
@@ -518,5 +512,5 @@
   <imagen>gun</imagen>
   <ancho>10</ancho>
   <alto>10</alto>
-  <velocidad>10</velocidad>
+  <velocidad>50</velocidad>
 </balas>
