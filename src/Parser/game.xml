@@ -514,3 +514,9 @@
 			<posY>300</posY>
 		</plataforma>
 </plataformas>
+<balas>
+  <imagen>gun</imagen>
+  <ancho>10</ancho>
+  <alto>10</alto>
+  <velocidad>10</velocidad>
+</balas>

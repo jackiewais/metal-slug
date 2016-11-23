@@ -224,6 +224,8 @@ void Servidor::handshake(mensajeStruct msg){
     	parser->parsearArchivoXML(levelpath);
     }
 
+    colaCliente->push(parser->getBala());
+    int velocidadBalaAux = parser->getVelocidadBala();
    //MANDO DIMENSIONES DE VENTANA.
     colaCliente->push(parser->getVentana());
 	//MANDAR SPRITES
