@@ -393,6 +393,7 @@ void Jugador::moverAPosicionInicial(){
 	this->gameOver=false;
 	this->municiones = -1;
 	this->vida=100;
+	this->arma=GUN;
 }
 
 void Jugador::reiniciar(){
