@@ -83,49 +83,90 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 			bala5->tipoDeBala = MACHINEGUN;
 
 			//SI ESTOY APUNTADO ARRIBA CAMBIA LA POSICION INICIAL DE LAS BALAS
-			if(direccion == UP){
-			//PRIMER RONDA
-			bala->x = posX+10;
-			bala->y = posY+73;
+			switch (direccion){
+			case UP:
+				bala->x = posX+10;
+				bala->y = posY+73;
 
-			bala1->x = posX+10;
-			bala1->y = posY+83;
+				bala1->x = posX+10;
+				bala1->y = posY+83;
 
-			bala2->x = posX+10;
-			bala2->y = posY+93;
-			// SEGUNDA RONDA
+				bala2->x = posX+10;
+				bala2->y = posY+93;
+				// SEGUNDA RONDA
 
-			bala3->x = posX+10;
-			bala3->y = posY+23;
+				bala3->x = posX+10;
+				bala3->y = posY+23;
 
-			bala4->x = posX+10;
-			bala4->y = posY+33;
+				bala4->x = posX+10;
+				bala4->y = posY+33;
 
-			bala5->x = posX+10;
-			bala5->y = posY+43;
+				bala5->x = posX+10;
+				bala5->y = posY+43;
+				break;
+			case DIAGLEFT:
+				bala->x = posX+10;
+				bala->y = posY+73;
 
+				bala1->x = posX+10;
+				bala1->y = posY+83;
 
-			}else{
+				bala2->x = posX+10;
+				bala2->y = posY+93;
+				// SEGUNDA RONDA
 
-			bala->x = posX+93;
-			bala->y = posY+30;
+				bala3->x = posX+10;
+				bala3->y = posY+23;
 
-			bala1->x = posX+103;
-			bala1->y = posY+30;
+				bala4->x = posX+10;
+				bala4->y = posY+33;
 
-			bala2->x = posX+113;
-			bala2->y = posY+30;
-			// SEGUNDA RONDA
+				bala5->x = posX+10;
+				bala5->y = posY+43;
+				break;
+			case DIAGRIGHT:
+				bala->x = posX+93;
+				bala->y = posX+93;
 
-			bala3->x = posX+13;
-			bala3->y = posY+30;
+				bala1->x = posX+103;
+				bala1->y = posX+103;
 
-			bala4->x = posX+23;
-			bala4->y = posY+30;
+				bala2->x = posX+113;
+				bala2->y = posX+113;
+				// SEGUNDA RONDA
 
-			bala5->x = posX+33;
-			bala5->y = posY+30;
+				bala3->x = posX+13;
+				bala3->y = posX+13;
+
+				bala4->x = posX+23;
+				bala4->y = posX+23;
+
+				bala5->x = posX+33;
+				bala5->y = posX+33;
+				break;
+			default:
+				bala->x = posX+93;
+				bala->y = posY+30;
+
+				bala1->x = posX+103;
+				bala1->y = posY+30;
+
+				bala2->x = posX+113;
+				bala2->y = posY+30;
+				// SEGUNDA RONDA
+
+				bala3->x = posX+13;
+				bala3->y = posY+30;
+
+				bala4->x = posX+23;
+				bala4->y = posY+30;
+
+				bala5->x = posX+33;
+				bala5->y = posY+30;
+				break;
 			}
+
+
 
 			//PRIMER RONDA
 			balasDisparadas.push_front(bala);
@@ -148,9 +189,9 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 		case SHOOTGUN:
 			bala->tipoDeBala = SHOOTGUN;
 			if(direccion == LEFT){
-				bala->x = posX-30;
+				bala->x = posX+40;
 			}else{
-			bala->x = posX+30;
+			bala->x = posX+40;
 			}
 			bala->y = posY+20;
 			balasDisparadas.push_front(bala);
