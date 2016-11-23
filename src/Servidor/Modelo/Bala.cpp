@@ -111,12 +111,12 @@ void Bala::mover(){
 		break;
 		case DIAGRIGHT:
 			this->x+=this->velocidad;
-			this->y-=this->velocidad;
+			this->direccion = RIGHT;
 		break;
 		case DIAGLEFT:
 			this->x-=this->velocidad;
-			this->y-=this->velocidad;
-		break;
+			this->direccion = LEFT;
+			break;
 	}
 	}
 

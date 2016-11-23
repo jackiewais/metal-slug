@@ -187,11 +187,16 @@ list<Bala*> Jugador::disparar(aimDirection direccion){
 			}
 		break;
 		case SHOOTGUN:
+
 			bala->tipoDeBala = SHOOTGUN;
+
 			if(direccion == LEFT){
-				bala->x = posX+40;
+				bala->x = posX+50;
 			}else{
 			bala->x = posX+40;
+			}
+			if(direccion == DIAGLEFT){
+			bala->x = posX-60;
 			}
 			bala->y = posY+20;
 			balasDisparadas.push_front(bala);

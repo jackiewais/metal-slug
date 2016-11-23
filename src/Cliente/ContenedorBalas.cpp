@@ -64,10 +64,12 @@ void ContenedorBalas::render()
 			switch (it->direccion){
 			case RIGHT:
 				offset=0;
+				offsetMachine = 0;
 				flip = SDL_FLIP_NONE;
 				break;
 			case LEFT:
 				flip = SDL_FLIP_HORIZONTAL;
+				offsetMachine = 80;
 				offset = 80;
 				break;
 			case UP:
@@ -92,6 +94,7 @@ void ContenedorBalas::render()
 			currentClip.y = 50;
 			currentClip.h = 150;
 			currentClip.w = 70;
+			flip = SDL_FLIP_NONE;
 			angulo = 0;
 		}else if (it->tipo == SHOOTGUN){
 			if(up==true){

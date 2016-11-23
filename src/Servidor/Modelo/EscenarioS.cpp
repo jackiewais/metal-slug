@@ -172,7 +172,7 @@ void EscenarioS::moverBala(){
 		afuera =false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
 
-		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 5)){
+		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 10)){
 		afuera = true;
 		itDelete = it;
 		}
