@@ -706,35 +706,51 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 	map<string, Enemigo*>::iterator itEnemigos;
 	Enemigo *enemigo;
 
+	list<Bala*>balasEliminadas;
+	bool eliminarBala;
+
 	for (itBalas = balas.begin(); itBalas != balas.end(); itBalas++) {
 		bala = (*itBalas);
+
+		eliminarBala = false;
 
 		for (map<int,Jugador*>::iterator itJugador=mapJugadores.begin(); itJugador!=mapJugadores.end(); itJugador++){
 			jugador = itJugador->second;
 			if (jugador->conectado()) {
-				//si la bala es del enemigo
-				if (bala->IdJugador == NULL) {
-					if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
-						cout<<"Restar vida al jugador"<<endl;
-						jugador->restarVida(10);
+				if(!eliminarBala) {
+					//si la bala es del enemigo
+					if (bala->IdJugador == NULL) {
+						if (Colision::colisionSoldadoConBala(jugador->posX, jugador->posY,jugador->ancho,jugador->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+							cout<<"Restar vida al jugador"<<endl;
+							jugador->restarVida(10);
+							balasEliminadas.push_back(bala);
+							eliminarBala = true;
+						}
 					}
 				}
 
+
 				for (itEnemigos = enemigosVivos.begin(); itEnemigos != enemigosVivos.end(); itEnemigos++) {
 					enemigo = itEnemigos->second;
-					//si la bala es del jugador
-					if (bala->IdJugador != NULL) {
-						if(!enemigo->esEnemigoFinal()) {
-							if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
-								herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);
-								Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
-								jugadorDisparo->sumarPuntos();
-							}
-						}else {
-							if (Colision::colisionAirbusterRibertsConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio)) {
-								herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);
-								Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
-								jugadorDisparo->sumarPuntos();
+					if(!eliminarBala) {
+						//si la bala es del jugador
+						if (bala->IdJugador != NULL) {
+							if(!enemigo->esEnemigoFinal()) {
+								if (Colision::colisionSoldadoConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio,bala->direccion)) {
+									herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);
+									Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
+									jugadorDisparo->sumarPuntos();
+									balasEliminadas.push_back(bala);
+									eliminarBala = true;
+								}
+							}else {
+								if (Colision::colisionAirbusterRibertsConBala(enemigo->posX, enemigo->posY,enemigo->ancho,enemigo->alto,bala->x,bala->y,bala->radio)) {
+									herirEnemigo(mainList, enemigo->getCodEnemigo(), bala);
+									Jugador *jugadorDisparo = this->mapJugadores[bala->IdJugador];
+									jugadorDisparo->sumarPuntos();
+									balasEliminadas.push_back(bala);
+									eliminarBala = true;
+								}
 							}
 						}
 
@@ -762,6 +778,22 @@ void EscenarioS::colisionar(list<mensajeStruct>* mainList) {
 				}
 				findBonus(mainList, jugador);
 			}
+		}
+	}else {
+		//elimino las balas
+		list<Bala*>::iterator itBalasEliminadas;
+		list<Bala*>::iterator itDelete;
+
+		while(!balasEliminadas.empty()) {
+
+			for (itBalasEliminadas = balasEliminadas.begin(); itBalasEliminadas != balasEliminadas.end(); itBalasEliminadas++) {
+				itDelete = itBalasEliminadas;
+				balas.remove(*itBalasEliminadas);
+				break;
+			}
+
+			delete (*itDelete);
+			balasEliminadas.erase(itDelete);
 		}
 	}
 }
