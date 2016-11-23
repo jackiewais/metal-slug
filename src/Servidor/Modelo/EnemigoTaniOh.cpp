@@ -4,7 +4,7 @@
 using namespace std;
 
 EnemigoTaniOh::EnemigoTaniOh(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores)
-:Enemigo(id, velocidad, ancho, alto, altoEscenario, mapJugadores)
+:Enemigo(id, velocidad, ancho, alto, altoEscenario, mapJugadores,"taniOh")
 {
 	this->sprite = "taniOh";
 	this->vida = 1000;

@@ -44,7 +44,7 @@ void EscenarioS::addEnemigoInactivo(enemigoStruct enemigoStruct) {
 	int velocidad = enemigoStruct.velocidad;
 	int ancho = enemigoStruct.ancho;
 	int alto = enemigoStruct.alto;
-	Enemigo *enemigo = new Enemigo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores);
+	Enemigo *enemigo = new Enemigo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores,enemigoStruct.sprite);
 	if (enemigoStruct.bloquearAvanceEscenario != 0) {
 		enemigo->bloquearAvanceEscenario();
 	}
