@@ -594,7 +594,9 @@ void Cliente::setDimensionesVentana(mensajeStruct msg){
 			 if(context->jugando) {
 				 context->escenario.renderizarObjetos();
 			 }
-
+			 if (context->escenario.endOfLevel){
+				 context->escenario.loadMediaEOLevelLabels();
+			 }
 			// if(!context->escenario.esperandoJugadores){
 				// cout << "esta renderizando pausa" << endl;
 

@@ -71,6 +71,7 @@ public:
 	void setGameOverAll();
 	std::list<Label*> eoLevelLabels;
 	void addEOLevelLabel(string name, int posX, int posY);
+	void loadMediaEOLevelLabels();
 private:
 	void cargarMensajeEsperandoJugador();
 	ObjetoGraficable *esperandoJugador;
@@ -83,6 +84,7 @@ private:
 	ObjetoGraficable *jugadorPrincipal;
 	int screenWidth, screenHeight;
 	int fondoMasChico = 0 ; // para el calculo de parallax.
+	bool faltaHacerLoadMediaEOLevelLabels;
 
 };
 

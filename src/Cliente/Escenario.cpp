@@ -16,6 +16,7 @@ Escenario::Escenario() {
 	lbalas = new Label();
 	lGameOver = new Label();
 	gameOver=false;
+	this->faltaHacerLoadMediaEOLevelLabels = false;
 }
 
 void Escenario::cargarMensajeEsperandoJugador(){
@@ -173,7 +174,9 @@ bool Escenario::loadMedia()
 	this->balas.loadMedia(this->gRenderer);
 
 	this->lbalas->setData(this->gRenderer,"ARMS",36);
+	this->lbalas->loadMedia();
 	this->lGameOver->setData(this->gRenderer,"GAME OVER",72);
+	this->lGameOver->loadMedia();
 	/*this->iGameOver->initTexture("game_over",800,600);
 	this->iGameOver->loadMedia(this->gRenderer);
 	this->iFondoNegro->initTexture("fondonegro",800,600);
@@ -334,9 +337,11 @@ void Escenario::renderizarObjetos() {
 		this->graficablesBasic["game_over"]->render(0,0);
 	}else if (this->endOfLevel) {
 		this->graficablesBasic["fondo_negro"]->render(0,0);
-		 for (list<Label*>::iterator it=eoLevelLabels.begin(); it != eoLevelLabels.end(); ++it){
-		    (*it)->renderDefault();
-		 }
+		if (!this->faltaHacerLoadMediaEOLevelLabels){
+			for (list<Label*>::iterator it=eoLevelLabels.begin(); it != eoLevelLabels.end(); ++it){
+				(*it)->renderDefault();
+			}
+		}
 
 	}else{
 		std::map<std::string, ObjetoGraficable*>::iterator it;
@@ -423,4 +428,15 @@ void Escenario::addEOLevelLabel(string name, int posX, int posY){
 	label->setData(this->gRenderer,name,48);
 	label->setDefaultPos(posX,posY);
 	this->eoLevelLabels.push_back(label);
+	this->faltaHacerLoadMediaEOLevelLabels = true;
 }
+
+void Escenario::loadMediaEOLevelLabels(){
+	if (this->faltaHacerLoadMediaEOLevelLabels){
+		for (list<Label*>::iterator it=eoLevelLabels.begin(); it != eoLevelLabels.end(); ++it){
+			(*it)->loadMedia();
+		}
+		this->faltaHacerLoadMediaEOLevelLabels = false;
+	}
+}
+
