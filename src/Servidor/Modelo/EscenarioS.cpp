@@ -278,7 +278,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 
 //FIN SILVIA
-		map<string, Enemigo*>::iterator itEnemigos;
+		/*map<string, Enemigo*>::iterator itEnemigos;
 		Enemigo *enemigo = NULL;
 		list<Bala*> balasEnemigos;
 		bool disparar = false;
@@ -294,7 +294,8 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 					}
 
 				}
-		this->addBala(balasEnemigos);
+		this->addBala(balasEnemigos);*/
+
 		if(jugador->vida <= 0){
 			if (!jugador->gameOver){
 				jugador->gameOver=true;
