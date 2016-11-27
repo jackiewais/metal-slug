@@ -604,7 +604,7 @@
 		    <imagen>plataforma</imagen>
 			<ancho>140</ancho>
 			<alto>30</alto>
-			<posX>150</posX>
+			<posX>850</posX>
 			<posY>300</posY>
 		</plataforma>
 		<plataforma>
@@ -612,7 +612,7 @@
 		    <imagen>plataforma</imagen>
 			<ancho>140</ancho>
 			<alto>30</alto>
-			<posX>900</posX>
+			<posX>1200</posX>
 			<posY>300</posY>
 		</plataforma>
 </plataformas>

@@ -620,5 +620,9 @@
   <imagen>gun</imagen>
   <ancho>10</ancho>
   <alto>10</alto>
+<<<<<<< HEAD
   <velocidad>20</velocidad>
+=======
+  <velocidad>50</velocidad>
+>>>>>>> 8b47ef67851445ad0739a14cc3f89a95b6767172
 </balas>
