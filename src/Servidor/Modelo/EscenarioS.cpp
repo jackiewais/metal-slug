@@ -169,7 +169,7 @@ void EscenarioS::moverBala(){
 		afuera =false;
 	for (it=balas.begin(); it!=balas.end(); ++it){
 
-		if((*it)->x>this->ancho || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 10)){
+		if((*it)->x>this->ancho || (*it)->y>800 || (*it)->x< 0 || (*it)->y < 0 || ( (*it)->tipoDeBala == SHOOTGUN && (*it)->movimientos > 10)){
 		afuera = true;
 		itDelete = it;
 		}
@@ -278,7 +278,7 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 
 //FIN SILVIA
-		/*map<string, Enemigo*>::iterator itEnemigos;
+		map<string, Enemigo*>::iterator itEnemigos;
 		Enemigo *enemigo = NULL;
 		list<Bala*> balasEnemigos;
 		bool disparar = false;
@@ -289,12 +289,13 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		}
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
 					enemigo = itEnemigos->second;
-					if(!enemigo->esEnemigoFinal() && disparar){
-					balasEnemigos.push_back(enemigo->disparar());
+					if(enemigo->esEnemigoFinal() && disparar){
+					balasEnemigos.splice(balasEnemigos.end(), enemigo->disparar());
+
 					}
 
 				}
-		this->addBala(balasEnemigos);*/
+		this->addBala(balasEnemigos);
 
 		if(jugador->vida <= 0){
 			if (!jugador->gameOver){

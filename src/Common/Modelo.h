@@ -30,7 +30,9 @@ enum aimDirection {
 	UP = 03,
 	DOWN = 04,
 	DIAGRIGHT = 05,
-	DIAGLEFT = 06
+	DIAGLEFT = 06,
+	DIAGLEFTDOWN = 07,
+	DIAGRIGHTDOWN = 8
 };
 
 enum weapon {

@@ -6,6 +6,10 @@
  */
 
 #include "Bala.h"
+#include <iostream>
+
+
+using namespace std;
 
 Bala::Bala(int x, int y, int dir,int jugador, int velocidad) {
 
@@ -117,6 +121,21 @@ void Bala::mover(){
 			this->x-=this->velocidad;
 			this->direccion = LEFT;
 			break;
+		case DOWN:
+			cout << "entro a dosparo abajo"<<  endl;
+			this->y += this->velocidad;
+			break;
+		case DIAGLEFTDOWN:
+					cout << "entro a dosparo abajo"<<  endl;
+					this->y += this->velocidad;
+					this->x -= this->velocidad;
+					break;
+		case DIAGRIGHTDOWN:
+					cout << "entro a dosparo abajo"<<  endl;
+					this->y += this->velocidad;
+					this->x += this->velocidad;
+
+					break;
 	}
 	}
 
