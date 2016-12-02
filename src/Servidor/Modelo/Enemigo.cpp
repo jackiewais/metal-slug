@@ -180,7 +180,7 @@ list<Bala*> Enemigo::disparar(){
 	list<Bala*> balas;
 	if(this->alto<400){
 	Bala* bala1 = new Bala(this->posX+50,this->posY+60,DIAGLEFTDOWN,0,2);
-	bala1->tipoDeBala = GUN;
+	bala1->tipoDeBala = TANIOHGUN;
 	balas.push_front(bala1);
 	Bala* bala2 = new Bala(this->posX+50,this->posY+60,DIAGRIGHTDOWN,0,2);
 	bala2->tipoDeBala = GUN;

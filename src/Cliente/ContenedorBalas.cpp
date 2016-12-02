@@ -50,7 +50,7 @@ bool ContenedorBalas::loadMedia(SDL_Renderer* gRend)
 	return success;
 }
 void ContenedorBalas::render()
-{	cout << "arranca render " << endl;
+{
 	SDL_Rect currentClip;
 	int offset;
 	bool up= false;
@@ -113,17 +113,24 @@ void ContenedorBalas::render()
 				}
 				currentClip.y+=80;
 			}
-			  }else {
+			  }else {if (it->tipo == TANIOHGUN){
+						currentClip.x = 0;
+						currentClip.y = 450;
+						currentClip.h = 50;
+						currentClip.w = 50;
 
-			currentClip.x = 0;
-			currentClip.y = 0;
-			currentClip.h = 50;
-			currentClip.w = 30;
+			  	  	  	  }else{
+
+						currentClip.x = 0;
+						currentClip.y = 0;
+						currentClip.h = 50;
+						currentClip.w = 30;
+			  	  	  	 }
 			  }
 
 		this->balasTexture.render( posX, posY, &currentClip,angulo,NULL,flip);
 		}
-		cout << "termina render " << endl;
+
 }
 
 //sin usar por ahora.

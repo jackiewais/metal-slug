@@ -8,7 +8,6 @@
 #include "Bala.h"
 #include <iostream>
 
-
 using namespace std;
 
 Bala::Bala(int x, int y, int dir,int jugador, int velocidad) {
@@ -20,9 +19,24 @@ this->velocidad = velocidad;
 this->IdJugador = jugador;
 this->radio = 10;
 }
+Bala::Bala(int x, int y, int dir,int jugador, int velocidad, bool parabola) {
+
+this->x = x;
+this->y = y;
+this->direccion = dir;
+this->velocidad = velocidad;
+this->IdJugador = jugador;
+this->radio = 10;
+this->balaParabola = parabola;
+
+//cargo la parabola
+
+}
+
 
 void Bala::mover(){
-
+	int parabolaX;
+	int parabolaY;
 	if (this->tipoDeBala == MACHINEGUN){
 		switch(this->direccion){
 				case RIGHT:
@@ -102,7 +116,7 @@ void Bala::mover(){
 				break;
 			}
 
-	}else {
+	}else { if(this->tipoDeBala != TANIOHGUN){
 	switch(this->direccion){
 		case RIGHT:
 			this->x+=this->velocidad;
@@ -122,23 +136,35 @@ void Bala::mover(){
 			this->direccion = LEFT;
 			break;
 		case DOWN:
-			cout << "entro a dosparo abajo"<<  endl;
+
 			this->y += this->velocidad;
 			break;
 		case DIAGLEFTDOWN:
-					cout << "entro a dosparo abajo"<<  endl;
+
 					this->y += this->velocidad;
 					this->x -= this->velocidad;
 					break;
 		case DIAGRIGHTDOWN:
-					cout << "entro a dosparo abajo"<<  endl;
+
 					this->y += this->velocidad;
 					this->x += this->velocidad;
 
 					break;
 	}
 	}
+	else{
+		parabolaX = variableParabola;
+					parabolaY = ((variableParabola -4)*(variableParabola -4)) + 400;
+					this->x-=10;
+					this->y = parabolaY;
 
+					cout << "("<< x << "," << y << ")" << endl;
+					if(variableParabola <=14){
+					variableParabola++;
+					}
+
+	}
+	}
 	//this->y++;
 
 }
