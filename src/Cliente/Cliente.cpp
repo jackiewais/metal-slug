@@ -481,7 +481,7 @@ void Cliente::updateBala(mensajeStruct msg){
 		pos+=4;
 		//pos+=2;
 	}
-	cout << "salio de balas updat " << endl;
+
 }
 
 

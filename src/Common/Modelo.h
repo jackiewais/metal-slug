@@ -39,6 +39,8 @@ enum weapon {
 	GUN = 01,
 	MACHINEGUN = 02,
 	SHOOTGUN = 03,
+	TANIOHGUN = 04,
+	BOMB = 05
 	};
 enum balaMachineGun{
 	up = 01,

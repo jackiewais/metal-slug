@@ -179,21 +179,21 @@ bool Enemigo::restarVida(weapon arma) {
 list<Bala*> Enemigo::disparar(){
 	list<Bala*> balas;
 	if(this->alto<400){
-	Bala* bala1 = new Bala(this->posX+50,this->posY+60,DIAGLEFTDOWN,0,2);
-	bala1->tipoDeBala = GUN;
+	Bala* bala1 = new Bala(this->posX+50,this->posY+60,LEFT,0,2);
+	bala1->tipoDeBala = BOMB;
 	balas.push_front(bala1);
-	Bala* bala2 = new Bala(this->posX+50,this->posY+60,DIAGRIGHTDOWN,0,2);
-	bala2->tipoDeBala = GUN;
+	Bala* bala2 = new Bala(this->posX+50,this->posY+60,DOWN,0,2);
+	bala2->tipoDeBala = BOMB;
 	balas.push_front(bala2);
-	Bala* bala3 = new Bala(this->posX+50,this->posY+60,DOWN,0,2);
-	bala3->tipoDeBala = GUN;
+	Bala* bala3 = new Bala(this->posX+50,this->posY+60,RIGHT,0,2);
+	bala3->tipoDeBala = BOMB;
 	balas.push_front(bala3);}
 	else { // ES EL TANQUE
 		Bala* bala1 = new Bala(this->posX+80,this->posY+150,LEFT,0,2);
-			bala1->tipoDeBala = GUN;
+			bala1->tipoDeBala = TANIOHGUN;
 			balas.push_front(bala1);
 			Bala* bala2 = new Bala(this->posX+80,this->posY+20,LEFT,0,2);
-			bala2->tipoDeBala = GUN;
+			bala2->tipoDeBala = TANIOHGUN;
 			balas.push_front(bala2);
 
 

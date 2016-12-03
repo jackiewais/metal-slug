@@ -50,7 +50,7 @@ bool ContenedorBalas::loadMedia(SDL_Renderer* gRend)
 	return success;
 }
 void ContenedorBalas::render()
-{	cout << "arranca render " << endl;
+{
 	SDL_Rect currentClip;
 	int offset;
 	bool up= false;
@@ -88,42 +88,63 @@ void ContenedorBalas::render()
 				break;
 			}
 
-		if(it->tipo == MACHINEGUN){
+		switch (it->tipo){
 
-			currentClip.x = offsetMachine;
-			currentClip.y = 50;
-			currentClip.h = 150;
-			currentClip.w = 70;
-			flip = SDL_FLIP_NONE;
-			angulo = 0;
-		}else if (it->tipo == SHOOTGUN){
+		case MACHINEGUN:
+		currentClip.x = offsetMachine;
+		currentClip.y = 50;
+		currentClip.h = 150;
+		currentClip.w = 70;
+		flip = SDL_FLIP_NONE;
+		angulo = 0;
+		break;
+		case SHOOTGUN:
 			if(up==true){
-				angulo =270;
+			angulo =270;
+		}
+		currentClip.x = 0;
+		currentClip.y = 200;
+		currentClip.h = 100;
+		currentClip.w = 85;
+		for(int i =0 ; i<5 ; i++){
+			for (int j= 0; j <4 ; j++){
+
+			this->balasTexture.render( posX, posY, &currentClip,angulo,NULL,flip );
+			currentClip.x +=99;
 			}
+			currentClip.y+=80;
+		}
+		break;
+		case GUN:
+
+		currentClip.x = 0;
+		currentClip.y = 0;
+		currentClip.h = 50;
+		currentClip.w = 30;
+		break;
+		case TANIOHGUN:
+		currentClip.x = 0;
+		currentClip.y = 450;
+		currentClip.h = 50;
+		currentClip.w = 50;
+		break;
+		case BOMB:
 			currentClip.x = 0;
-			currentClip.y = 200;
-			currentClip.h = 100;
-			currentClip.w = 85;
-			for(int i =0 ; i<5 ; i++){
+			currentClip.y = 525;
+			currentClip.h = 70;
+			currentClip.w = 50;
+			//for(int i =0 ; i<5 ; i++){
+			//this->balasTexture.render( posX, posY, &currentClip);
+			//currentClip.x +=50;
 
-				for (int j= 0; j <4 ; j++){
+			//}
 
-					this->balasTexture.render( posX, posY, &currentClip,angulo,NULL,flip );
-					currentClip.x +=99;
-				}
-				currentClip.y+=80;
-			}
-			  }else {
+		}
 
-			currentClip.x = 0;
-			currentClip.y = 0;
-			currentClip.h = 50;
-			currentClip.w = 30;
-			  }
 
 		this->balasTexture.render( posX, posY, &currentClip,angulo,NULL,flip);
 		}
-		cout << "termina render " << endl;
+
 }
 
 //sin usar por ahora.
