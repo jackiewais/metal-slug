@@ -540,9 +540,9 @@
 		<sprite>enemigo</sprite>
 	</enemigo>
 	<enemigo>
-		<ancho>362</ancho>
-		<alto>222</alto>
-		<tipo>airbusterRiberts</tipo>
+		<ancho>224</ancho>
+		<alto>226</alto>
+		<tipo>hiDo</tipo>
 		<velocidad>5</velocidad>
 		<posXAbsolutaDeJugadorParaAparicion>2000</posXAbsolutaDeJugadorParaAparicion>
 		<bloquearAvanceEscenario>1</bloquearAvanceEscenario>
