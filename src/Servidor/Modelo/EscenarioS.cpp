@@ -48,13 +48,13 @@ void EscenarioS::addEnemigoInactivo(enemigoStruct enemigoStruct) {
 	Enemigo *enemigo;
 	if (enemigoStruct.tipo == "airbusterRiberts") {
 		// ancho,alto 362,222
-		enemigo = new EnemigoAirbusterRiberts(id,velocidad,alto,ancho,this->alto,&this->mapJugadores);
+		enemigo = new EnemigoAirbusterRiberts(id,velocidad,ancho,alto,this->alto,&this->mapJugadores);
 	} else if (enemigoStruct.tipo == "taniOh") {
 		// ancho,alto 508,252
-		enemigo = new EnemigoTaniOh(id,velocidad,alto,ancho,this->alto,&this->mapJugadores);
+		enemigo = new EnemigoTaniOh(id,velocidad,ancho,alto,this->alto,&this->mapJugadores);
 	} else if (enemigoStruct.tipo == "hiDo") {
 		// ancho,alto 224,226
-		enemigo = new EnemigoHiDo(id,velocidad,alto,ancho,this->alto,&this->mapJugadores);
+		enemigo = new EnemigoHiDo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores);
 	} else {
 		// ancho,alto 74,98
 		enemigo = new Enemigo(id,velocidad,ancho,alto,this->alto,&this->mapJugadores,sprite);
@@ -337,6 +337,11 @@ list<mensajeStruct> EscenarioS::actualizar(){
 				this->avanceBloqueado = true;
 			}
 			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
+			enemigo = enemigo->lanzarEnemigo();
+			if (enemigo != NULL) {
+				this->enemigosVivos[enemigo->getCodEnemigo()] = enemigo;
+				returnList.push_back(getMensajeEnemigoNuevo(enemigo));
+			}
 		}
 
 		Plataforma *plataforma = NULL;

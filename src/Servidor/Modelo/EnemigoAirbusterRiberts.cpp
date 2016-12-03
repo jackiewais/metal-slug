@@ -8,6 +8,7 @@ EnemigoAirbusterRiberts::EnemigoAirbusterRiberts(int id, int velocidad, int anch
 {
 	this->sprite = "airbus";
 	this->vida = 1000;
+	this->idDeProxEnemigoALanzar = 1000;
 	moverAPosicionInicial();
 }
 
@@ -23,11 +24,11 @@ void EnemigoAirbusterRiberts::mover(int anchoEscenario) {
 		unJugador = it->second;
 		int distancia = this->posX + (this->ancho/2) - unJugador->getPosX();
 
-		if ( distancia <= 0 ) {
+		/*if ( distancia <= 0 ) {
 			this->estado = CAMINA_DER_GUN;
 		} else {
 			this->estado = CAMINA_IZQ_GUN;
-		}
+		}*/
 
 		if ( distancia > this->distanciaHastaLaQueSeAcercaAJugador ) {
 			this->mover(anchoEscenario, -1);
@@ -65,4 +66,14 @@ void EnemigoAirbusterRiberts::moverAPosicionInicial(){
 
 bool EnemigoAirbusterRiberts::esEnemigoFinal() {
 	return true;
+}
+
+Enemigo* EnemigoAirbusterRiberts::lanzarEnemigo(){
+	Enemigo *enemigo = NULL;
+	if ( (this->posX >= 0) && (this->idDeProxEnemigoALanzar == 1000) ) {
+		enemigo = new Enemigo(this->idDeProxEnemigoALanzar,this->velocidad,74,98,this->piso+150,this->mapJugadores,"enemigo");
+		enemigo->saltandoDeAvion(this->posX, this->posY);
+		this->idDeProxEnemigoALanzar++;
+	}
+	return enemigo;
 }

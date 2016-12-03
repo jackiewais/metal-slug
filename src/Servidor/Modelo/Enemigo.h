@@ -23,6 +23,8 @@ public:
 	virtual bool esEnemigoFinal();
 	bool restarVida(weapon arma);
 	virtual string getUtimoChar();
+	virtual Enemigo* lanzarEnemigo();
+	void saltandoDeAvion(int x, int y);
 	list<Bala*> disparar();
 	int posX;
 	int posY;

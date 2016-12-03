@@ -15,10 +15,12 @@ public:
 	void mover(int anchoEscenario);
 	bool esEnemigoFinal();
 	string getUtimoChar();
+	Enemigo* lanzarEnemigo();
 
 private:
 	void mover(int anchoEscenario, int vecesX);
 	void moverAPosicionInicial();
+	int idDeProxEnemigoALanzar;
 };
 
 #endif /* SRC_SERVIDOR_MODELO_ENEMIGOAIRBUSTERRIBERTS_H_ */

@@ -40,19 +40,26 @@ void Enemigo::mover(int anchoEscenario) {
 	if ( it != this->mapJugadores->end() ) {
 		unJugador = it->second;
 
-
-		if ( (this->posX - unJugador->getPosX()) > this->distanciaHastaLaQueSeAcercaAJugador ) {
-			this->mover(anchoEscenario, -1, "CAMINA_IZQ");
-		} else if ( (this->posX - unJugador->getPosX()) < -this->distanciaHastaLaQueSeAcercaAJugador ) {
-			this->mover(anchoEscenario, 1, "CAMINA_DER");
-		} else if ( (this->posX < 0) && (this->posX < unJugador->getPosX()) ) {
-			this->mover(anchoEscenario, 1, "CAMINA_DER");
-		} else if ( (this->posX > (anchoEscenario - this->ancho)) && (this->posX > unJugador->getPosX()) ) {
-			this->mover(anchoEscenario, -1, "CAMINA_IZQ");
+		if (this->posY < this->piso) {
+			this->posY += 5;
+			//this->estado = DISPARANDO_DER;
+			if (this->posY > this->piso) {
+				this->posY = this->piso;
+			}
 		} else {
-			this->mover(anchoEscenario, 0, "PARADO_GUN");
-		}
 
+			if ( (this->posX - unJugador->getPosX()) > this->distanciaHastaLaQueSeAcercaAJugador ) {
+				this->mover(anchoEscenario, -1, "CAMINA_IZQ");
+			} else if ( (this->posX - unJugador->getPosX()) < -this->distanciaHastaLaQueSeAcercaAJugador ) {
+				this->mover(anchoEscenario, 1, "CAMINA_DER");
+			} else if ( (this->posX < 0) && (this->posX < unJugador->getPosX()) ) {
+				this->mover(anchoEscenario, 1, "CAMINA_DER");
+			} else if ( (this->posX > (anchoEscenario - this->ancho)) && (this->posX > unJugador->getPosX()) ) {
+				this->mover(anchoEscenario, -1, "CAMINA_IZQ");
+			} else {
+				this->mover(anchoEscenario, 0, "PARADO_GUN");
+			}
+		}
 	}
 }
 
@@ -107,6 +114,12 @@ void Enemigo::moverAPosicionInicial(){
 	this->posX = 800;
 	this->posY = piso;
 	this->estado=PARADO_GUN;
+}
+
+void Enemigo::saltandoDeAvion(int x, int y){
+	this->posX = x;
+	this->posY = y;
+	this->estado = DISPARANDO_DER;
 }
 
 string Enemigo::getUtimoChar(){
@@ -178,7 +191,7 @@ bool Enemigo::restarVida(weapon arma) {
 }
 list<Bala*> Enemigo::disparar(){
 	list<Bala*> balas;
-	if(this->alto<400){
+	if(this->ancho<400){
 	Bala* bala1 = new Bala(this->posX+50,this->posY+60,LEFT,0,2);
 	bala1->tipoDeBala = BOMB;
 	balas.push_front(bala1);
@@ -203,4 +216,8 @@ list<Bala*> Enemigo::disparar(){
 
 
 	return balas;
+}
+
+Enemigo* Enemigo::lanzarEnemigo(){
+	return NULL;
 }
