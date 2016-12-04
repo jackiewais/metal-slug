@@ -43,8 +43,9 @@ void Enemigo::mover(int anchoEscenario) {
 		if (this->posY < this->piso) {
 			this->posY += 5;
 			//this->estado = DISPARANDO_DER;
-			if (this->posY > this->piso) {
+			if (this->posY >= this->piso) {
 				this->posY = this->piso;
+				this->estado = PARADO_GUN;
 			}
 		} else {
 
@@ -69,7 +70,7 @@ void Enemigo::mover(int anchoEscenario, int vecesX, string accion) {
 		this->estado = (vecesX >= 0)?SALTA_DER_GUN:SALTA_IZQ_GUN;
 	}
 
-	manejarSalto();
+	//manejarSalto();
 
 	if (vecesX == 0){
 		if (!estaSaltando()){
@@ -119,7 +120,8 @@ void Enemigo::moverAPosicionInicial(){
 void Enemigo::saltandoDeAvion(int x, int y){
 	this->posX = x;
 	this->posY = y;
-	this->estado = DISPARANDO_DER;
+	this->estado = SALTA_DER_GUN;
+	this->vida = 50;
 }
 
 string Enemigo::getUtimoChar(){

@@ -16,6 +16,7 @@ public:
 	bool esEnemigoFinal();
 	string getUtimoChar();
 	Enemigo* lanzarEnemigo();
+	int itLanzarEnemigo;
 
 private:
 	void mover(int anchoEscenario, int vecesX);

@@ -337,10 +337,12 @@ list<mensajeStruct> EscenarioS::actualizar(){
 				this->avanceBloqueado = true;
 			}
 			returnList.push_back(getMensajeEnemigoUpdate(enemigo));
-			enemigo = enemigo->lanzarEnemigo();
-			if (enemigo != NULL) {
-				this->enemigosVivos[enemigo->getCodEnemigo()] = enemigo;
-				returnList.push_back(getMensajeEnemigoNuevo(enemigo));
+			if (this->enemigosVivos.size() <= 10) {
+				enemigo = enemigo->lanzarEnemigo();
+				if (enemigo != NULL) {
+					this->enemigosVivos[enemigo->getCodEnemigo()] = enemigo;
+					returnList.push_back(getMensajeEnemigoNuevo(enemigo));
+				}
 			}
 		}
 

@@ -8,7 +8,8 @@ EnemigoAirbusterRiberts::EnemigoAirbusterRiberts(int id, int velocidad, int anch
 {
 	this->sprite = "airbus";
 	this->vida = 1000;
-	this->idDeProxEnemigoALanzar = 1000;
+	this->idDeProxEnemigoALanzar = 9000;
+	this->itLanzarEnemigo = 0;
 	moverAPosicionInicial();
 }
 
@@ -70,10 +71,12 @@ bool EnemigoAirbusterRiberts::esEnemigoFinal() {
 
 Enemigo* EnemigoAirbusterRiberts::lanzarEnemigo(){
 	Enemigo *enemigo = NULL;
-	if ( (this->posX >= 0) && (this->idDeProxEnemigoALanzar == 1000) ) {
+	this->itLanzarEnemigo++;
+	if ( (this->posX >= 0) && (this->itLanzarEnemigo >= 100) ) {
 		enemigo = new Enemigo(this->idDeProxEnemigoALanzar,this->velocidad,74,98,this->piso+150,this->mapJugadores,"enemigo");
-		enemigo->saltandoDeAvion(this->posX, this->posY);
+		enemigo->saltandoDeAvion(this->posX+76, this->posY+34);
 		this->idDeProxEnemigoALanzar++;
+		this->itLanzarEnemigo = 0;
 	}
 	return enemigo;
 }

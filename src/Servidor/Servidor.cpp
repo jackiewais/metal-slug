@@ -175,9 +175,9 @@ void Servidor::procesarTeclaPulsada(mensajeStruct msg){
 
 			for (mensajeStruct msgRta : mensajesRta) {
 				msgRta.socketCli = user.first;
-				  if (SDL_LockMutex(mutexQueue) == 0) {
+				  if (SDL_LockMutex(mutexQueueClientes) == 0) {
 				colaCliente->push(msgRta);
-				SDL_UnlockMutex(mutexQueue);
+				SDL_UnlockMutex(mutexQueueClientes);
 							}
 			 }
 	  }
@@ -197,10 +197,10 @@ if(!mensajesRta.empty()){
 
 				for (mensajeStruct msgRta : mensajesRta) {
 					msgRta.socketCli = user.first;
-					if (SDL_LockMutex(mutexQueue) == 0) {
+					if (SDL_LockMutex(mutexQueueClientes) == 0) {
 
 					colaCliente->push(msgRta);
-					SDL_UnlockMutex(mutexQueue);
+					SDL_UnlockMutex(mutexQueueClientes);
 							}
 				 }
 		  }
@@ -549,8 +549,11 @@ void *Servidor::sendMessage(void *arguments){
     	while(!finish){
 		    if(!queueCli->empty()){
 		    	mensajeStruct* msg = new mensajeStruct();
-		    	*msg=queueCli->front();
-		    	queueCli->pop();
+		    	if (SDL_LockMutex(mutexQueueClientes) == 0) {
+					*msg=queueCli->front();
+					queueCli->pop();
+					SDL_UnlockMutex(mutexQueueClientes);
+		    	}
 		    	if(msg->tipo == DISCONNECTED){
 		    		finish = true;
 		    	}else{
