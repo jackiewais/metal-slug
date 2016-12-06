@@ -10,6 +10,7 @@ using namespace std;
 
 class Enemigo {
 public:
+	int timer= 0;
 	Enemigo(int id, int velocidad, int ancho, int alto, int altoEscenario, map<int, Jugador*> *mapJugadores, string sprite);
 	virtual ~Enemigo();
 	virtual void mover(int anchoEscenario);
@@ -26,6 +27,7 @@ public:
 	virtual Enemigo* lanzarEnemigo();
 	void saltandoDeAvion(int x, int y);
 	list<Bala*> disparar();
+	list<Bala*> dispararComun();
 	int posX;
 	int posY;
 	int alto;

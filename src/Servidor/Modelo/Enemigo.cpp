@@ -191,6 +191,19 @@ bool Enemigo::restarVida(weapon arma) {
 	}
 	return false;
 }
+list<Bala*> Enemigo::dispararComun(){
+
+	list<Bala*> balas;
+
+	Bala* bala1 = new Bala(this->posX+12,this->posY+12,RIGHT,0,2);
+	bala1->tipoDeBala = GUN;
+	balas.push_front(bala1);
+
+
+return balas;
+
+
+}
 list<Bala*> Enemigo::disparar(){
 	list<Bala*> balas;
 	if(this->ancho<400){

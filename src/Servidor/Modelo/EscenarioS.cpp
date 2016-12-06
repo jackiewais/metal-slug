@@ -282,11 +282,16 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 		Enemigo *enemigo = NULL;
 		list<Bala*> balasEnemigos;
 		bool disparar = false;
+		bool disparar2 =false;
 		this->tiempoDisparoEnemigo +=1;
 		if(this->tiempoDisparoEnemigo >200){
 			disparar =true;
 			this->tiempoDisparoEnemigo = 0;
 		}
+		if(this->tiempoDisparoEnemigo >199){
+					disparar2 =true;
+
+				}
 		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
 					enemigo = itEnemigos->second;
 					if(enemigo->esEnemigoFinal() && disparar){
@@ -295,6 +300,16 @@ list<mensajeStruct> EscenarioS::moverJugador(int jugadorId, string mensaje) {
 					}
 
 				}
+		for (itEnemigos = this->enemigosVivos.begin(); itEnemigos != this->enemigosVivos.end(); itEnemigos++) {
+						enemigo = itEnemigos->second;
+						if(!enemigo->esEnemigoFinal() && disparar2){
+						balasEnemigos.splice(balasEnemigos.end(), enemigo->dispararComun());
+
+						}
+
+					}
+
+
 		this->addBala(balasEnemigos);
 
 		if(jugador->vida <= 0){
